@@ -1,0 +1,182 @@
+
+
+.Loader {
+    border: 16px solid black; /* Light grey */
+    border-top: 16px solid orange; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin-left: 40vw;
+    margin-top: 30vh;
+  }
+  .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    color: orange;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link{
+    color: black;
+    font-weight: 500;
+    font-size: 20px;
+  }
+
+  button{
+    margin-top: 0.7vw;
+    padding: 0.5vw;
+    background-color: orange;
+    font-weight: 500;
+    border-color: black;
+    border-radius: 1vw;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  h4{
+    font-size: 1.5vw;
+  }
+ tr {
+  padding: 1.5vw;
+  font-size: 1vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+td {
+  padding: 1.5vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+th{
+  padding: 1.5vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+
+
+.BattingTable{
+  
+  th{
+    background-color: orange;
+  }
+  display: flex;
+  margin: 1vw;
+}
+
+.BowlingTable
+{
+  th{
+    background-color: orange;
+  }
+  display: flex;
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTable{
+  margin-top: 3vw;
+  display: flex;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+
+.BattingTableR{
+  
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+.BowlingTableR
+{
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+.BattingTableRR{
+  
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+.BowlingTableRR
+{
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableRR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+
+
+
+.BattingTableRRR{
+  
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+.BowlingTableRRR
+{
+  th{
+    background-color: orange;
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableRRR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+
+
+
+  
+
+
+
