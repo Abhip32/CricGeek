@@ -329,7 +329,43 @@
   <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
   <h4 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:25px;">Timeline</h4>
   <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
-  <h5 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:17px;margin-left: 1vw;">{{data1.timeline[0]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[1]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[2]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[3]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[4]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[5]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[6]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[7]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[8]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[9]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[10]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[11]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[12]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[13]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[14]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[15]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[16]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[17]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[18]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[19]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[20]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[21]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[22]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[23]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[24]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[25]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[26]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[27]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[28]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[29]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[30]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[31]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[32]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[33]}}&nbsp;&nbsp;&nbsp;{{data1.timeline[34]}}</h5>
+  <div class="timeline" *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:15px;margin-left: 1vw;display: flex;align-items: center;gap: 1rem;overflow: hidden;overflow-x: auto;">
+    <h5>{{data1.timeline[0]}}</h5>
+    <h5>{{data1.timeline[1]}}</h5>
+    <h5>{{data1.timeline[2]}}</h5>
+    <h5>{{data1.timeline[3]}}</h5>
+    <h5>{{data1.timeline[4]}}</h5>
+    <h5>{{data1.timeline[5]}}</h5>
+    <h5>{{data1.timeline[6]}}</h5>
+    <h5>{{data1.timeline[7]}}</h5>
+    <h5>{{data1.timeline[8]}}</h5>
+    <h5>{{data1.timeline[9]}}</h5>
+    <h5>{{data1.timeline[10]}}</h5>
+    <h5>{{data1.timeline[11]}}</h5>
+    <h5>{{data1.timeline[12]}}</h5>
+    <h5>{{data1.timeline[13]}}</h5>
+    <h5>{{data1.timeline[14]}}</h5>
+    <h5>{{data1.timeline[15]}}</h5>
+    <h5>{{data1.timeline[16]}}</h5>
+    <h5>{{data1.timeline[17]}}</h5>
+    <h5>{{data1.timeline[18]}}</h5>
+    <h5>{{data1.timeline[19]}}</h5>
+    <h5>{{data1.timeline[20]}}</h5>
+    <h5>{{data1.timeline[21]}}</h5>
+    <h5>{{data1.timeline[22]}}</h5>
+    <h5>{{data1.timeline[23]}}</h5>
+    <h5>{{data1.timeline[24]}}</h5>
+    <h5>{{data1.timeline[25]}}</h5>
+    <h5>{{data1.timeline[26]}}</h5>
+    <h5>{{data1.timeline[27]}}</h5>
+    <h5>{{data1.timeline[28]}}</h5>
+    <h5>{{data1.timeline[29]}}</h5>
+    <h5>{{data1.timeline[30]}}</h5>
+    <h5>{{data1.timeline[31]}}</h5>
+    <h5>{{data1.timeline[32]}}</h5>
+    <h5>{{data1.timeline[33]}}</h5>
+    <h5>{{data1.timeline[34]}}</h5>
+  </div>
 </div>
 
 <div *ngFor="let data1 of scoresheetdata" style="margin-left: 1vw;">
