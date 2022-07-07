@@ -132,7 +132,7 @@
   </div>
   
   <div class="BattingTable" *ngIf="timing!='RESULT'">
-      <div  class="subscores" *ngFor="let data of scoresheettables1">
+      <div  class="subscores" *ngFor="let data of scoresheettables1" >
         <div class="tablesa">
           <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;table-layout: fixed;">
             <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
@@ -186,30 +186,18 @@
               <th>{{data[0][1]}}</th>
               <th>{{data[0][2]}}</th>
               <th>{{data[0][3]}}</th>
-              <th>{{data[0][4]}}</th>
-              <th>{{data[0][5]}}</th>
-              <th>{{data[0][6]}}</th>
-              <th>{{data[0][7]}}</th>
             </tr>
             <tr *ngIf="data.length>=2">  
               <td>{{data[1][0]}}</td>
               <td>{{data[1][1]}}</td>
               <td>{{data[1][2]}}</td>
               <td>{{data[1][3]}}</td>
-              <td>{{data[1][4]}}</td>
-              <td>{{data[1][5]}}</td>
-              <td>{{data[1][6]}}</td>
-              <td>{{data[1][7]}}</td>
             </tr>
             <tr *ngIf="data.length>=3">  
               <td>{{data[2][0]}}</td>
               <td>{{data[2][1]}}</td>
               <td>{{data[2][2]}}</td>
               <td>{{data[2][3]}}</td>
-              <td>{{data[2][4]}}</td>
-              <td>{{data[2][5]}}</td>
-              <td>{{data[2][6]}}</td>
-              <td>{{data[2][7]}}</td>
             </tr>
           </table>
         </div>
