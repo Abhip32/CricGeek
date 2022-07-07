@@ -1,19 +1,17 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import axios from 'axios';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HostListener } from '@angular/core';
-
-
-
-
+import axios from 'axios';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-mainpage',
+  templateUrl: './mainpage.component.html',
+  styleUrls: ['./mainpage.component.scss']
 })
-export class AppComponent {
+export class MainpageComponent implements OnInit {
+  index=false;
+  match=true;
+  row=false;
+  score=false;
   title = 'CricGeek';
   currentmatchesdata:any=[];
   upcomingmatchesdata:any=[];
@@ -21,8 +19,6 @@ export class AppComponent {
   scoresheetdata:any=[];
   scoresheetheadings:any=[];
   maindata:any=[];
-  index=true;
-  match=false;
 
   scoresheettables:any=[];
   scoresheettables1:any=[];
@@ -40,34 +36,16 @@ export class AppComponent {
   movers0:any=" ";
   movers1:any=" ";
 
-  row=false;
-  score=false;
+  constructor(private router: Router) { }
 
-  constructor(private http: HttpClient,private router: Router){
+  ngOnInit(): void {
     this.apilive()
     this.apiresult()
     this.apiupcoming()
-
   }
-
   goToIndex() {
     this.index=true;
     this.router.navigate(['/', '/']);
-  }
-
-  goToRanking() {
-    this.index=true;
-    this.router.navigate(['/', 'Rankings']);
-  }
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    let element = document.querySelector('.navbar') as HTMLElement;
-    if (window.pageYOffset > 30) {
-      element.classList.add('navbar-inverse');
-    } else {
-      element.classList.remove('navbar-inverse');
-    }
-    console.log("inverse")
   }
 
   goToMainPage() {
@@ -211,6 +189,10 @@ export class AppComponent {
     
   }
 
+  goback()
+  {
+    window.location.reload();
+  }
   createRange(number:any){
     // var items: number[] = [];
     // for(var i = 1; i <= number; i++){
@@ -247,3 +229,8 @@ export class AppComponent {
     });
   }
 }
+
+  
+
+
+

@@ -1,0 +1,4484 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    </head>
+    <header style="background-image:url('https://wallpaperaccess.com/full/7282469.jpg');position: relative;width: 99.4vw;" *ngIf="!score">
+    
+        <div class="text-heading">
+            <h4 style="font-size:7vh;position:absolute; top:20vh;left: 10vw;width: 25vw;font-family: 'Montserrat', sans-serif;">
+               <em style="color: white;">Capture Live Cricket Action All over the World</em> 
+            </h4>
+        </div>
+    </header>
+
+        <div class="container1" *ngIf="!score">
+            <div class="tabs">
+              <div class="tabby-tab">
+                 <input type="radio" id="tab-1" name="tabby-tabs" checked>
+                 <label for="tab-1">Live Matches</label>
+                 <div class="tabby-content">
+                    <div class="Loader" *ngIf="!datalodedlive">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+                              <span class="sr-only"></span>
+                            </div>
+                          </div>
+                    </div> 
+                    <div class="row" *ngIf="row">
+                      <div class="col-sm-6" *ngFor="let match of currentmatchesdata">
+                        <div class="card">
+                          <div class="card-body">
+                            <h6 style="color: red;">{{match.time}}</h6>
+                            <h6>{{match.title}}</h6>
+                            <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[0]}}</h5></div>
+                            <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[1]}}</h5></div>
+                            <h6>{{match.progress}}</h6>
+                            <button (click)="apiscoresheet(match.links,match.time,match.flag0,match.flag1,match.teams[0],match.teams[1],match.title,match.progress,match.overs[0],match.overs[1])">Scroesheet</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="tabby-tab">
+                <input type="radio" id="tab-2" name="tabby-tabs" >
+                <label for="tab-2">Upcoming Matches</label>
+                <div class="tabby-content">
+                    <div class="Loader" *ngIf="!datalodedupcoming">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+                              <span class="sr-only"></span>
+                            </div>
+                          </div>
+                    </div> 
+                    <div class="row">
+                      <div class="col-sm-6" *ngFor="let match of upcomingmatchesdata">
+                        <div class="card">
+                          <div class="card-body">
+                            <h6 style="color: red;">{{match.time}}</h6>
+                            <h6>{{match.title}}</h6>
+                            <div class="card-title" *ngIf="match.scores.length ==4 || match.scores.length ==3" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.scores[0]}}</h5><h5>{{match.scores[1]}}</h5></div>
+                            <div class="card-title" *ngIf="match.scores.length ==4 || match.scores.length ==3" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.scores[2]}}</h5><h5>{{match.scores[3]}}</h5></div>
+                            <div class="card-title" *ngIf="match.scores.length ==2 || match.scores.length ==1" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.scores[0]}}</h5></div>
+                            <div class="card-title" *ngIf="match.scores.length ==2 || match.scores.length ==1" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.scores[1]}}</h5></div>
+                            <div class="card-title" *ngIf="match.scores.length ==0" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5></div>
+                            <div class="card-title" *ngIf="match.scores.length ==0" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5></div>
+                            <h6>{{match.progress}}</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+           </div>
+
+
+           <div class="tabby-tab">
+            <input type="radio" id="tab-3" name="tabby-tabs" >
+            <label for="tab-3">Results</label>
+            <div class="tabby-content">
+               <div class="Loader" *ngIf="!datalodedresult">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+                      <span class="sr-only"></span>
+                    </div>
+                  </div>
+               </div> 
+               <div class="row" *ngIf="row">
+                 <div class="col-sm-6" *ngFor="let match of resultsdata">
+                   <div class="card">
+                     <div class="card-body">
+                       <h6 style="color: red;">{{match.time}}</h6>
+                       <h6>{{match.title}}</h6>
+                       <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[0]}}</h5></div>
+                       <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[1]}}</h5></div>
+                       <h6>{{match.progress}}</h6>
+                       <button (click)="apiscoresheet(match.links,match.time,match.flag0,match.flag1,match.teams[0],match.teams[1],match.title,match.progress,match.overs[0],match.overs[1])">Scroesheet</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+           </div> 
+       </div>
+    
+    </div>
+</div>
+        
+<div *ngIf="datascoresheets" style="margin-top: 10vh;margin-left: 1vw;width: 90vw;background-color: black;color: white;font-family: 'Montserrat', sans-serif;">
+    <button (click)="goback()" style="background-color: red;color: white;font-weight: bold;font-family: 'Montserrat', sans-serif;font-size: medium;margin: 1vw;padding: 0.5vw;border-radius: 1vw;">Back</button>
+    <h2 style="background-color: rgb(199,0,0);padding: 1vw;">Match Scorecard</h2>
+      <div class="card" style="background-color: black;color: white;">
+        <div class="card-body" style="background-color: black;color: white;">
+          <h6 style="color: red;">{{timing}}</h6>
+          <h6>{{mtitle}}</h6>
+          <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{mflag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{mteam0}}</h5><h5 style="padding-right:0.5vw;">{{movers0}}</h5></div>
+          <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{mflag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{mteam1}}</h5><h5 style="padding-right:0.5vw;">{{movers1}}</h5></div>
+          <h6>{{mprogress}}</h6>
+          <div *ngFor="let data1 of scoresheetdata">
+            <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
+            <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.runrateinfo}}</h6>
+            <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.groundtime}}</h6>
+            <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
+            <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" >{{data1.partnershipdata[0]}}</h6>
+            <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.partnershipdata[1]}}</h6>
+            <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
+          </div>
+        </div>
+      </div>
+  </div>
+  
+  <div class="BattingTable" *ngIf="timing!='RESULT'">
+      <div  class="subscores" *ngFor="let data of scoresheettables1">
+        <div class="tablesa">
+          <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;table-layout: fixed;">
+            <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+              {{mteam0}}
+            </h4>
+            <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+              {{mteam1}}
+            </h4>
+            <tr *ngIf="data.length>=1">  
+              <th>{{data[0][0]}}</th>
+              <th>{{data[0][1]}}</th>
+              <th>{{data[0][2]}}</th>
+              <th>{{data[0][3]}}</th>
+              <th>{{data[0][4]}}</th>
+              <th>{{data[0][5]}}</th>
+              <th>{{data[0][6]}}</th>
+              <th>{{data[0][7]}}</th>
+            </tr>
+            <tr *ngIf="data.length>=2">  
+              <td>{{data[1][0]}}</td>
+              <td>{{data[1][1]}}</td>
+              <td>{{data[1][2]}}</td>
+              <td>{{data[1][3]}}</td>
+              <td>{{data[1][4]}}</td>
+              <td>{{data[1][5]}}</td>
+              <td>{{data[1][6]}}</td>
+              <td>{{data[1][7]}}</td>
+            </tr>
+            <tr *ngIf="data.length>=3">  
+              <td>{{data[2][0]}}</td>
+              <td>{{data[2][1]}}</td>
+              <td>{{data[2][2]}}</td>
+              <td>{{data[2][3]}}</td>
+              <td>{{data[2][4]}}</td>
+              <td>{{data[2][5]}}</td>
+              <td>{{data[2][6]}}</td>
+              <td>{{data[2][7]}}</td>
+            </tr>
+          </table>
+  
+  
+          <table class="table1" *ngIf="scoresheettables1.indexOf(data)==2" style="border: 1px solid black;margin-bottom: 2vw;table-layout: fixed;">
+            <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+               Career Stats
+            </h4>
+            <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+               Career Stats
+            </h4>
+            <tr *ngIf="data.length>=1">  
+              <th>{{data[0][0]}}</th>
+              <th>{{data[0][1]}}</th>
+              <th>{{data[0][2]}}</th>
+              <th>{{data[0][3]}}</th>
+              <th>{{data[0][4]}}</th>
+              <th>{{data[0][5]}}</th>
+              <th>{{data[0][6]}}</th>
+              <th>{{data[0][7]}}</th>
+            </tr>
+            <tr *ngIf="data.length>=2">  
+              <td>{{data[1][0]}}</td>
+              <td>{{data[1][1]}}</td>
+              <td>{{data[1][2]}}</td>
+              <td>{{data[1][3]}}</td>
+              <td>{{data[1][4]}}</td>
+              <td>{{data[1][5]}}</td>
+              <td>{{data[1][6]}}</td>
+              <td>{{data[1][7]}}</td>
+            </tr>
+            <tr *ngIf="data.length>=3">  
+              <td>{{data[2][0]}}</td>
+              <td>{{data[2][1]}}</td>
+              <td>{{data[2][2]}}</td>
+              <td>{{data[2][3]}}</td>
+              <td>{{data[2][4]}}</td>
+              <td>{{data[2][5]}}</td>
+              <td>{{data[2][6]}}</td>
+              <td>{{data[2][7]}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+  </div>
+
+
+  <div class="BowlingTable" *ngIf="timing!='RESULT'">
+    <div  class="subscores" *ngFor="let data of scoresheettables1">
+      <div class="tablesa">
+        <table class="table1" *ngIf="scoresheettables1.indexOf(data)==1" style="border: 1px solid black;margin-bottom: 2vw;">
+          <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+            {{mteam1}}
+          </h4>
+          <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+            {{mteam0}}
+          </h4>
+          <tr *ngIf="data.length>=1">  
+            <th>{{data[0][0]}}</th>
+            <th>{{data[0][1]}}</th>
+            <th>{{data[0][2]}}</th>
+            <th>{{data[0][3]}}</th>
+            <th>{{data[0][4]}}</th>
+            <th>{{data[0][5]}}</th>
+            <th>{{data[0][6]}}</th>
+            <th>{{data[0][7]}}</th>
+            <th>{{data[0][8]}}</th>
+            <th>{{data[0][9]}}</th>
+          </tr>
+          <tr *ngIf="data.length>=2">  
+            <td>{{data[1][0]}}</td>
+            <td>{{data[1][1]}}</td>
+            <td>{{data[1][2]}}</td>
+            <td>{{data[1][3]}}</td>
+            <td>{{data[1][4]}}</td>
+            <td>{{data[1][5]}}</td>
+            <td>{{data[1][6]}}</td>
+            <td>{{data[1][7]}}</td>
+            <td>{{data[1][8]}}</td>
+            <td>{{data[1][9]}}</td>
+          </tr>
+          <tr *ngIf="data.length>=3">  
+            <td>{{data[2][0]}}</td>
+            <td>{{data[2][1]}}</td>
+            <td>{{data[2][2]}}</td>
+            <td>{{data[2][3]}}</td>
+            <td>{{data[2][4]}}</td>
+            <td>{{data[2][5]}}</td>
+            <td>{{data[2][6]}}</td>
+            <td>{{data[2][7]}}</td>
+            <td>{{data[2][8]}}</td>
+            <td>{{data[2][9]}}</td>
+          </tr>
+        </table>
+
+
+        <table class="table1" *ngIf="scoresheettables1.indexOf(data)==3" style="border: 1px solid black;margin-bottom: 2vw;">
+          <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+            Career Stats
+          </h4>
+          <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+             Career Stats
+          </h4>
+          
+          <tr *ngIf="data.length>=1">  
+            <th>{{data[0][0]}}</th>
+            <th>{{data[0][1]}}</th>
+            <th>{{data[0][2]}}</th>
+            <th>{{data[0][3]}}</th>
+          </tr>
+          <tr *ngIf="data.length>=2">  
+            <td>{{data[1][0]}}</td>
+            <td>{{data[1][1]}}</td>
+            <td>{{data[1][2]}}</td>
+            <td>{{data[1][3]}}</td>
+          </tr>
+          <tr *ngIf="data.length>=3">  
+            <td>{{data[2][0]}}</td>
+            <td>{{data[2][1]}}</td>
+            <td>{{data[2][2]}}</td>
+            <td>{{data[2][3]}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+</div>
+<div *ngFor="let data1 of scoresheetdata" style="margin-left: 1vw;" style="color: white;font-family: 'Montserrat', sans-serif;background-color: black;margin: 1vw;width: 90vw;">
+  <h4 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:25px;background-color: rgb(199,0,0);padding: 1vw;">Timeline</h4>
+  <div class="timeline" *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:15px;margin-left: 1vw;display: flex;align-items: center;gap: 1rem;overflow: hidden;overflow-x: auto;">
+    <h5>{{data1.timeline[0]}}</h5>
+    <h5>{{data1.timeline[1]}}</h5>
+    <h5>{{data1.timeline[2]}}</h5>
+    <h5>{{data1.timeline[3]}}</h5>
+    <h5>{{data1.timeline[4]}}</h5>
+    <h5>{{data1.timeline[5]}}</h5>
+    <h5>{{data1.timeline[6]}}</h5>
+    <h5>{{data1.timeline[7]}}</h5>
+    <h5>{{data1.timeline[8]}}</h5>
+    <h5>{{data1.timeline[9]}}</h5>
+    <h5>{{data1.timeline[10]}}</h5>
+    <h5>{{data1.timeline[11]}}</h5>
+    <h5>{{data1.timeline[12]}}</h5>
+    <h5>{{data1.timeline[13]}}</h5>
+    <h5>{{data1.timeline[14]}}</h5>
+    <h5>{{data1.timeline[15]}}</h5>
+    <h5>{{data1.timeline[16]}}</h5>
+    <h5>{{data1.timeline[17]}}</h5>
+    <h5>{{data1.timeline[18]}}</h5>
+    <h5>{{data1.timeline[19]}}</h5>
+    <h5>{{data1.timeline[20]}}</h5>
+    <h5>{{data1.timeline[21]}}</h5>
+    <h5>{{data1.timeline[22]}}</h5>
+    <h5>{{data1.timeline[23]}}</h5>
+    <h5>{{data1.timeline[24]}}</h5>
+    <h5>{{data1.timeline[25]}}</h5>
+    <h5>{{data1.timeline[26]}}</h5>
+    <h5>{{data1.timeline[27]}}</h5>
+    <h5>{{data1.timeline[28]}}</h5>
+    <h5>{{data1.timeline[29]}}</h5>
+    <h5>{{data1.timeline[30]}}</h5>
+    <h5>{{data1.timeline[31]}}</h5>
+    <h5>{{data1.timeline[32]}}</h5>
+    <h5>{{data1.timeline[33]}}</h5>
+    <h5>{{data1.timeline[34]}}</h5>
+  </div>
+</div>
+
+<div *ngFor="let data1 of scoresheetdata" style="margin-left: 1vw;" style="color: white;font-family: 'Montserrat', sans-serif;background-color: black;margin: 1vw;width: 90vw;">
+  <h4 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'" style="font-size:25px;background-color: rgb(199,0,0);padding: 1vw;">Commentary</h4>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[0]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[1]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[2]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[3]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[4]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[5]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[6]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[7]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[8]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[9]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[10]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[11]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[12]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[13]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[14]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[15]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[16]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[17]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[18]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[19]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[20]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[21]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[22]}}</h6>
+  <h6 *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'">{{data1.comm[23]}}</h6>
+  <hr *ngIf="scoresheetdata.indexOf(data1)==0&&timing!='RESULT'"/>
+</div>
+
+<div class="OtherInfoTable" *ngIf="timing!='RESULT'">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==4" style="border: 1px solid black;margin-bottom: 2vw;">
+        <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+          Match Info
+        </h4>
+        <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+          Match Info
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <td>{{data[0][1]}}</td>
+          <td>{{data[0][2]}}</td>
+          <td>{{data[0][3]}}</td>
+          <td>{{data[0][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <th>{{data[1][0]}}</th>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <th>{{data[2][0]}}</th>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <th>{{data[3][0]}}</th>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <th>{{data[4][0]}}</th>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <th>{{data[5][0]}}</th>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <th>{{data[6][0]}}</th>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <th>{{data[7][0]}}</th>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <th>{{data[8][0]}}</th>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <th>{{data[9][0]}}</th>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==5" style="border: 1px solid black;margin-bottom: 2vw;">
+        <h4 *ngIf="movers0.length>movers1.length" style="margin: 1vw;">
+          {{mteam0}} Batting <br/>
+          (Current Innings)
+        </h4>
+        <h4 *ngIf="movers0.length<movers1.length" style="margin: 1vw;">
+          {{mteam1}} Batting  <br/>
+          (Current Innings)
+        </h4>
+        <tr *ngIf="data.length>=1" style="background-color:orange;">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+        </tr>
+      </table>
+      
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==6" style="border: 1px solid black;margin-bottom: 2vw;">
+        <tr *ngIf="data.length>=1" style="background-color:orange;">  
+          <th>{{data[0][0]}}</th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="BattingTableR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting 
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==1"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowlling
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="BowlingTableR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==2" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==3" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowlling
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="OtherInfoTableR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==4" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+          Match Info
+        </h4>
+
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <td>{{data[0][1]}}</td>
+          <td>{{data[0][2]}}</td>
+          <td>{{data[0][3]}}</td>
+          <td>{{data[0][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <th>{{data[1][0]}}</th>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <th>{{data[2][0]}}</th>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <th>{{data[3][0]}}</th>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <th>{{data[4][0]}}</th>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <th>{{data[5][0]}}</th>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <th>{{data[6][0]}}</th>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <th>{{data[7][0]}}</th>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <th>{{data[8][0]}}</th>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <th>{{data[9][0]}}</th>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+      
+    
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--####################################################################-->
+
+
+
+
+
+
+
+<div class="BattingTableRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==1"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowlling  (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="BowlingTableRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==2" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==3" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowlling (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="BattingTableRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==4" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting (2nd Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==5"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowlling (2nd Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="BowlingTableRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==6" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting (2nd Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==7" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowlling (2nd Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="OtherInfoTableRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==8" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+          Match Info
+        </h4>
+
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <td>{{data[0][1]}}</td>
+          <td>{{data[0][2]}}</td>
+          <td>{{data[0][3]}}</td>
+          <td>{{data[0][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <th>{{data[1][0]}}</th>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <th>{{data[2][0]}}</th>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <th>{{data[3][0]}}</th>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <th>{{data[4][0]}}</th>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <th>{{data[5][0]}}</th>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <th>{{data[6][0]}}</th>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <th>{{data[7][0]}}</th>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <th>{{data[8][0]}}</th>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <th>{{data[9][0]}}</th>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!--################################################################################################-->
+
+
+
+
+
+
+<div class="BattingTableRRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==1"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowlling (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="BowlingTableRRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==2" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==3" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowlling (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="BattingTableRRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==4" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting (2nd Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==5"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowling (2nd Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="OtherInfoTableRRR" *ngIf="timing=='RESULT'&&movers0.includes('&')&&!movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==6" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          Match Info
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <td>{{data[0][1]}}</td>
+          <td>{{data[0][2]}}</td>
+          <td>{{data[0][3]}}</td>
+          <td>{{data[0][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <th>{{data[1][0]}}</th>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <th>{{data[2][0]}}</th>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <th>{{data[3][0]}}</th>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <th>{{data[4][0]}}</th>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <th>{{data[5][0]}}</th>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <th>{{data[6][0]}}</th>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <th>{{data[7][0]}}</th>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <th>{{data[8][0]}}</th>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <th>{{data[9][0]}}</th>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="BattingTableRRR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==0" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam0}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==1"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam1}} Bowlling (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="BowlingTableRRR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==2" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting (1st Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==3" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowlling (1st Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="BattingTableRRR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==4" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        
+        <h4 style="margin: 1vw;">
+          {{mteam1}} Batting (2nd Innings)
+        </h4>
+        
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+
+
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==5"  style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;">
+        <h4 style="margin: 1vw;">
+           {{mteam0}} Bowling (2nd Innings)
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <th></th>
+          <th>{{data[0][1]}}</th>
+          <th>{{data[0][2]}}</th>
+          <th>{{data[0][3]}}</th>
+          <th>{{data[0][4]}}</th>
+          <th>{{data[0][5]}}</th>
+          <th>{{data[0][6]}}</th>
+          <th>{{data[0][7]}}</th>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <td>{{data[1][0]}}</td>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+          <td>{{data[1][5]}}</td>
+          <td>{{data[1][6]}}</td>
+          <td>{{data[1][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <td>{{data[2][0]}}</td>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+          <td>{{data[2][4]}}</td>
+          <td>{{data[2][5]}}</td>
+          <td>{{data[2][6]}}</td>
+          <td>{{data[2][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <td>{{data[3][0]}}</td>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+          <td>{{data[3][4]}}</td>
+          <td>{{data[3][5]}}</td>
+          <td>{{data[3][6]}}</td>
+          <td>{{data[3][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <td>{{data[4][0]}}</td>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+          <td>{{data[4][4]}}</td>
+          <td>{{data[4][5]}}</td>
+          <td>{{data[4][6]}}</td>
+          <td>{{data[4][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <td>{{data[5][0]}}</td>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+          <td>{{data[5][4]}}</td>
+          <td>{{data[5][5]}}</td>
+          <td>{{data[5][6]}}</td>
+          <td>{{data[5][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <td>{{data[6][0]}}</td>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+          <td>{{data[6][4]}}</td>
+          <td>{{data[6][5]}}</td>
+          <td>{{data[6][6]}}</td>
+          <td>{{data[6][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <td>{{data[7][0]}}</td>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+          <td>{{data[7][4]}}</td>
+          <td>{{data[7][5]}}</td>
+          <td>{{data[7][6]}}</td>
+          <td>{{data[7][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <td>{{data[8][0]}}</td>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+          <td>{{data[8][4]}}</td>
+          <td>{{data[8][5]}}</td>
+          <td>{{data[8][6]}}</td>
+          <td>{{data[8][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <td>{{data[9][0]}}</td>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+          <td>{{data[9][4]}}</td>
+          <td>{{data[9][5]}}</td>
+          <td>{{data[9][6]}}</td>
+          <td>{{data[9][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=11">  
+          <td>{{data[10][0]}}</td>
+          <td>{{data[10][1]}}</td>
+          <td>{{data[10][2]}}</td>
+          <td>{{data[10][3]}}</td>
+          <td>{{data[10][4]}}</td>
+          <td>{{data[10][5]}}</td>
+          <td>{{data[10][6]}}</td>
+          <td>{{data[10][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=12">  
+          <td>{{data[11][0]}}</td>
+          <td>{{data[11][1]}}</td>
+          <td>{{data[11][2]}}</td>
+          <td>{{data[11][3]}}</td>
+          <td>{{data[11][4]}}</td>
+          <td>{{data[11][5]}}</td>
+          <td>{{data[11][6]}}</td>
+          <td>{{data[11][7]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=13">  
+          <td>{{data[12][0]}}</td>
+          <td>{{data[12][1]}}</td>
+          <td>{{data[12][2]}}</td>
+          <td>{{data[12][3]}}</td>
+          <td>{{data[12][4]}}</td>
+          <td>{{data[12][5]}}</td>
+          <td>{{data[12][6]}}</td>
+          <td>{{data[12][7]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="OtherInfoTableRRR" *ngIf="timing=='RESULT'&&!movers0.includes('&')&&movers1.includes('&')">
+  <div  class="subscores" *ngFor="let data of scoresheettables1">
+    <div class="tablesa">
+      <table class="table1" *ngIf="scoresheettables1.indexOf(data)==6" style="border: 1px solid black;margin-bottom: 2vw;width: 90vw;"> 
+        <h4 style="margin: 1vw;">
+          Match Info
+        </h4>
+        <tr *ngIf="data.length>=1">  
+          <th>{{data[0][0]}}</th>
+          <td>{{data[0][1]}}</td>
+          <td>{{data[0][2]}}</td>
+          <td>{{data[0][3]}}</td>
+          <td>{{data[0][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=2">  
+          <th>{{data[1][0]}}</th>
+          <td>{{data[1][1]}}</td>
+          <td>{{data[1][2]}}</td>
+          <td>{{data[1][3]}}</td>
+          <td>{{data[1][4]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=3">  
+          <th>{{data[2][0]}}</th>
+          <td>{{data[2][1]}}</td>
+          <td>{{data[2][2]}}</td>
+          <td>{{data[2][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=4">  
+          <th>{{data[3][0]}}</th>
+          <td>{{data[3][1]}}</td>
+          <td>{{data[3][2]}}</td>
+          <td>{{data[3][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=5">  
+          <th>{{data[4][0]}}</th>
+          <td>{{data[4][1]}}</td>
+          <td>{{data[4][2]}}</td>
+          <td>{{data[4][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=6">  
+          <th>{{data[5][0]}}</th>
+          <td>{{data[5][1]}}</td>
+          <td>{{data[5][2]}}</td>
+          <td>{{data[5][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=7">  
+          <th>{{data[6][0]}}</th>
+          <td>{{data[6][1]}}</td>
+          <td>{{data[6][2]}}</td>
+          <td>{{data[6][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=8">  
+          <th>{{data[7][0]}}</th>
+          <td>{{data[7][1]}}</td>
+          <td>{{data[7][2]}}</td>
+          <td>{{data[7][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=9">  
+          <th>{{data[8][0]}}</th>
+          <td>{{data[8][1]}}</td>
+          <td>{{data[8][2]}}</td>
+          <td>{{data[8][3]}}</td>
+        </tr>
+        <tr *ngIf="data.length>=10">  
+          <th>{{data[9][0]}}</th>
+          <td>{{data[9][1]}}</td>
+          <td>{{data[9][2]}}</td>
+          <td>{{data[9][3]}}</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+      
+
+
+
+       
+
+    
+    
+       
