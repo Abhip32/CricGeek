@@ -143,7 +143,7 @@ export class MainpageComponent implements OnInit {
     console.log(this.movers0,this.movers1)
     const options = {
       method: 'GET',
-      url: `https://cricgeek.p.rapidapi.com/${url}`,
+      url: `https://cricgeek.p.rapidapi.com${url}`,
       headers: {
         'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
         'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
