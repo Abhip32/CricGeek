@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'Match_Info', component: MainpageComponent },
   { path: 'Rankings', component: RankingsComponent },
-  { path: 'CricGeek/Match/Info/:type/:id/:match', component: MatchInfoComponent },
+  { path: 'Match/Info/:type/:id/:match', component: MatchInfoComponent },
   { path: 'live', component: LiveMatchComponent },
 
 ];
