@@ -40,7 +40,7 @@
                           <div class="Linkss">
                             <div *ngFor="let match1 of currentmatchesdata1">
                               <div *ngIf="match1.title.includes(match.teams[0])&&match1.title.includes(match.teams[1])">
-                                  <a href="/Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
+                                  <a href="CricGeek/Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
                               </div>
                             </div>
 
@@ -101,7 +101,7 @@
                      
                      <div *ngFor="let match1 of currentmatchesdata2">
                       <div *ngIf="match1.title.includes(match.teams[0])&&match1.title.includes(match.teams[1])">
-                          <a href="/Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
+                          <a href="CricGeek/Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
                       </div>
                     </div>
                    </div>
