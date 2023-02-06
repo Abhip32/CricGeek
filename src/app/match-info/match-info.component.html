@@ -1,0 +1,317 @@
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    </head>
+<div style="padding: 5%;">
+    <div style="margin-top: 10vh;margin-left: 1vw;width: 90vw;background-color: black;color: white;font-family: 'Montserrat', sans-serif;">
+     
+        <h2 style="background-color: rgb(199,0,0);padding: 1vw;">{{scoresheetdata[0].title}}</h2>
+          <div class="card" style="background-color: black;color: white;">
+            <div class="card-body" style="background-color: black;color: white;display: flex; justify-content: space-around;">
+              <div>
+                
+              <h6>{{currentmatchesdata[0].title}}</h6>
+              <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag0!='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{currentmatchesdata[0].flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[0]}}</h5></div>
+              <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag1!='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{currentmatchesdata[0].flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[1]}}</h5></div>
+              <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag0=='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{scoresheetdata[0].LTeamFlag}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[0]}}</h5></div>
+              <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag1=='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{scoresheetdata[0].RTeamFlag}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[1]}}</h5></div>
+
+              <h3>POTM : {{scoresheetdata[0].potm}}</h3>
+              <h3>Result : {{scoresheetdata[0].status}}</h3>
+              </div>
+              <table *ngIf="scoresheetdata[0].keystats.length >1">
+                <th>Key Stats</th>
+                <tr>
+                  <td style="padding: 2%;"> <h6>{{scoresheetdata[0].team1}}</h6></td>
+               </tr>
+                <tr>
+                   <td style="padding: 2%;"> <h6>{{scoresheetdata[0].keystats[0]}}</h6></td>
+                </tr>
+                <tr>
+                    <td style="padding: 2%;"><h6>{{scoresheetdata[0].keystats[1]}}</h6></td>
+                </tr>
+                <tr>
+                    <td style="padding: 2%;"><h6>{{scoresheetdata[0].recent}}</h6></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+</div>
+
+
+<div class="container1" *ngIf="!score">
+    <div class="tabs">
+      <div class="tabby-tab">
+         <input type="radio" id="tab-1" name="tabby-tabs" checked>
+         <label for="tab-1">Recent Commnetry</label>
+         <div class="tabby-content">
+            <div class="Loader" *ngIf="!datalodedlive">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+                      <span class="sr-only"></span>
+                    </div>
+                  </div>
+            </div> 
+            <div class="row" *ngIf="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                  
+                    <h6 *ngFor="let data of scoresheetdata[0].comm">{{data}}</h6>
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div> 
+    </div>
+
+    <div class="tabby-tab">
+        <input type="radio" id="tab-2" name="tabby-tabs" >
+        <label for="tab-2">Playing Squad</label>
+        <div class="tabby-content">
+            <h2 style="text-align: center;color: white;margin: 20px;">Playing 11</h2>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div style="display: flex;justify-content: space-between;align-items: center;">
+                      <img src="{{scoresheetdata[0].LTeamFlag}}"/>
+                      <h2>{{scoresheetdata[0].teams[1]}}</h2>
+                    </div>
+                    <div *ngFor="let player of scoresheetdata[0].LTeam.slice(0,11)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
+                        <img src={{player.pic}}  style="box-shadow: 1px 1px 20px white"/>
+                        <h4 style="color: white;">{{player.name}}</h4>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div style="display: flex;justify-content: space-between;align-items: center;">
+                      <img src="{{scoresheetdata[0].RTeamFlag}}"/>
+                      <h2>{{scoresheetdata[0].teams[3]}}</h2>
+                    </div>
+                    <div *ngFor="let player of scoresheetdata[0].RTeam.slice(0,11)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
+                        <img src={{player.pic}}  style="box-shadow: 1px 1px 20px white"/>
+                        <h4 style="color: white;">{{player.name}}</h4>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h2 style="text-align: center;color: white;margin: 20px;">Bench</h2>
+            <div class="row">
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <div *ngFor="let player of scoresheetdata[0].LTeam.slice(12)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
+                          <img src={{player.pic}} style="box-shadow: 1px 1px 20px white"/>
+                          <h4 style="color: white;">{{player.name}}</h4>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <div *ngFor="let player of scoresheetdata[0].RTeam.slice(12)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
+                          <img src={{player.pic}} style="box-shadow: 1px 1px 20px white;"/>
+                          <h4 style="color: white;">{{player.name}}</h4>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+   </div>
+
+
+   <div class="tabby-tab">
+    <input type="radio" id="tab-3" name="tabby-tabs" >
+    <label for="tab-3">Match Facts</label>
+    <div class="tabby-content">
+       <div class="row" *ngIf="row">
+         <div class="col-sm-12">
+           <div class="card">
+             <div class="card-body" style="padding: 0px;">
+                        <table style="border: none;">
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[0]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[0]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[1]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[1]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[2]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[2]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[3]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[3]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[4]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[4]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[5]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[5]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[6]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[6]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[7]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[7]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[8]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[8]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[9]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[9]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[10]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[10]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[11]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[11]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[12]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[12]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[13]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[13]}}</td>
+                          </tr>
+                          <tr>  
+                            <th>{{scoresheetdata[0].matchInfoCol1[14]}}</th>
+                            <td>{{scoresheetdata[0].matchInfoCol2[14]}}</td>
+                          </tr>
+                        </table>
+             </div>
+           </div>
+         </div>
+       </div>
+   </div> 
+</div>
+
+
+<div class="tabby-tab">
+  <input type="radio" id="tab-4" name="tabby-tabs" >
+  <label for="tab-4">Match Scorecard</label>
+  <div class="tabby-content">
+     <div class="row" *ngIf="row">
+       <div class="col-sm-12">
+         <div class="card">
+          
+           <div class="card-body" style="padding: 0px;">
+            <div class="warpper">
+              <input class="radio" id="one" name="group" type="radio" checked>
+              <input class="radio" id="two" name="group" type="radio">
+              <input class="radio" id="three" name="group" type="radio">
+              <input class="radio" id="four" name="group" type="radio">
+            
+              <div class="tabs">
+                <label class="tab" id="one-tab" for="one" *ngIf="innings1bat.length>0">Innings 1</label>
+                <label class="tab" id="two-tab" for="two" *ngIf="innings2bat.length>0">Innings 2</label>
+                <label class="tab" id="three-tab" for="three " *ngIf="innings3bat.length>0">Innings 3</label>
+                <label class="tab" id="four-tab" for="four" *ngIf="innings4bat.length>0">Innings 4</label>
+              </div>
+            
+              <div class="panels">
+                <div class="panel" id="one-panel">
+                  <table style="width: 100%;">
+                    <th>{{ scoresheetdata[0].innings[0]}}</th>
+                    <tr *ngFor="let data of innings1bat">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+      
+      
+                  <table style="width: 100%;">
+                    <th>Innings 1 Bowling</th>
+                    <tr *ngFor="let data of innings1bowl">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="panel" id="two-panel">
+                  <table style="width: 100%;">
+                    <th>{{ scoresheetdata[0].innings[1]}}</th>
+                    <tr *ngFor="let data of innings2bat">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+      
+      
+                  <table style="width: 100%;">
+                    <th>Innings 2 Bowling</th>
+                    <tr *ngFor="let data of innings2bowl">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="panel" id="three-panel">
+                  <table style="width: 100%;">
+                    <th>{{ scoresheetdata[0].innings[2]}}</th>
+                    <tr *ngFor="let data of innings3bat">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+      
+      
+                  <table style="width: 100%;">
+                    <th>Innings 3 Bowling</th>
+                    <tr *ngFor="let data of innings3bowl">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+                </div>
+
+                <div class="panel" id="four-panel">
+                  <table style="width: 100%;">
+                    <th>{{ scoresheetdata[0].innings[3]}}</th>
+                    <tr *ngFor="let data of innings4bat">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+      
+      
+                  <table style="width: 100%;">
+                    <th>Innings 4 Bowling</th>
+                    <tr *ngFor="let data of innings4bowl">
+                      <td *ngFor="let item of data">{{item}} </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+                  
+           </div>
+         </div>
+       </div>
+     </div>
+ </div> 
+</div>
+
+</div>
+</div>

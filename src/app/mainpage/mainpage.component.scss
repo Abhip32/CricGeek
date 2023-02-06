@@ -1,0 +1,310 @@
+
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300);
+
+body { 
+
+  background-color: #333; 
+  color: whitesmoke; 
+  font-size: 16px; 
+  font-family: 'Lato';
+} 
+h1 { font-size: 32px; }
+h2 { font-size: 26px; }
+h3 { font-size: 18px; }
+p { margin: 0 0 15px; line-height: 24px; color: gainsboro; }
+a { color: dodgerblue; text-decoration: none; border-bottom: 1px dotted; }
+a:hover { color: tomato; }
+
+.container1 { 
+  width: auto; 
+  height: 100vh;
+  padding: 1vw;
+}
+
+/* ------------------- */
+/* PEN STYLES      -- */
+/* ----------------- */
+
+/* MAKE IT CUTE ----- */
+.tabs {
+  position: relative;
+  display: flex;
+  height: auto;
+  border-radius: 8px 8px 0 0;
+}
+
+.tabby-tab {
+  flex: 1;
+}
+
+.tabby-tab label {
+    font-family: 'Montserrat',sans-serif;
+    color: white;
+  display: block;
+  box-sizing: border-box;
+  /* tab content must clear this */
+    height: 40px;
+  
+  padding: 10px;
+  text-align: center;
+  background: black;
+  cursor: pointer;
+  transition: background 0.5s ease;
+  
+}
+
+.tabby-tab label:hover {
+  background: rgb(199,0,0);
+}
+
+.tabby-content {
+  position: absolute;
+  height: fit-content;
+  left: 0; bottom: 0; right: 0;
+  /* clear the tab labels */
+    top: 40px; 
+  
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+  background: rgb(199,0,0);
+
+  
+  
+  transition: 
+    opacity 0.8s ease,
+    transform 0.8s ease   ;
+  
+  /* show/hide */
+    opacity: 0;
+    transform: scale(0.1);
+    transform-origin: top left;
+  
+}
+
+.tabby-content img {
+  float: left;
+  margin-right: 20px;
+  border-radius: 8px;
+}
+
+
+/* MAKE IT WORK ----- */
+
+.tabby-tab [type=radio] { display: none; }
+[type=radio]:checked ~ label {
+  background: rgb(199,0,0);
+  z-index: 2;
+}
+
+[type=radio]:checked ~ label ~ .tabby-content {
+  z-index: 1;
+  
+  /* show/hide */
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* BREAKPOINTS ----- */
+@media screen and (max-width: 767px) {
+  .tabs { min-height: 400px;}
+}
+
+@media screen and (max-width: 480px) {
+
+    .card-body {
+        min-width: 98vw;
+    }
+    .container1{
+      height: auto;
+    }
+    .card {
+        width: auto;
+    }
+    .wrapper{
+        width: 50vh;
+        height: auto;
+    }
+  .tabs { min-height: auto;font-size: 2vh;}
+  .tabby-tab label { 
+    height: 60px;
+  }
+  .tabby-content { top: 60px;
+    width: auto;
+    padding: 0; }
+  .tabby-content img {
+    float: none;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+}
+
+.card{
+  color: black;
+  margin: 10px;
+  
+  button{
+    color: white;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 1vw;
+    padding: 0.5vw;
+    background-color:rgb(199,0,0);
+    &:hover{
+      color: rgb(199,0,0);
+      background-color: black;
+      transition: 1s;
+    }
+  }
+}
+
+
+table{
+  color: white;
+  font-family: 'Montserrat',sans-serif;
+  background-color: black;
+  th{
+    background-color: rgb(199,0,0);
+  }
+}
+
+tr {
+  padding: 1.5vw;
+  font-size: 2vh;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+td {
+  padding: 1.5vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+th{
+  padding: 1.5vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+
+
+.BattingTable{
+  
+  th{
+    background-color:rgb(199,0,0);
+  }
+  display: flex;
+  margin: 1vw;
+}
+
+.BowlingTable
+{
+  th{
+    background-color:rgb(199,0,0);
+  }
+  display: flex;
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTable{
+  margin-top: 3vw;
+  display: flex;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+
+.BattingTableR{
+  
+  th{
+    background-color:rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+.BowlingTableR
+{
+  th{
+    background-color: rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+.BattingTableRR{
+  
+  th{
+    background-color:rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+.BowlingTableRR
+{
+  th{
+    background-color: rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableRR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+
+
+
+.BattingTableRRR{
+  
+  th{
+    background-color: rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+.BowlingTableRRR
+{
+  th{
+    background-color: rgb(199,0,0);
+  }
+  margin: 1vw;
+}
+
+
+
+.OtherInfoTableRRR{
+  margin-top: 3vw;
+  .table1{
+    margin-left: 2vw;
+  }
+
+}
+
+
+.timeline{
+  span{
+    margin: 0.5vw;
+  }
+}

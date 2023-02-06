@@ -1,0 +1,292 @@
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+</head>
+<header style="background-image:url('https://pbs.twimg.com/media/EtYfbxBXYAEXddV?format=jpg&name=large');position: relative;width: 99.4vw;">
+
+    <div class="text-heading">
+        <h1 style="font-size:6vh;position:absolute; top:15vh;left: 10vw;font-family: 'Montserrat', sans-serif;color: rgb(199, 0, 0);text-shadow: 6px 6px 10px white;">
+            HOME OF CRICKET
+        </h1>
+        <h4 style="font-size:5vh;position:absolute; top:32vh;left: 10vw;width: 15vw;font-family: 'Montserrat', sans-serif;">
+           <em style="color: black;">ULTIMATE DESTINATION FOR TRUE CRICKET FAN</em> 
+        </h4>
+    </div>
+    
+</header>
+    <div *ngIf="!datalodedlive">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-danger" role="status" style="width: 5vw;height: 5vw;">
+              <span class="sr-only"></span>
+            </div>
+          </div>
+    </div>
+    <div class="container" *ngFor="let data of currentmatchesdata">
+         <div class="s_bode" *ngIf="currentmatchesdata.indexOf(data)==0">
+             <div class="left_section">
+              <h1 style="color: white;font-family: 'Montserrat', sans-serif;font-size: 3vh;">Featured Match</h1>
+                     <img src={{data.flag0}} alt="">
+                     <h2>{{data.teams[0]}}</h2>
+                     <p>{{data.overs[0]}}</p>
+             </div>
+             <div class="mid_section">
+                {{data.title}}
+                <br/>
+                <br/>
+                {{data.progress}}
+            </div>
+             <div class="right_section">
+                 <img src={{data.flag1}} alt="">
+                 <h2>{{data.teams[1]}}</h2>
+                 <p>{{data.overs[1]}}</p>
+             </div>
+         </div>
+    </div>
+
+    <div class="News" style="margin-left: 2vw;margin-right: 2vw">
+      <div class="photos1">
+        <div class="section-header">
+          <h1>Recent Photos</h1> 
+         </div>
+          <ul class="cards" style="margin-bottom: -10vw;">
+            <li *ngFor="let photo of photos">
+              <a href="" class="card">
+                <img src="https://cricbuzz.com{{photo.img}}" class="card__image" alt="" />
+                <div class="card__overlay">
+                  <p class="card__description">{{photo.cap}}</p>
+                </div>
+              </a>      
+            </li>
+          </ul>
+      </div>
+  </div>
+
+  <div class="News" style="margin-left: 2vw;margin-right: 2vw;">
+        <div class="news1">
+          <div class="section-header">
+            <h1>News</h1>  
+           </div>
+
+
+            <div class="container1" >
+              <div class="tabs">
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-1" name="tabby-tabs" checked>
+                  <label for="tab-1">Latest News</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of news">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+                  </div>
+                  
+                  </div>
+                </div>
+            
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-2" name="tabby-tabs">
+                  <label for="tab-2">CRICGEEK Plus</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of newsplus">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+                  </div>
+                 
+                  </div>
+                </div>
+            
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-3" name="tabby-tabs">
+                  <label for="tab-3">Spotlight</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                      
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of spotlights">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+
+                  </div>
+                  </div>
+                </div>
+            
+
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-4" name="tabby-tabs">
+                  <label for="tab-4">Interviews</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of interviews">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+
+
+
+
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-5" name="tabby-tabs">
+                  <label for="tab-5">Statistics</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                     
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of stats">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+
+                  </div>
+                  </div>
+                </div>
+
+
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-6" name="tabby-tabs">
+                  <label for="tab-6">Specials</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                        <figure class="snip1527" *ngFor="let news of specials">
+                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                          <figcaption style="padding: 5px;">
+                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                            <b>{{news.Headline}}</b>
+
+                            <p>
+                              {{news.Content}}
+                            </p>
+                          </figcaption>
+                   
+                        </figure>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+
+
+
+                <div class="tabby-tab">
+                  <input type="radio" id="tab-7" name="tabby-tabs">
+                  <label for="tab-7">Opinions</label>
+                  <div class="tabby-content">
+                    <div class="container-fluid py-2">
+                          <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
+                            <figure class="snip1527" *ngFor="let news of opinions">
+                              <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
+                              <figcaption style="padding: 5px;">
+                                <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
+                                <b>{{news.Headline}}</b>
+
+                                <p>
+                                  {{news.Content}}
+                                </p>
+                              </figcaption>
+                       
+                            </figure>
+                          </div>
+                  </div>
+                  </div>
+                </div>
+               
+
+
+
+                
+                
+              </div>
+
+
+              
+</div>
+
+</div>
+
+
+    
+
+</div>
+
+
+
+
+
+
+  
+
+    
+
+
+    
+
+
+    
+
+    
+
+
+
+    
+
+    
+
+
