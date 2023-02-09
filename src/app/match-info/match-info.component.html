@@ -22,8 +22,8 @@
               <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag0=='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{scoresheetdata[0].LTeamFlag}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[0]}}</h5></div>
               <div class="card-title" style="display: flex;align-items: center;"><h5><img *ngIf="currentmatchesdata[0].flag1=='https://t3.ftcdn.net/jpg/04/03/35/36/360_F_403353601_UMYFS9tYvnPDm0KJMg26u2qmR0sPZONu.jpg'" src={{scoresheetdata[0].RTeamFlag}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{currentmatchesdata[0].teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{currentmatchesdata[0].overs[1]}}</h5></div>
 
-              <h3>POTM : {{scoresheetdata[0].potm}}</h3>
-              <h3>Result : {{scoresheetdata[0].status}}</h3>
+              <h3 *ngIf="scoresheetdata[0].potm.length>0">POTM : {{scoresheetdata[0].potm}}</h3>
+              <h3 *ngIf="scoresheetdata[0].status.length>0">Result : {{scoresheetdata[0].status}}</h3>
               </div>
               <table *ngIf="scoresheetdata[0].keystats.length >1">
                 <th>Key Stats</th>
