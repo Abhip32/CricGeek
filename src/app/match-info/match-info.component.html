@@ -10,7 +10,8 @@
 <div style="padding: 5%;">
     <div style="margin-top: 10vh;margin-left: 1vw;width: 90vw;background-color: black;color: white;font-family: 'Montserrat', sans-serif;">
      
-        <h2 style="background-color: rgb(199,0,0);padding: 1vw;">{{scoresheetdata[0].title}}</h2>
+        <h2 style="background-color: rgb(199,0,0);padding: 1vw;" *ngIf="scoresheetdata.length>0">{{scoresheetdata[0].title}}</h2>
+        <h2 style="background-color: rgb(199,0,0);padding: 1vw;" *ngIf="scoresheetdata.length==0">Loading</h2>
           <div class="card" style="background-color: black;color: white;">
             <div class="card-body" style="background-color: black;color: white;display: flex; justify-content: space-around;">
               <div>
