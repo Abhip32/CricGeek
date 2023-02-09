@@ -74,7 +74,7 @@ export class MatchInfoComponent implements OnInit {
 }
 
   ngOnInit(): void {
-    this.apiscoresheet(this.link)
+    this.apilive1()
     
   }
 
@@ -94,6 +94,29 @@ export class MatchInfoComponent implements OnInit {
       this.datalodedlive=true;
       this.row=true;
       this.score=false;
+
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+  
+    apilive1(){
+    const options = {
+      method: 'GET',
+      url: 'https://cricgeek.p.rapidapi.com/live1',
+      headers: {
+        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
+        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
+      }
+    };
+    
+    axios.request(options).then( (response) => {
+      this.currentmatchesdata=response.data;
+      console.log(this.currentmatchesdata)
+      this.datalodedlive=true;
+      this.row=true;
+      this.score=false;
+      this.apiscoresheet(this.link);
 
     }).catch(function (error) {
       console.error(error);
