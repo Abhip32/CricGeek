@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
 </head>
 
-<header style="background-image:url('https://pbs.twimg.com/media/EtYfbxBXYAEXddV?format=jpg&name=large');position: relative;width: 99.4vw;">
+<header style="background-image:url('assets/images/HomeHeader.jpeg');position: relative;width: 99.4vw;">
 
     <div class="text-heading">
         <h1 style="font-size:6vh;position:absolute; top:15vh;left: 10vw;font-family: 'Montserrat', sans-serif;color: rgb(199, 0, 0);text-shadow: 6px 6px 10px white;">
@@ -30,20 +30,27 @@
          <div class="s_bode" *ngIf="currentmatchesdata.indexOf(data)==0">
              <div class="left_section">
               <h1 style="color: white;font-family: 'Montserrat', sans-serif;font-size: 3vh;">Featured Match</h1>
-                     <img src={{data.flag0}} alt="">
-                     <h2>{{data.teams[0]}}</h2>
-                     <p>{{data.overs[0]}}</p>
+              <img src={{data.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                     <div style="display: flex;align-items: center;">
+                      <div *ngFor="let item of data.teamName2">
+                          <span style="font-weight: bold;color: white;">{{item}}&nbsp;</span>
+                      </div>
+                  </div>
              </div>
              <div class="mid_section">
                 {{data.title}}
                 <br/>
                 <br/>
-                {{data.progress}}
+                {{data.status1}}<br/>
+                {{data.status2}}
             </div>
              <div class="right_section">
-                 <img src={{data.flag1}} alt="">
-                 <h2>{{data.teams[1]}}</h2>
-                 <p>{{data.overs[1]}}</p>
+              <img src={{data.flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+              <div style="display: flex;align-items: center;">
+                <div *ngFor="let item of data.teamName1">
+                    <span style="font-weight: bold;color: white;">{{item}}&nbsp;</span>
+                </div>
+            </div>
              </div>
          </div>
     </div>
@@ -53,16 +60,15 @@
         <div class="section-header">
           <h1>Recent Photos</h1> 
          </div>
-          <ul class="cards" style="margin-bottom: -10vw;">
-            <li *ngFor="let photo of photos">
-              <a href="" class="card">
-                <img src="https://cricbuzz.com{{photo.img}}" class="card__image" alt="" />
-                <div class="card__overlay">
-                  <p class="card__description">{{photo.cap}}</p>
-                </div>
-              </a>      
-            </li>
-          </ul>
+         <div class="containerMain">
+          <div class="row">
+            <div class="col-6 col-md-4 col-lg-4" *ngFor="let photo of photos">
+              <div class="card" style="padding: 1vw;margin: 1vw;background-color: transparent;">
+                <img src={{photo.img}} class="card-img-top" alt="Photo">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
   </div>
 
@@ -78,21 +84,24 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-1" name="tabby-tabs" checked>
                   <label for="tab-1">Latest News</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of news">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;width: 100%;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of news">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                   </div>
                   
@@ -102,21 +111,24 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-2" name="tabby-tabs">
                   <label for="tab-2">CRICGEEK Plus</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of newsplus">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of newsplus">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                   </div>
                  
@@ -126,22 +138,25 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-3" name="tabby-tabs">
                   <label for="tab-3">Spotlight</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
                       
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of spotlights">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of spotlights">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
                   </div>
@@ -152,21 +167,24 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-4" name="tabby-tabs">
                   <label for="tab-4">Interviews</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of interviews">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of interviews">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                   </div>
                   </div>
@@ -178,22 +196,25 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-5" name="tabby-tabs">
                   <label for="tab-5">Statistics</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
                      
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of stats">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of stats">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
                   </div>
@@ -204,21 +225,24 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-6" name="tabby-tabs">
                   <label for="tab-6">Specials</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                        <figure class="snip1527" *ngFor="let news of specials">
-                          <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                          <figcaption style="padding: 5px;">
-                            <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                            <b>{{news.Headline}}</b>
-
-                            <p>
-                              {{news.Content}}
-                            </p>
-                          </figcaption>
-                   
-                        </figure>
+                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of specials">
+                          <div class="row g-0">
+                            <div class="col-md-4">
+                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="card-body">
+                                <h5 class="card-title">{{news.Headline}}</h5>
+                                <p class="card-text">{{news.Content}}</p>
+                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                   </div>
                   </div>
@@ -229,21 +253,24 @@
                 <div class="tabby-tab">
                   <input type="radio" id="tab-7" name="tabby-tabs">
                   <label for="tab-7">Opinions</label>
-                  <div class="tabby-content">
+                  <div class="tabby-content" style="overflow: scroll;">
                     <div class="container-fluid py-2">
-                          <div class="card card-body" style="display: flex;flex-direction: row;background-color: black;align-items: center;overflow-x:scroll;">
-                            <figure class="snip1527" *ngFor="let news of opinions">
-                              <div class="image"><img src="{{news.Images[0]}}" alt="pr-sample23" /></div>
-                              <figcaption style="padding: 5px;">
-                                <p class="day" style="color:black;text-shadow: 2px 2px 4px #ffffff;font-weight: bolder;">{{news.tit[1]}}</p>
-                                <b>{{news.Headline}}</b>
-
-                                <p>
-                                  {{news.Content}}
-                                </p>
-                              </figcaption>
-                       
-                            </figure>
+                          <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
+                            <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of opinions">
+                              <div class="row g-0">
+                                <div class="col-md-4">
+                                  <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                  <div class="card-body">
+                                    <h5 class="card-title">{{news.Headline}}</h5>
+                                    <p class="card-text">{{news.Content}}</p>
+                                    <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
+                                   <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                   </div>
                   </div>

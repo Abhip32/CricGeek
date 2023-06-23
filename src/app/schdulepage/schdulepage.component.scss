@@ -1,9 +1,7 @@
-
-
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300);
 
 body { 
-
+  height: 100%;
   background-color: #333; 
   color: whitesmoke; 
   font-size: 16px; 
@@ -18,7 +16,7 @@ a:hover { color: tomato; }
 
 .container1 { 
   width: auto; 
-  height: 100vh;
+  height: auto;
   padding: 1vw;
 }
 
@@ -111,6 +109,35 @@ a:hover { color: tomato; }
 }
 
 @media screen and (max-width: 480px) {
+    table{
+        color: white;
+        width: 95vw;
+        font-family: 'Montserrat',sans-serif;
+        background-color: black;
+        th{
+          background-color: black;
+        }
+      }
+      
+      tr {
+        padding: 1.5vh;
+        color: white;
+        font-size: 1vh;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+      td {
+        padding: 1.5vh;
+        color: white;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+      th{
+        padding: 1.5vh;
+        color: white;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
 
     .card-body {
         min-width: 98vw;
@@ -137,174 +164,35 @@ a:hover { color: tomato; }
     margin-right: 0;
     margin-bottom: 20px;
   }
-  
-}
 
-.card{
-  color: black;
-  margin: 10px;
-  
-  button{
-    color: white;
-    font-weight: bold;
-    font-family: 'Montserrat', sans-serif;
-    border-radius: 1vw;
-    padding: 0.5vw;
-    background-color:rgb(199,0,0);
-    &:hover{
-      color: rgb(199,0,0);
-      background-color: black;
-      transition: 1s;
-    }
-  }
 }
-
 
 table{
-  color: white;
-  font-family: 'Montserrat',sans-serif;
-  background-color: black;
-  th{
-    background-color: rgb(199,0,0);
+    color: white;
+    width: 95vw;
+    font-family: 'Montserrat',sans-serif;
+    background-color: black;
+    th{
+      background-color: black;
+    }
   }
-}
-
-tr {
-  padding: 1.5vw;
-  font-size: 1.5vh;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-td {
-  padding: 1.5vw;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-th{
-  padding: 1.5vw;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-
-
-.BattingTable{
   
+  tr {
+    padding: 1.5vw;
+    color: white;
+    font-size: 2vh;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+  td {
+    padding: 1.5vw;
+    color: white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
   th{
-    background-color:rgb(199,0,0);
+    padding: 1.5vw;
+    color: white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
   }
-  display: flex;
-  margin: 1vw;
-}
-
-.BowlingTable
-{
-  th{
-    background-color:rgb(199,0,0);
-  }
-  display: flex;
-  margin: 1vw;
-}
-
-
-
-.OtherInfoTable{
-  margin-top: 3vw;
-  display: flex;
-  .table1{
-    margin-left: 2vw;
-  }
-
-}
-
-
-
-.BattingTableR{
-  
-  th{
-    background-color:rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-.BowlingTableR
-{
-  th{
-    background-color: rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-
-
-.OtherInfoTableR{
-  margin-top: 3vw;
-  .table1{
-    margin-left: 2vw;
-  }
-
-}
-
-
-.BattingTableRR{
-  
-  th{
-    background-color:rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-.BowlingTableRR
-{
-  th{
-    background-color: rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-
-
-.OtherInfoTableRR{
-  margin-top: 3vw;
-  .table1{
-    margin-left: 2vw;
-  }
-
-}
-
-
-
-
-
-.BattingTableRRR{
-  
-  th{
-    background-color: rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-.BowlingTableRRR
-{
-  th{
-    background-color: rgb(199,0,0);
-  }
-  margin: 1vw;
-}
-
-
-
-.OtherInfoTableRRR{
-  margin-top: 3vw;
-  .table1{
-    margin-left: 2vw;
-  }
-
-}
-
-
-.timeline{
-  span{
-    margin: 0.5vw;
-  }
-}

@@ -6,6 +6,7 @@ import { LiveMatchComponent } from './live-match/live-match.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { MatchInfoComponent } from './match-info/match-info.component';
 import {RankingsComponent} from './rankings/rankings.component'
+import { SchdulepageComponent } from './schdulepage/schdulepage.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'Rankings', component: RankingsComponent },
   { path: 'Match/Info/:type/:id/:match', component: MatchInfoComponent },
   { path: 'live', component: LiveMatchComponent },
+  { path: 'Schdule', component: SchdulepageComponent },
 
 ];
 

@@ -1,130 +1,126 @@
 <head>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-  </head>
-  <header style="background-image:url('https://wallpaperaccess.com/full/7282469.jpg');position: relative;width: 99.4vw;" *ngIf="!score">
-  
-      <div class="text-heading">
-          <h4 style="font-size:7vh;position:absolute; top:20vh;left: 10vw;width: 25vw;font-family: 'Montserrat', sans-serif;">
-             <em style="color: white;">Capture Live Cricket Action All over the World</em> 
-          </h4>
-      </div>
-  </header>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+</head>
+<header style="background-image:url('assets/images/matchInfoHeader.jpg');position: relative;width: 99.4vw;" *ngIf="!score">
 
+    <div class="text-heading">
+        <h4 style="font-size:7vh;position:absolute; top:20vh;left: 10vw;width: 25vw;font-family: 'Montserrat', sans-serif;">
+            <em style="color: white;">Capture Live Cricket Action All over the World</em>
+        </h4>
+    </div>
+</header>
 
-      <div class="container1" *ngIf="!score">
-          <div class="tabs">
-            <div class="tabby-tab">
-               <input type="radio" id="tab-1" name="tabby-tabs" checked>
-               <label for="tab-1">Live Matches</label>
-               <div class="tabby-content">
-                  <div class="Loader" *ngIf="!datalodedlive">
-                      <div class="d-flex justify-content-center">
-                          <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
-                            <span class="sr-only"></span>
-                          </div>
-                        </div>
-                      </div> 
-                <div class="row" *ngIf="row">
-                  <div class="col-sm-6" *ngFor="let match of currentmatchesdata">
-                    <div class="card">
-                      <div class="card-body">
-                          <h6 style="color: red;">{{match.time}}</h6>
-                          <h6>{{match.title}}</h6>
-                          <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[0]}}</h5></div>
-                          <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[1]}}</h5></div>
-                          <h6>{{match.progress}}</h6>
-                          <div class="Linkss">
-                            <div *ngFor="let match1 of currentmatchesdata1">
-                              <div *ngIf="match1.title.includes(match.teams[0])&&match1.title.includes(match.teams[1])">
-                                  <a href="Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
-                              </div>
-                            </div>
-
-                          </div>
-                        
-                        
-                        </div>
+<div class="container1" *ngIf="!score">
+    <div class="tabs">
+      <ng-container *ngIf="currentmatchesdata.length">
+        <div class="tabby-tab">
+          <input type="radio" id="tab-1" name="tabby-tabs" checked>
+          <label for="tab-1">Live Matches</label>
+          <div class="tabby-content">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card" *ngFor="let match of currentmatchesdata">
+                  <div class="card-body">
+                    <h6>{{match.title}} {{match.name}}</h6>
+                    <h6>{{match.status1}}</h6>
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <div *ngFor="let item of match.teamName1">
+                        <span style="font-weight: bold;">{{item}}&nbsp;</span>
                       </div>
                     </div>
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <div *ngFor="let item of match.teamName2">
+                        <span style="font-weight: bold;">{{item}}&nbsp;</span>
+                      </div>
+                    </div>
+                    <h6>{{match.status2}}</h6>
+                    <div class="Linkss">
+                      <a href="Match/Info{{match.links[0]}}" onclick="getScoreCard()" style="color: red;font-weight: bolder;text-decoration: none;">
+                        &nbsp;Score Sheet
+                      </a>
+                    </div>
                   </div>
-              </div> 
-            </div>
-
-            <div class="tabby-tab">
-              <input type="radio" id="tab-2" name="tabby-tabs" >
-              <label for="tab-2">Schedule</label>
-              <div class="tabby-content">
-                <table style="width: 100%;">
-                  <td>
-                    Schedule for this cricket year
-                  </td>
-                  <tr *ngFor="let data of schdule">
-                    <td>
-                      {{data.title}}
-                    </td>
-                    <td>
-                      {{data.sc1}}
-                    </td>
-                    <td>
-                      {{data.tm1}}
-                    </td>
-                  </tr>
-                </table>
-                 
                 </div>
+              </div>
             </div>
-
-         <div class="tabby-tab">
-          <input type="radio" id="tab-3" name="tabby-tabs" >
+          </div>
+        </div>
+      </ng-container>
+  
+      <ng-container *ngIf="upcomingmatchesdata.length">
+        <div class="tabby-tab">
+          <input type="radio" id="tab-2" name="tabby-tabs">
+          <label for="tab-2">Upcoming Matches</label>
+          <div class="tabby-content">
+            <div class="row">
+              <div class="col-sm-12" *ngFor="let match of upcomingmatchesdata">
+                <div class="card">
+                  <div class="card-body">
+                    <h6>{{match.title}} {{match.name}}</h6>
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <div>
+                        <span style="font-weight: bold;">{{match.team1}}</span>
+                      </div>
+                    </div>
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <span style="font-weight: bold;">{{match.team2}}</span>
+                    </div>
+                    <h6>{{match.status2}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+  
+      <ng-container *ngIf="resultsdata.length">
+        <div class="tabby-tab">
+          <input type="radio" id="tab-3" name="tabby-tabs">
           <label for="tab-3">Results</label>
           <div class="tabby-content">
-             <div class="Loader" *ngIf="!datalodedresult">
-              <div class="d-flex justify-content-center">
-                  <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
-                    <span class="sr-only"></span>
-                  </div>
-                </div>
-             </div> 
-             <div class="row" *ngIf="row">
-               <div class="col-sm-6" *ngFor="let match of resultsdata">
-                 <div class="card">
-                   <div class="card-body">
-                     <h6 style="color: red;">{{match.time}}</h6>
-                     <h6>{{match.title}}</h6>
-                     <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag0}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[0]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[0]}}</h5></div>
-                     <div class="card-title" style="display: flex;align-items: center;"><h5><img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/></h5><h5 style="padding-right:1vw;">{{match.teams[1]}}</h5><h5 style="padding-right:0.5vw;">{{match.overs[1]}}</h5></div>
-                     <h6>{{match.progress}}</h6>
-                     
-                     <div *ngFor="let match1 of currentmatchesdata2">
-                      <div *ngIf="match1.title.includes(match.teams[0])&&match1.title.includes(match.teams[1])">
-                          <a href="Match/Info{{match1.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">Score Sheet</a>
+            <div class="row">
+              <div class="col-sm-12" *ngFor="let match of resultsdata">
+                <div class="card">
+                  <div class="card-body">
+                    <h6>{{match.title}} &nbsp; {{match.name}}</h6>
+                    <h6>{{match.status1}}</h6>
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <div *ngFor="let item of match.teamName2">
+                        <span style="font-weight: bold;">{{item}}&nbsp;</span>
                       </div>
                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
-  
+                    <div style="display: flex;align-items: center;">
+                      <img src={{match.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
+                      <div *ngFor="let item of match.teamName1">
+                        <span style="font-weight: bold;">{{item}}&nbsp;</span>
+                      </div>
+                    </div>
+                    <h6>{{match.status2}}</h6>
+                    <div class="Linkss">
+                      <a href="Match/Info{{match.links[0]}}" style="color: red;font-weight: bolder;text-decoration: none;">
+                        &nbsp;Score Sheet
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 
 
 
-
-
-
-
-
-
-    
-
-
-
-     
-
-  
-  
-     

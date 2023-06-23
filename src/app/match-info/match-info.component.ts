@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 @Component({
   selector: 'app-match-info',
@@ -14,7 +14,8 @@ export class MatchInfoComponent implements OnInit {
   row=false;
   score=false;
   title = 'CricGeek';
-  eleven=[0,1,2,3,4,5,6,7,8,9,10]
+  matchData:any=[];
+
   currentmatchesdata:any=[];
   currentmatchesdata1:any=[];
   upcomingmatchesdata:any=[];
@@ -64,277 +65,106 @@ export class MatchInfoComponent implements OnInit {
   type:any;
   id:any;
   matchName:any;
+  rawmatchesdata: any;
   constructor(private route: ActivatedRoute) {
     this.route.params.subscribe( params => {
       this.type=params['type']
       this.id=params['id']
       this.matchName=params['match']
-      this.link="/"+params['type']+"/"+params['id']+"/"+params['match']
+      this.link=params['type']+"/"+params['id']+"/"+params['match']
     });
 }
 
   ngOnInit(): void {
-    this.apilive1()
-    
+  this.apiscoresheet(this.link);
+  this.apilive(this.link);
+  this.apiresult(this.link);
   }
 
-  apilive(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/live',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.currentmatchesdata=response.data.filter( (item:any) => this.scoresheetdata[0].title.includes(item.teams[0])&&this.scoresheetdata[0].title.includes(item.teams[1]));
-      console.log(this.currentmatchesdata);
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
 
-    }).catch(function (error) {
+  async getFlag(flag: string): Promise<string> {
+    try {
+      const response: AxiosResponse<any> = await axios.get(`https://cricket-api-nu.vercel.app/getTeamFlag/${flag}`);
+      return response.data.data;
+    } catch (error) {
       console.error(error);
-    });
+      throw error;
+    }
   }
-  
-    apilive1(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/live1',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
+
+  async apilive(url:any): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLiveDataFromCricbuzz');
+      this.rawmatchesdata = await response.data.filter((data:any) => data.links[0]=="/"+url);
+      console.log(this.rawmatchesdata)
+      for (let i = 0; i < this.rawmatchesdata.length; i++) {
+        const match:any = this.rawmatchesdata[i];
+        const title: string = match.title;
+
+        // Extracting the team names from the title
+        const teams: string[] = title.split(' vs ');
+        const team1: string = teams[0];
+        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
+
+        const flag1: string = await this.getFlag(team1);
+        const flag2: string = await this.getFlag(team2);
+        this.rawmatchesdata[i].flag1 = flag1;
+        this.rawmatchesdata[i].flag2 = flag2;
       }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.currentmatchesdata=response.data;
-      console.log(this.currentmatchesdata)
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
-      this.apiscoresheet(this.link);
 
-    }).catch(function (error) {
+      this.currentmatchesdata = this.rawmatchesdata;
+      if(this.currentmatchesdata.length > 0)
+      {
+        this.matchData=this.currentmatchesdata;
+      }
+
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 
+  async apiresult(url:any): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getRecentDataFromCricbuzz');
+      this.resultsdata = await response.data.filter((data:any) => data.links[0]=="/"+url);
+      console.log(this.resultsdata)
+      for (let i = 0; i < this.resultsdata.length; i++) {
+        const match:any = this.resultsdata[i];
+        const title: string = match.title;
 
+        // Extracting the team names from the title
+        const teams: string[] = title.split(' vs ');
+        const team1: string = teams[0];
+        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
 
-  
+        const flag1: string = await this.getFlag(team1);
+        const flag2: string = await this.getFlag(team2);
+        this.resultsdata[i].flag1 = flag1;
+        this.resultsdata[i].flag2 = flag2;
+
+        if(this.resultsdata.length > 0)
+        {
+          this.matchData=this.resultsdata;
+        }
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   apiscoresheet(url:any)
   {
 
     const options = {
       method: 'GET',
-      url: `https://cricgeek.p.rapidapi.com/info/${this.id}`,
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
+      url: `https://cricket-api-nu.vercel.app/getScoreCard/${url}`,
     };
     
     axios.request(options).then( (response) => {
-      this.scoresheetdata=response.data;
-      this.apilive()
+      this.scoresheetdata=response.data[0];
       console.log(this.scoresheetdata);
-      for(let i=0; i<this.scoresheetdata[0].innings1.length; i+=7) {
-        if(this.scoresheetdata[0].innings1[i].includes("Bowler")||this.scoresheetdata[0].innings1[i].includes("Extras")||this.scoresheetdata[0].innings1[i].includes(" Yet to Bat "))
-        {
-          break;
-        }
-        if(this.scoresheetdata[0].innings1[i]!="Bowler"&&this.scoresheetdata[0].innings1[i].length<40)
-        {
-          this.innings1bat.push([
-            this.scoresheetdata[0].innings1[i],
-            this.scoresheetdata[0].innings1[i+1],
-            this.scoresheetdata[0].innings1[i+2],
-            this.scoresheetdata[0].innings1[i+3],
-            this.scoresheetdata[0].innings1[i+4],
-            this.scoresheetdata[0].innings1[i+5],
-            this.scoresheetdata[0].innings1[i+6],
-          ])
-        }
-      }
-
-      for(let i=0;i<this.scoresheetdata[0].innings1.length;i++)
-      {
-        if(this.scoresheetdata[0].innings1[i]=="Bowler")
-        {
-            this.breakpointsinng1=i;
-            break;
-        }
-      }
-
-
-      for(let i=this.breakpointsinng1; i<this.scoresheetdata[0].innings1.length; i+=8) {
- 
-          this.innings1bowl.push([
-            this.scoresheetdata[0].innings1[i],
-            this.scoresheetdata[0].innings1[i+1],
-            this.scoresheetdata[0].innings1[i+2],
-            this.scoresheetdata[0].innings1[i+3],
-            this.scoresheetdata[0].innings1[i+4],
-            this.scoresheetdata[0].innings1[i+5],
-            this.scoresheetdata[0].innings1[i+6],
-            this.scoresheetdata[0].innings1[i+7],
-          ])
-      }
-
-      console.log(this.innings1bat);
-      console.log(this.innings1bowl);
-
-
-      for(let i=0; i<this.scoresheetdata[0].innings2.length; i+=7) {
-        if(this.scoresheetdata[0].innings2[i].includes("Bowler")||this.scoresheetdata[0].innings2[i].includes("Extras")||this.scoresheetdata[0].innings2[i].includes(" Yet to Bat "))
-        {
-          break;
-        }
-        if(this.scoresheetdata[0].innings2[i]!="Bowler")
-        {
-          this.innings2bat.push([
-            this.scoresheetdata[0].innings2[i],
-            this.scoresheetdata[0].innings2[i+1],
-            this.scoresheetdata[0].innings2[i+2],
-            this.scoresheetdata[0].innings2[i+3],
-            this.scoresheetdata[0].innings2[i+4],
-            this.scoresheetdata[0].innings2[i+5],
-            this.scoresheetdata[0].innings2[i+6],
-          ])
-        }
-      }
-
-      for(let i=0;i<this.scoresheetdata[0].innings2.length;i++)
-      {
-        if(this.scoresheetdata[0].innings2[i]=="Bowler")
-        {
-            this.breakpointsinng2=i;
-            break;
-        }
-      }
-
-
-      for(let i=this.breakpointsinng2; i<this.scoresheetdata[0].innings2.length; i+=8) {
- 
-          this.innings2bowl.push([
-            this.scoresheetdata[0].innings2[i],
-            this.scoresheetdata[0].innings2[i+1],
-            this.scoresheetdata[0].innings2[i+2],
-            this.scoresheetdata[0].innings2[i+3],
-            this.scoresheetdata[0].innings2[i+4],
-            this.scoresheetdata[0].innings2[i+5],
-            this.scoresheetdata[0].innings2[i+6],
-            this.scoresheetdata[0].innings2[i+7],
-          ])
-      }
-
-      console.log(this.innings2bat);
-      console.log(this.innings2bowl);
-
-
-      for(let i=0; i<this.scoresheetdata[0].innings3.length; i+=7) {
-        if(this.scoresheetdata[0].innings3[i].includes("Bowler")||this.scoresheetdata[0].innings3[i].includes("Extras")||this.scoresheetdata[0].innings3[i].includes(" Yet to Bat "))
-        {
-          break;
-        }
-        if(this.scoresheetdata[0].innings3[i]!="Bowler")
-        {
-          this.innings3bat.push([
-            this.scoresheetdata[0].innings3[i],
-            this.scoresheetdata[0].innings3[i+1],
-            this.scoresheetdata[0].innings3[i+2],
-            this.scoresheetdata[0].innings3[i+3],
-            this.scoresheetdata[0].innings3[i+4],
-            this.scoresheetdata[0].innings3[i+5],
-            this.scoresheetdata[0].innings3[i+6],
-          ])
-        }
-      }
-
-      for(let i=0;i<this.scoresheetdata[0].innings3.length;i++)
-      {
-        if(this.scoresheetdata[0].innings3[i]=="Bowler")
-        {
-            this.breakpointsinng3=i;
-            break;
-        }
-      }
-
-
-      for(let i=this.breakpointsinng3; i<this.scoresheetdata[0].innings3.length; i+=8) {
- 
-          this.innings3bowl.push([
-            this.scoresheetdata[0].innings3[i],
-            this.scoresheetdata[0].innings3[i+1],
-            this.scoresheetdata[0].innings3[i+2],
-            this.scoresheetdata[0].innings3[i+3],
-            this.scoresheetdata[0].innings3[i+4],
-            this.scoresheetdata[0].innings3[i+5],
-            this.scoresheetdata[0].innings3[i+6],
-            this.scoresheetdata[0].innings3[i+7],
-          ])
-      }
-
-      console.log(this.innings3bat);
-      console.log(this.innings3bowl);
-
-      for(let i=0; i<this.scoresheetdata[0].innings4.length; i+=7) {
-        if(this.scoresheetdata[0].innings4[i].includes("Bowler")||this.scoresheetdata[0].innings4[i].includes("Extras")||this.scoresheetdata[0].innings4[i].includes(" Yet to Bat "))
-        {
-          break;
-        }
-        if(this.scoresheetdata[0].innings4[i]!="Bowler")
-        {
-          this.innings4bat.push([
-            this.scoresheetdata[0].innings4[i],
-            this.scoresheetdata[0].innings4[i+1],
-            this.scoresheetdata[0].innings4[i+2],
-            this.scoresheetdata[0].innings4[i+3],
-            this.scoresheetdata[0].innings4[i+4],
-            this.scoresheetdata[0].innings4[i+5],
-            this.scoresheetdata[0].innings4[i+6],
-          ])
-        }
-      }
-
-      for(let i=0;i<this.scoresheetdata[0].innings4.length;i++)
-      {
-        if(this.scoresheetdata[0].innings4[i]=="Bowler")
-        {
-            this.breakpointsinng4=i;
-            break;
-        }
-      }
-
-
-      for(let i=this.breakpointsinng3; i<this.scoresheetdata[0].innings4.length; i+=8) {
- 
-          this.innings4bowl.push([
-            this.scoresheetdata[0].innings4[i],
-            this.scoresheetdata[0].innings4[i+1],
-            this.scoresheetdata[0].innings4[i+2],
-            this.scoresheetdata[0].innings4[i+3],
-            this.scoresheetdata[0].innings4[i+4],
-            this.scoresheetdata[0].innings4[i+5],
-            this.scoresheetdata[0].innings4[i+6],
-            this.scoresheetdata[0].innings4[i+7],
-          ])
-      }
-
-      console.log(this.innings4bat);
-      console.log(this.innings4bowl);
-
-
-      
-
-
-      
-
       this.datascoresheets=true;
       this.score=true;
       this.row=false;
@@ -344,11 +174,9 @@ export class MatchInfoComponent implements OnInit {
     });
     
   }
+  
 
-  goback()
-  {
-   
-  }
+
   createRange(number:any){
     // var items: number[] = [];
     // for(var i = 1; i <= number; i++){

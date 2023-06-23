@@ -7,81 +7,26 @@
     <title>Document</title>
 </head>
 <body style="margin-top: 20vh;margin-left: 20px;margin-right: 20px;">
-    <h2 style="color: white;padding: 10px;">You can watch Live matches by taking subscription CricGeek doesn't promote the piracy</h2>
+  <h2 style="color: white;padding: 10px;">You can watch Live matches by taking subscription. CricGeek doesn't promote piracy.</h2>
 
-   <div class="tabs">
-    <div class="tabby-tab">
-        <input type="radio" id="tab-1" name="tabby-tabs" checked>
-        <label for="tab-1">Start Sports</label>
-        <div class="tabby-content">
-            <div style="height: 40vw;margin: 2vw;">
-                <div class="video-container">
-                
-                  <div class="responsive-video" style="background:url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsS-tTEGq_QJ-62A1JjfiLFAl6ZGSmFa1Hqy63cG5cuw&s) center center no-repeat;">
-                    <iframe id="myFrame1" src="https://stream.crichd.vip/update/star1hi.php" width="80vw" height="50vh" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media" ></iframe>
-                  </div>
-                </div>
-              </div>
-       </div> 
-       
-     </div>
+<div>
+  <label for="stream-dropdown" style="color: white;padding: 10px;">Select a streaming option:</label>
+  <select id="stream-dropdown" (change)="onStreamSelect($event)" style="padding: 10px;width: min-content;background-color: white;border-radius: 20px;">
+    <option value="https://stream.crichd.vip/update/star1hi.php">Start Sports</option>
+    <option value="https://stream.crichd.vip/update/sscricket.php">Super Sports</option>
+    <option value="https://stream.crichd.vip/update/willowcricket.php">Willow Cricket</option>
+    <option value="https://stream.crichd.vip/update/fox501.php">Fox Cricket</option>
+  </select>
 
+  <div style="height: min-content;margin: 2vw;">
+    <div class="video-container">
+      <div class="responsive-video">
+        <iframe id="myFrame" [src]="selectedStream" width="80vw" height="50vh" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen allow="encrypted-media"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-
-     <div class="tabby-tab">
-        <input type="radio" id="tab-3" name="tabby-tabs" checked>
-        <label for="tab-3">Super Sports</label>
-        <div class="tabby-content">
-            <div style="height: 40vw;margin: 2vw;">
-                <div class="video-container">
-                
-                    <div class="responsive-video" style="background:url(https://yt3.googleusercontent.com/KKN6AOAaCUmvroce78t0YOMzteJJToeWO0dqBMtoVb4b3jW8CaT1NL_BRUkC4RdQRtJpH9kC_w=s900-c-k-c0x00ffffff-no-rj) center center no-repeat;">
-                        <iframe id="myFrame2" src="https://stream.crichd.vip/update/sscricket.php" width="80vw" height="50vh" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media" ></iframe>
-                      </div>
-                </div>
-              </div>
-       </div> 
-       
-     </div>
-
-     <div class="tabby-tab">
-        <input type="radio" id="tab-4" name="tabby-tabs" checked>
-        <label for="tab-4">Willow Cricket</label>
-        <div class="tabby-content">
-            <div style="height: 40vw;margin: 2vw;">
-                <div class="video-container">
-                
-                    <div class="responsive-video" style="background:url(https://aimages.willow.tv/willowhd_h40px.png) center center no-repeat;">
-                        <iframe id="myFrame3" src="https://stream.crichd.vip/update/willowcricket.php" width="80vw" height="50vh" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media" ></iframe>
-                      </div>
-                </div>
-              </div>
-       </div> 
-       
-     </div>
-
-
-     
-     <div class="tabby-tab">
-        <input type="radio" id="tab-5" name="tabby-tabs" checked>
-        <label for="tab-5">Fox Cricket</label>
-        <div class="tabby-content">
-            <div style="height: 40vw;margin: 2vw;">
-                <div class="video-container">
-                
-                    <div class="responsive-video" style="background:url(https://content.api.news/v3/images/bin/711615cbf473d7500060adc9fb7aa340?width=700) center center no-repeat;">
-                        <iframe id="myFrame4" src="https://stream.crichd.vip/update/fox501.php" width="80vw" height="50vh" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media" ></iframe>
-                      </div>
-                </div>
-              </div>
-       </div> 
-       
-     </div>
-
-
-   </div>
-    
     
 </body>
 </html>

@@ -8,6 +8,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { RankingsComponent } from './rankings/rankings.component';
 import { MatchInfoComponent } from './match-info/match-info.component';
 import { LiveMatchComponent } from './live-match/live-match.component';
+import { SchdulepageComponent } from './schdulepage/schdulepage.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { LiveMatchComponent } from './live-match/live-match.component';
     RankingsComponent,
     MatchInfoComponent,
     LiveMatchComponent,
+    SchdulepageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
+interface Match {
+  title: string;
+  name: string;
+  teamName1: string[];
+  teamName2: string[];
+  status1: string;
+  status2: string;
+  links: string[];
+  flag1: string;
+  flag2: string;
+  team1: string;
+  team2: string;
+}
 
 @Component({
   selector: 'app-mainpage',
@@ -8,182 +22,138 @@ import axios from 'axios';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent implements OnInit {
-  index=false;
-  match=true;
-  row=false;
-  score=false;
+  index = false;
+  match = true;
+  row = false;
+  score = false;
   title = 'CricGeek';
-  currentmatchesdata:any=[];
-  allmatchesdata:any=[];
-  currentmatchesdata1:any=[];
-  currentmatchesdata2:any=[];
-  upcomingmatchesdata:any=[];
-  resultsdata:any=[];
-  scoresheetdata:any=[];
-  scoresheetheadings:any=[];
-  maindata:any=[];
-  schdule:any=[];
-  scoresheettables:any=[];
-  scoresheettables1:any=[];
-  datalodedlive=false;
-  datalodedresult=false;
-  datalodedupcoming=false;
-  datascoresheets=false;
-  mflag0:any=''
-  mteam0:any=''
-  mflag1:any=''
-  mteam1:any=''
-  mtitle:any=''
-  timing:any='';
-  mprogress:any='';
-  movers0:any=" ";
-  movers1:any=" ";
+  currentmatchesdata:any[] = [];
+  rawmatchesdata:any[] = [];
+  upcomingmatchesdata:any[] = [];
+  resultsdata:any[] = [];
+  schdule: any[] = [];
+  datalodedlive = false;
+  datalodedresult = false;
+  datalodedupcoming = false;
+  datascoresheets = false;
+
+  isNumeric(num: any): boolean {
+    return !isNaN(num);
+  }
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.apilive()
-    this.apilive1()
-    this.apiresult()
-    this.apiresult1()
-    this.apischdule()
-  }
-  goToIndex() {
-    this.index=true;
-    this.router.navigate(['/', '/']);
+    this.apilive();
+    this.apiresult();
+    this.apiupcoming();
   }
 
-  goToMainPage() {
-    this.index=false;
-    this.match=true;
-    this.router.navigate(['/', 'MainPage']);
-  }
-
-
-  apischdule(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/schdule',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.schdule=response.data;
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
-
-    }).catch(function (error) {
+  async apischdule(): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getSchdule');
+      this.schdule = await response.data;
+      console.log(this.schdule);
+      this.row = true;
+      this.score = false;
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 
-
-
-  apilive1(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/live1',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.currentmatchesdata1=response.data;
-      this.allmatchesdata=this.allmatchesdata.concat(this.currentmatchesdata1)
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
-
-    }).catch(function (error) {
+  async getFlag(flag: string): Promise<string> {
+    try {
+      const response: AxiosResponse<any> = await axios.get(`https://cricket-api-nu.vercel.app/getTeamFlag/${flag}`);
+      return response.data.data;
+    } catch (error) {
       console.error(error);
-    });
+      throw error;
+    }
   }
 
 
-  apiresult1(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/recent1',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
+
+  async apilive(): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLiveDataFromCricbuzz');
+      this.rawmatchesdata = await response.data;
+      for (let i = 0; i < this.rawmatchesdata.length; i++) {
+        const match:any = this.rawmatchesdata[i];
+        const title: string = match.title;
+
+        // Extracting the team names from the title
+        const teams: string[] = title.split(' vs ');
+        const team1: string = teams[0];
+        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
+
+        const flag1: string = await this.getFlag(team1);
+        const flag2: string = await this.getFlag(team2);
+        this.rawmatchesdata[i].flag1 = flag1;
+        this.rawmatchesdata[i].flag2 = flag2;
       }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.currentmatchesdata2=response.data;
-      this.allmatchesdata=this.allmatchesdata.concat(this.currentmatchesdata2)
-      console.log(this.allmatchesdata);
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
 
-    }).catch(function (error) {
+      this.currentmatchesdata = this.rawmatchesdata.filter((item: any) => item.status1 !== '');;
+      console.log(this.currentmatchesdata);
+
+      this.row = true;
+      this.score = false;
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 
+  async apiresult(): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getRecentDataFromCricbuzz');
+      this.resultsdata = await response.data;
+      for (let i = 0; i < this.resultsdata.length; i++) {
+        const match:any = this.resultsdata[i];
+        const title: string = match.title;
 
-  
-  apilive(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/live',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
+        // Extracting the team names from the title
+        const teams: string[] = title.split(' vs ');
+        const team1: string = teams[0];
+        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
+
+        const flag1: string = await this.getFlag(team1);
+        const flag2: string = await this.getFlag(team2);
+        this.resultsdata[i].flag1 = flag1;
+        this.resultsdata[i].flag2 = flag2;
       }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.currentmatchesdata=response.data;
-      this.datalodedlive=true;
-      this.row=true;
-      this.score=false;
+      console.log(this.resultsdata);
 
-    }).catch(function (error) {
+      this.row = true;
+      this.score = false;
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 
+  async apiupcoming(): Promise<void> {
+    try {
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getUpcomingDataFromCricbuzz');
+      this.upcomingmatchesdata = await response.data;
+      for (let i = 0; i < this.upcomingmatchesdata.length; i++) {
+        const match:any = this.upcomingmatchesdata[i];
+        const title: string = match.title;
 
+        // Extracting the team names from the title
+        const teams: string[] = title.split(' vs ');
+        const team1: string = teams[0];
+        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
 
-
-  isNumeric(num:any){
-    return !isNaN(num)
-  }
-
-
-  apiresult(){
-    const options = {
-      method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/results',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
+        const flag1: string = await this.getFlag(team1);
+        const flag2: string = await this.getFlag(team2);
+        this.upcomingmatchesdata[i].flag1 = flag1;
+        this.upcomingmatchesdata[i].flag2 = flag2;
+        this.upcomingmatchesdata[i].team1 = team1;
+        this.upcomingmatchesdata[i].team2 = team2;
       }
-    };
-    
-    axios.request(options).then( (response) => {
-      this.resultsdata=response.data;
-      console.log(this.resultsdata)
-      this.datalodedresult=true;
-      this.row=true;
-      this.score=false;
 
-    }).catch(function (error) {
+      this.row = true;
+      this.score = false;
+    } catch (error) {
       console.error(error);
-    });
+    }
   }
 }
-
-  
-
-
-

@@ -48,11 +48,7 @@ export class RankingsComponent implements OnInit {
   getbattingrankings(){
     const options = {
       method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/battingrankings',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
+      url: 'https://cricket-api-nu.vercel.app/getBattingRankings',
     };
     
     axios.request(options).then( (response) => {
@@ -106,11 +102,7 @@ export class RankingsComponent implements OnInit {
   getbowlingrankings(){
     const options = {
       method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/bowlingrankings',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
+      url: 'https://cricket-api-nu.vercel.app/getBowlingRankings',
     };
     
     axios.request(options).then( (response) => {
@@ -162,11 +154,7 @@ export class RankingsComponent implements OnInit {
   getallrounderrankings(){
     const options = {
       method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/allrounderrankings',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
+      url: 'https://cricket-api-nu.vercel.app/getAllRounderRankings',
     };
     
     axios.request(options).then( (response) => {
@@ -218,11 +206,7 @@ export class RankingsComponent implements OnInit {
   getteamrankings(){
     const options = {
       method: 'GET',
-      url: 'https://cricgeek.p.rapidapi.com/teamsrankings',
-      headers: {
-        'X-RapidAPI-Key': '5c7e26a218msh8f28315cf99f5a1p1fa374jsnc011c056761c',
-        'X-RapidAPI-Host': 'cricgeek.p.rapidapi.com'
-      }
+      url: 'https://cricket-api-nu.vercel.app/getTeamRankings',
     };
     
     axios.request(options).then( (response) => {

@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./live-match.component.scss']
 })
 export class LiveMatchComponent implements OnInit {
+  event: any; 
 
   constructor() { }
 
@@ -50,5 +51,13 @@ export class LiveMatchComponent implements OnInit {
       iframe.style.display = "none";
     };
   }
+
+  selectedStream: string = 'https://stream.crichd.vip/update/star1hi.php';
+
+  onStreamSelect(event: Event): void {
+    this.selectedStream =  (event.target as HTMLInputElement).value;
+    // ... rest of your code
+  }
+
 
 }

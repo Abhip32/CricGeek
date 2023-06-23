@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     </head>
-    <header style="background-image:url('https://i.pinimg.com/originals/8c/77/9b/8c779bb7f3c2a369ca510bf75034943c.jpg');position: relative;width: 99.4vw;">
+    <header style="background-image:url('assets/images/rankingsHeader.jpg');position: relative;width: 99.4vw;">
     
         <div class="text-heading">
             <h4 style="font-size:5vh;position:absolute; top:20vh;left: 10vw;width: 25vw;font-family: 'Montserrat', sans-serif;">
@@ -15,12 +15,19 @@
         </div>
     </header>
 
-    <div class="container1">
+    <div class="container1" style="height: max-content;">
         <div class="tabs">
           <div class="tabby-tab">
              <input type="radio" id="tab-1" name="tabby-tabs" checked>
              <label for="tab-1">Batting</label>
              <div class="tabby-content" >
+                <div class="Loader" *ngIf="!testbat">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
                       <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true" style="font-family:'Montserrat', sans-serif;background-color: black;">Tests</button>
@@ -305,4 +312,6 @@
 
 </div>
 </div>
+
+
 
