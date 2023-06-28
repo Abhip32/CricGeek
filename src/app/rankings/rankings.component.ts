@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 @Component({
   selector: 'app-rankings',
@@ -12,6 +12,7 @@ export class RankingsComponent implements OnInit {
   testbat:any=[];
   onebat:any=[];
   t20bat:any=[];
+  score:boolean=false;
 
   testbowl:any=[];
   onebowl:any=[];
@@ -40,6 +41,18 @@ export class RankingsComponent implements OnInit {
     this.getteamrankings();
     
   }
+
+  async getFlag(flag: string)  {
+    try {
+      const response: AxiosResponse<any> = await axios.get(`https://cricket-api-nu.vercel.app/getTeamFlag/${flag}`);
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
 
   goToRanking() {
     this.router.navigate(['/', 'Rankings']);
@@ -91,7 +104,7 @@ export class RankingsComponent implements OnInit {
         }
       }
       
-
+      this.score=true;
       console.log(this.t20bat);
     }).catch(function (error) {
       console.error(error);
@@ -211,6 +224,13 @@ export class RankingsComponent implements OnInit {
     
     axios.request(options).then( (response) => {
       this.teamrankings=response.data;
+      for(let i=0;i<this.teamrankings.length;i++)
+      {
+        this.getFlag(this.teamrankings[i].country).then((flag) => {
+          this.teamrankings[i].flag=flag;
+        })
+
+      }
     }).catch(function (error) {
       console.error(error);
     });

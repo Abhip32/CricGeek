@@ -1,0 +1,55 @@
+<div class="hero overlay" style="background-image: url('assets/images/photosHeader.jpg');">
+  <div class="container">
+      <div class="row align-items-center">
+          <div class="col-lg-5 mx-auto text-center">
+              <h1 class="text-white">CricGeek Gallery</h1>
+              <p>Relive the moments</p>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <div class="Loader"  *ngIf="!score" style="min-height: 100vh;margin-top: 20vh;">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+  </div>
+  
+
+  <div class="container-fluid" *ngIf="score">
+    <div class="p-5">
+      <div class="row">
+        <div class="col-6 title-section">
+          <h2 class="heading">Gallery</h2>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Gallery item -->
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-4" *ngFor="let photo of photos">
+            <div class="bg-white rounded shadow-sm">
+              <div class="image-container">
+                <img src="{{photo.img}}" alt="" class="img-fluid card-img-top">
+                <div class="title-overlay">
+                  <h5 class="text-white">{{photo.title}}</h5>
+                </div>
+              </div>
+             
+            </div>
+          </div>
+          
+        <!-- End -->
+      </div>
+            <div class="row justify-content-center">
+        <div class="col-lg-7 text-center">
+          <div class="custom-pagination">
+            <ng-container *ngFor="let number of numbersArray">
+              <a *ngIf="number !=page" [href]="'/Photos/' + number">{{ number }}</a>
+              <span *ngIf="number ==page">{{ number }}</span>
+            </ng-container>          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

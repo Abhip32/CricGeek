@@ -1,0 +1,127 @@
+
+
+<div class="Loader"  *ngIf="!score" style="min-height: 100vh;margin-top: 20vh;">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+  </div>
+  
+  <div class="container site-section" style="margin-top: 5vh;"> 
+    <div class="row">
+      <div class="col-6 title-section">
+        <h2 class="heading">CricGeek Extra</h2>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 mb-4" *ngFor="let news of news">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+
+        <div class="col-lg-4 mb-4" *ngFor="let news of newsplus">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-lg-4 mb-4" *ngFor="let news of stats">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+    
+          <div class="col-lg-4 mb-4" *ngFor="let news of interviews">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-lg-4 mb-4" *ngFor="let news of spotlights">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text"> <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+    
+          <div class="col-lg-4 mb-4" *ngFor="let news of specials">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+    
+    
+          <div class="col-lg-4 mb-4" *ngFor="let news of opinions">
+            <div class="custom-media d-block">
+              <div class="img mb-4">
+                <a href="single.html"><img src="{{news.Images[0]}}" alt="Image" class="img-fluid"></a>
+              </div>
+              <div class="text">
+                <span class="meta">{{news.tit[0]}} &nbsp;|&nbsp;{{news.tit[1]}}</span>
+                <h3 class="mb-4">{{news.Headline[0]}}</h3>
+                <p>{{news.Content[0]}}</p>
+                <p><a href="https://cricbuzz.com{{news.Links[0]}}">Read more</a></p>
+              </div>
+            </div>
+          </div>
+
+      
+      
+    </div>
+  </div>
+  
+  
+  
+  
+  

@@ -1,61 +1,32 @@
-.navbar-inverse{
-    background-color: black;
+
+body{
+  overflow-x: hidden;
+}
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: transparent;
+}
+
+.navbar-nav a{
+  color: white;
+  font-weight: bold;
 }
 
 
-.footer{
 
 body {
-   
-    font-size: 13px;
-    font-weight: bold;
-    color: rgb(189, 196, 203)
+	line-height: 1.7;
+	color: lighten(black, 50%);
+	font-weight: 300;
+	
+	background-color: #222831;
+	font-size: 16px;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0
-}
 
-ul>li {
-    padding: 4px;
-    color:#C5CAE9;
-}
 
-ul>li:hover {
-    color: #957bda;
-    cursor: pointer
-}
 
-hr {
-    border-width: 3px
-}
-
-.card {
-    padding: 2% 7%
-}
-
-.social>i {
-    padding: 1%;
-    font-size: 15px
-}
-
-.social>i:hover {
-    color: #957bda;
-    cursor: pointer
-}
-
-.policy>div {
-    padding: 4px
-}
-
-.heading {
-    font-family: 'Titillium Web', sans-serif;
-    color: black
-}
-
-.divider {
-    border-top: 2px solid
-}
-}

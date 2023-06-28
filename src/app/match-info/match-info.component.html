@@ -1,294 +1,192 @@
-
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-    </head>
-<div>
-
-  <h2 style="background-color: rgb(199,0,0);margin-top: 10vh;margin-left: 1vw;display: flex;height: 50vh;justify-content: center;align-items: center;color: white;" *ngIf="!datascoresheets">
-    <div class="Loader">
+    <div class="Loader"  *ngIf="!score" style="min-height: 100vh;margin-top: 20vh;">
       <div class="d-flex justify-content-center">
-          <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
+          <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
               <span class="sr-only"></span>
           </div>
       </div>
   </div>
-  </h2>
-    <div  *ngIf="datascoresheets" style="min-height: 100vh;">
-      <div style="margin-top: 10vh;margin-left: 1vw;padding-right: 1vw;width: 98vw;background-color: black;color: white;font-family: 'Montserrat', sans-serif;">
-     
-        <h2 style="background-color: rgb(199,0,0);padding: 1vw;" >{{scoresheetdata.title}}</h2>
-
-        
-        
-        
-
-          <div class="card" style="background-color: black;color: white;">
-            <div class="card-body" style="color: white;">
-              <div class="row">
-                <div class="col-sm-6">
-                    <h6>{{matchData[0].title}} &nbsp;{{matchData[0].name}}</h6>
-                    <div style="display: flex;align-items: center;"><img src={{matchData[0].flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
-                      <div *ngFor="let item of matchData[0].teamName1">
-                          <span style="font-weight: bold;">  {{item}}&nbsp;</span>
-                      </div>
-                  </div>
-                  <div style="display: flex;align-items: center;"><img src={{matchData[0].flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
-                      <div *ngFor="let item of matchData[0].teamName2">
-                          <span style="font-weight: bold;">{{item}}&nbsp;</span>
-                      </div>
-                  </div>
-              
-      
-                    <h3 *ngIf="scoresheetdata.potm.length>0">POTM : {{scoresheetdata.potm}}</h3>
-                    <h3 *ngIf="scoresheetdata.status.length>0">Result : {{scoresheetdata.status}}</h3>
-           
-                </div>
-
-                <div class="col-sm-6">
-                  <table *ngIf="scoresheetdata.keystats.length >1">
-                    <th>Key Stats</th>
-                    <tr>
-                      <td style="padding: 2%;"> <h6>{{scoresheetdata.team1}}</h6></td>
-                   </tr>
-                    <tr>
-                       <td style="padding: 2%;"> <h6>{{scoresheetdata.keystats[0]}}</h6></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 2%;"><h6>{{scoresheetdata.keystats[1]}}</h6></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 2%;"><h6>{{scoresheetdata.recent}}</h6></td>
-                    </tr>
-                  </table>
-                </div>
-                
-
-              </div>
-             
-            </div>
+ 
+    <div  *ngIf="score" style="min-height: min-content; margin-top: 15vh;">
+      <div class="col-lg-12">
+        <div class="card m-3 border-none">
+          <div class="widget-title" style="background-color: rgb(199,0,0);color: white;font-weight: 900;">
+            <h2>{{currentmatchesdata.teamA}} V/s {{currentmatchesdata.teamB}}</h2>
           </div>
-</div>
-
-
-<div class="container1">
-    <div class="tabs">
-      <div class="tabby-tab">
-         <input type="radio" id="tab-1" name="tabby-tabsIn" checked>
-         <label for="tab-1">Recent Commnetry</label>
-         <div class="tabby-content">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="card">
-                  <div class="card-body">
-                  
-                    <h6 *ngFor="let data of scoresheetdata.comm">{{data}}</h6>
-                  
-                  </div>
-                </div>
-              </div>
+          <div class="card-body" >
+            <h6 class="text-center" style="background-color: green;color: white;padding: 5px;font-weight: bold;width: 100px;border-radius: 30px;">{{currentmatchesdata.status}}</h6>
+            <h6>{{currentmatchesdata.title}} {{currentmatchesdata.subtitle.slice(0,currentmatchesdata.subtitle.length/2)}} , {{currentmatchesdata.day}}</h6>
+            <div class="card-title d-flex align-items-center">
+              <h6><img src={{currentmatchesdata.flagA}} style="font-size: 20vw;margin-right:2vw;width: 100px;"/></h6>
+              <h6 style="padding-right:1vw;">{{currentmatchesdata.teamA}}</h6>
+              <h6 style="padding-right:0.5vw;">{{currentmatchesdata.scoreA}}</h6>
             </div>
-        </div> 
+            <div class="card-title d-flex align-items-center">
+              <h6><img src={{currentmatchesdata.flagB}} style="font-size: 20vw;margin-right:2vw;width: 100px;"/></h6>
+              <h6 style="padding-right:1vw;">{{currentmatchesdata.teamB}}</h6>
+              <h6 style="padding-right:0.5vw;">{{currentmatchesdata.scoreB}}</h6>
+            </div>
+            <h6>{{currentmatchesdata.progress}}</h6>
+
+          </div>
+        </div>
+  
+
     </div>
 
 
-    <div class="tabby-tab">
-      <input type="radio" id="tab-2" name="tabby-tabsIn" >
-      <label for="tab-2">Squad</label>
-      <div class="tabby-content">
-          <h2 style="text-align: center;color: white;margin: 20px;">Playing 11</h2>
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <div style="display: flex;justify-content: space-between;align-items: center;">
-                    <img src="{{matchData[0].flag2}}"/>
-                    <h2>{{scoresheetdata.teams[1]}}</h2>
-                  </div>
-                  <div *ngFor="let player of scoresheetdata.LTeam.slice(0,11)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
-                      <img src={{player.pic}}  style="box-shadow: 1px 1px 20px white"/>
-                      <h4 style="color: white;">{{player.name}}</h4>
-                    </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <div style="display: flex;justify-content: space-between;align-items: center;">
-                    <img src="{{matchData[0].flag1}}"/>
-                    <h2>{{scoresheetdata.teams[3]}}</h2>
-                  </div>
-                  <div *ngFor="let player of scoresheetdata.RTeam.slice(0,11)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
-                      <img src={{player.pic}}  style="box-shadow: 1px 1px 20px white"/>
-                      <h4 style="color: white;">{{player.name}}</h4>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <h2 style="text-align: center;color: white;margin: 20px;">Bench</h2>
-          <div class="row">
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <div *ngFor="let player of scoresheetdata.LTeam.slice(12)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
-                        <img src={{player.pic}} style="box-shadow: 1px 1px 20px white"/>
-                        <h4 style="color: white;">{{player.name}}</h4>
-                      </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <div *ngFor="let player of scoresheetdata.RTeam.slice(12)" style="display: flex;margin: 20px;align-items: center;background-color: black;padding: 20px;border-radius: 50px;">
-                        <img src={{player.pic}} style="box-shadow: 1px 1px 20px white;"/>
-                        <h4 style="color: white;">{{player.name}}</h4>
-                      </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-      </div>
-
- </div>
-
-
- <div class="tabby-tab">
-  <input type="radio" id="tab-3" name="tabby-tabsIn" >
-  <label for="tab-3">Match Facts</label>
-  <div class="tabby-content">
-     <div class="row">
-       <div class="col-sm-12">
-         <div class="card">
-           <div class="card-body" style="padding: 0px;">
-                      <table style="border: none;width: 100%;">
-                        <tr *ngFor="let item of scoresheetdata.matchInfo | keyvalue">
-                          <th>{{ item.key }}</th>
-                          <td>{{ item.value }}</td>
-                        </tr>
-                      
-                      </table>
-           </div>
-         </div>
-       </div>
-     </div>
- </div> 
-</div>
-
-
-
-<div class="tabby-tab">
-  <input type="radio" id="tab-4" name="tabby-tabsIn" >
-  <label for="tab-4">Scorecard</label>
-  <div class="tabby-content">
-     <div class="row">
-       <div class="col-sm-12">
-         <div class="card">
-          
-           <div class="card-body" style="padding: 0px;">
-            <div class="warpper">
-              <input class="radio" id="one" name="group" type="radio" checked>
-              <input class="radio" id="two" name="group" type="radio">
-              <input class="radio" id="three" name="group" type="radio">
-              <input class="radio" id="four" name="group" type="radio">
-            
-              <div style="height: min-content;display: flex;">
-                <label class="tab" id="one-tab" for="one" *ngIf="scoresheetdata.innings1Table.batting.length>0">Innings 1</label>
-                <label class="tab" id="two-tab" for="two" *ngIf="scoresheetdata.innings2Table.batting.length>0">Innings 2</label>
-                <label class="tab" id="three-tab" for="three " *ngIf="scoresheetdata.innings3Table.batting.length>0">Innings 3</label>
-                <label class="tab" id="four-tab" for="four" *ngIf="scoresheetdata.innings4Table.batting.length>0">Innings 4</label>
-              </div>
-            
-              <div class="panels">
-                <div class="panel" id="one-panel">
-                  <table style="width: 100%;">
-                    <th>{{ scoresheetdata.innings[0]}}</th>
-                    <tr *ngFor="let data of scoresheetdata.innings1Table.batting">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-      
-      
-                  <table style="width: 100%;">
-                    <th>Innings 1 Bowling</th>
-                    <tr *ngFor="let data of scoresheetdata.innings1Table.bowling">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-                </div>
-
-
-                <div class="panel" id="two-panel">
-                  <table style="width: 100%;">
-                    <th>{{ scoresheetdata.innings[1]}}</th>
-                    <tr *ngFor="let data of scoresheetdata.innings2Table.batting">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-      
-      
-                  <table style="width: 100%;">
-                    <th>Innings 2 Bowling</th>
-                    <tr *ngFor="let data of scoresheetdata.innings2Table.bowling">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-                </div>
-
-
-                <div class="panel" id="three-panel">
-                  <table style="width: 100%;">
-                    <th>{{ scoresheetdata.innings[2]}}</th>
-                    <tr *ngFor="let data of scoresheetdata.innings3Table.batting">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-      
-      
-                  <table style="width: 100%;">
-                    <th>Innings 3 Bowling</th>
-                    <tr *ngFor="let data of scoresheetdata.innings3Table.bowling">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-                </div>
-
-                <div class="panel" id="four-panel">
-                  <table style="width: 100%;">
-                    <th>{{ scoresheetdata.innings[3]}}</th>
-                    <tr *ngFor="let data of scoresheetdata.innings4Table.batting">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-      
-      
-                  <table style="width: 100%;">
-                    <th>Innings 4 Bowling</th>
-                    <tr *ngFor="let data of scoresheetdata.innings4Table.bowling">
-                      <td *ngFor="let item of data">{{item}} </td>
-                    </tr>
-                  </table>
-                </div>
-                
-
-                  
-           </div>
-         </div>
-       </div>
-     </div>
- </div> 
-</div>
-
+    </div>
     
 
-</div>
+    <div class="p-5"  *ngIf="score">
+      <ul class="nav nav-pills mb-3"  style="background-color: rgb(199,0,0);padding: 10px;" id="pills-tab" role="tablist">
+        <li class="nav-item flex-fill" role="presentation">
+          <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Players</button>
+        </li>
+        <li class="nav-item flex-fill" role="presentation">
+          <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Scorecard</button>
+        </li>
+        <li class="nav-item flex-fill" role="presentation">
+          <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Commentary</button>
+        </li>
+       
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+          <div class="row">
+            <div class="col-6">
+              <table class="w-100">
+                <th>{{currentmatchesdata.teamA}}</th>
+                <tr *ngFor="let player of playersdata.teamA">
+                  <td>{{player.name}}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-6">
+              <table class="w-100">
+                <th>{{currentmatchesdata.teamB}}</th>
+                <tr *ngFor="let player of playersdata.teamB">
+                  <td>{{player.name}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item" *ngFor="let match of scoresheetdata; let i=index">
+              <h2 class="accordion-header" id="heading{{i}}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}" *ngFor="let heading of match[0].headings">
+                    <img src={{heading.teamLogo}} alt="Team Logo">
+                    <h5>{{ heading.inningHeading }}</h5>
+                    <h5>{{ heading.scores }}</h5>
+                </button>
+              </h2>
+              <div id="collapse{{i}}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body accordion-bg-dark">
+                  <div style="overflow-x: auto;">
+                    <table class="w-100">
+                      <tr>
+                        <th>Batsman</th>
+                        <th>&nbsp;</th>
+                        <th>R</th>
+                        <th>B</th>
+                        <th>4s</th>
+                        <th>6s</th>
+                        <th>SR</th>
+                      </tr>
+                      <tr *ngFor="let batting of match[0].battingData">
+                        <td *ngFor="let data of batting">{{data}}</td>
+                      </tr>
+                    </table>
+                  </div>
+          
+                  <div style="overflow-x: auto;">
+                    <table class="w-100">
+                      <tr>
+                        <th>Bowler</th>
+                        <th>O</th>
+                        <th>M</th>
+                        <th>R</th>
+                        <th>W</th>
+                        <th>ECo</th>
+                      </tr>
+                      <tr *ngFor="let bowling of match[0].bowlingData">
+                        <td *ngFor="let data of bowling">{{data}}</td>
+                      </tr>
+                    </table>
+                  </div>
+          
+                  <div style="overflow-x: auto;">
+                    <table class="w-100">
+                      <tr *ngFor="let extra of match[0].extras">
+                        <th>{{extra[0]}}</th>
+                        <td>{{extra[1]}}</td>
+                      </tr>
+                    </table>
+                  </div>
+          
+                  <td style="background-color: black; color: white;">
+                    {{ match[0].fow }}
+                  </td>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+          <div class="accordion" id="accordionExample">
+            <h5 *ngIf="commdata.Innings.length == 0">No Data Available</h5>
+            <div class="accordion-item" *ngFor="let match of commdata.Innings; let i=index">
+              <h2 class="accordion-header" id="heading{{i}}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}" *ngFor="let heading of match.headings">
+                    <img src={{heading.teamLogo}} alt="Team Logo">
+                    <h5>{{ heading.inningHeading }}</h5>
+                    <h5>{{ heading.scores }}</h5>
+                </button>
+              </h2>
+              <div id="collapse{{i}}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body accordion-bg-dark">
+                  <div class="col-lg-12" *ngFor="let comm of match.comm">
+                        <div class="card" style="border-radius: 20px;" *ngIf="comm.batsmanData == undefined">
+                          <div class="card-body">
+                          <div>
+                              <h6><span style="background-color: rgb(207, 0, 0); color: white; border-radius: 50%; padding: 10px; display: inline-block; width: 50px; height: 50px; text-align: center;">
+                                {{comm.score}}
+                              </span> &nbsp;{{comm.runs.replace(' ','.')}}</h6>
+                              <h6 class="card-title">{{comm.text}}</h6>
+                          </div>
+                          </div>
+                        </div>
+
+                        <div class="card" style="border-radius: 20px;background-color: white;color: black;" *ngIf="comm.batsmanData != undefined">
+                          <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                  <h6>{{comm.endoverDiv1}}</h6>
+                                </div>
+                                <div class="col-6">
+                                  <h6>{{comm.batsmanData[0]}} | {{comm.batsmanData[1]}}</h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-6">
+                                <h6>{{comm.endoverDiv2}}</h6>
+                              </div>
+                              <div class="col-6">
+                                <h6>{{comm.bowlerData[0]}} | {{comm.bowlerData[1]}}</h6>
+                              </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+  
+      
     </div>
-</div>
+

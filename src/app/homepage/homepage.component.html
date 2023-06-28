@@ -1,320 +1,185 @@
-<head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-</head>
-
-<header style="background-image:url('assets/images/HomeHeader.jpeg');position: relative;width: 99.4vw;">
-
-    <div class="text-heading">
-        <h1 style="font-size:6vh;position:absolute; top:15vh;left: 10vw;font-family: 'Montserrat', sans-serif;color: rgb(199, 0, 0);text-shadow: 6px 6px 10px white;">
-            HOME OF CRICKET
-        </h1>
-        <h4 style="font-size:5vh;position:absolute; top:32vh;left: 10vw;width: 15vw;font-family: 'Montserrat', sans-serif;">
-           <em style="color: black;">ULTIMATE DESTINATION FOR TRUE CRICKET FAN</em> 
-        </h4>
-    </div>
-    
-</header>
-    <div *ngIf="!datalodedlive">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-danger" role="status" style="width: 5vw;height: 5vw;">
-              <span class="sr-only"></span>
-            </div>
-          </div>
-    </div>
-    <div class="container" *ngFor="let data of currentmatchesdata">
-         <div class="s_bode" *ngIf="currentmatchesdata.indexOf(data)==0">
-             <div class="left_section">
-              <h1 style="color: white;font-family: 'Montserrat', sans-serif;font-size: 3vh;">Featured Match</h1>
-              <img src={{data.flag1}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
-                     <div style="display: flex;align-items: center;">
-                      <div *ngFor="let item of data.teamName2">
-                          <span style="font-weight: bold;color: white;">{{item}}&nbsp;</span>
-                      </div>
-                  </div>
-             </div>
-             <div class="mid_section">
-                {{data.title}}
-                <br/>
-                <br/>
-                {{data.status1}}<br/>
-                {{data.status2}}
-            </div>
-             <div class="right_section">
-              <img src={{data.flag2}} style="width: 7vw;height:6vw;font-size: 20vw;margin-right:2vw;"/>
-              <div style="display: flex;align-items: center;">
-                <div *ngFor="let item of data.teamName1">
-                    <span style="font-weight: bold;color: white;">{{item}}&nbsp;</span>
-                </div>
-            </div>
-             </div>
-         </div>
-    </div>
-
-    <div class="News" style="margin-left: 2vw;margin-right: 2vw">
-      <div class="photos1">
-        <div class="section-header">
-          <h1>Recent Photos</h1> 
-         </div>
-         <div class="containerMain">
-          <div class="row">
-            <div class="col-6 col-md-4 col-lg-4" *ngFor="let photo of photos">
-              <div class="card" style="padding: 1vw;margin: 1vw;background-color: transparent;">
-                <img src={{photo.img}} class="card-img-top" alt="Photo">
-              </div>
-            </div>
-          </div>
+<div class="site-wrap">
+  <div class="hero overlay" style="background-image: url('assets/images/HomeHeader.jpeg');">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-5 ml-auto">
+          <h1 class="text-white">ULTIMEATE DESTINATION</h1>
+          <p>FOR A TRUE CRICKET FAN</p>
         </div>
       </div>
+    </div>
   </div>
 
-  <div class="News" style="margin-left: 2vw;margin-right: 2vw;">
-        <div class="news1">
-          <div class="section-header">
-            <h1>News</h1>  
-           </div>
-
-
-            <div class="container1" >
-              <div class="tabs">
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-1" name="tabby-tabs" checked>
-                  <label for="tab-1">Latest News</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: column;width: 100%;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of news">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  
-                  </div>
-                </div>
-            
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-2" name="tabby-tabs">
-                  <label for="tab-2">CRICGEEK Plus</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of newsplus">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                 
-                  </div>
-                </div>
-            
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-3" name="tabby-tabs">
-                  <label for="tab-3">Spotlight</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                      
-                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of spotlights">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                  </div>
-                  </div>
-                </div>
-            
-
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-4" name="tabby-tabs">
-                  <label for="tab-4">Interviews</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of interviews">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  </div>
-                </div>
-
-
-
-
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-5" name="tabby-tabs">
-                  <label for="tab-5">Statistics</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                     
-                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of stats">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                  </div>
-                  </div>
-                </div>
-
-
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-6" name="tabby-tabs">
-                  <label for="tab-6">Specials</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                      <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                        <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of specials">
-                          <div class="row g-0">
-                            <div class="col-md-4">
-                              <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                              <div class="card-body">
-                                <h5 class="card-title">{{news.Headline}}</h5>
-                                <p class="card-text">{{news.Content}}</p>
-                                <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                               <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  </div>
-                </div>
-
-
-
-                <div class="tabby-tab">
-                  <input type="radio" id="tab-7" name="tabby-tabs">
-                  <label for="tab-7">Opinions</label>
-                  <div class="tabby-content" style="overflow: scroll;">
-                    <div class="container-fluid py-2">
-                          <div class="card card-body" style="display: flex;flex-direction: column;background-color: black;align-items: center;">
-                            <div class="card mb-3" style="max-width: 100%;" *ngFor="let news of opinions">
-                              <div class="row g-0">
-                                <div class="col-md-4">
-                                  <img style="padding: 10px;" src={{news.Images[0]}} class="img-fluid rounded-start" alt="...">
-                                </div>
-                                <div class="col-md-8">
-                                  <div class="card-body">
-                                    <h5 class="card-title">{{news.Headline}}</h5>
-                                    <p class="card-text">{{news.Content}}</p>
-                                    <p class="card-text"><small class="text-body-secondary">{{news.tit[1]}}</small></p>
-                                   <a href="https://cricbuzz.com/{{news.Links[0]}}" style="background-color: red;color: white;font-weight: 700;padding: 10px;border: none;border-radius: 100px;text-decoration: none;">Read More</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                  </div>
-                  </div>
-                </div>
-               
-
-
-
-                
-                
-              </div>
-
-
-              
-</div>
-
-</div>
-
-
-    
-
-</div>
-
-
-
-
-
+  <div class="Loader"  *ngIf="!score" style="min-height: 100vh;margin-top: 20vh;">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+  </div>
+  
 
   
 
-    
+  
+  
+    <div *ngIf="score">
+    <div class="featuredMatch p-5" >
+      <h2>Featured Match</h2>
+      <h2 class="m-2" style="font-size: 20px;">{{currentmatchesdata[0].title}}</h2>
+      <br/>
+      <div class="container p-2">
+          <div class="row">
+              <div class="col-md-4 col-sm-6">
+                  <div class="text-center">
+                      <img class="img-fluid p-4" style="width: 150px;" src="{{currentmatchesdata[0].flagA}}" alt="Team 1 Flag" />
+                      <h4>{{currentmatchesdata[0].teamA}}</h4>
+                      <h4>{{currentmatchesdata[0].scoreA}}</h4>
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                  <div class="text-center align-items-center justify-content-center">
+                      <h3>V/s</h3>
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-6">
+                  <div class="text-center">
+                      <img class="img-fluid p-4" style="width: 150px;" src="{{currentmatchesdata[0].flagB}}" alt="Team 2 Flag" />
+                      <h4>{{currentmatchesdata[0].teamB}}</h4>
+                      <h4>{{currentmatchesdata[0].scoreB}}</h4>
+                  </div>
+              </div>
+              <div class="col-12 m-1">
+                  <h3 class="text-center" style="font-size: 20px;">{{currentmatchesdata[0].progress}}</h3>
+              </div>
+          </div>
+      </div>
+  </div>
 
 
-    
+
+  <div class="latest-news" style="margin-top: -10vh;">
+    <div class="container pb-5">
+      <div class="row">
+        <div class="col-12 title-section">
+          <h2 class="heading">Latest News</h2>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-md-6" *ngFor="let news of news.slice(0,4)">
+          <div class="post-entry">
+            <a href="#">
+              <img src="{{news.Images[0]}}" alt="Image" class="img-fluid mt-5" height="100%">
+            </a>
+            <div class="caption">
+              <div class="caption-inner">
+                <h3 class="mb-3">{{news.Headline[0]}}</h3>
+                <div class="author d-flex align-items-center">
+                  <div class="img mb-2 mr-3">
+                    <img src="assets/images/cb.png" alt="">
+                  </div>
+                  <div class="text">
+                    <h4>{{news.tit[0]}}</h4>
+                    <span>{{news.tit[1]}}</span>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+       
+       
+
+    </div>
+  </div>
+  
+  <div class="site-section bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="widget-next-match">
+            <div class="widget-title">
+              <h3>{{POTW[0].title}}</h3>
+            </div>
+            <div class="widget-body mb-3">
+              <img src="{{POTW[0].imageSrc}}" alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
+            </div>
+
+            <div class="text-center widget-vs-contents mb-4">            
+              <p class="card-text">{{POTW[0].description}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="widget-next-match">
+          <div class="widget-title">
+            <h3>{{POTW[1].title}}</h3>
+          </div>
+          <div class="widget-body mb-3">
+            <img src="{{POTW[1].imageSrc}}" alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
+          </div>
+
+          <div class="text-center widget-vs-contents mb-4">
+            <p class="card-text">{{POTW[1].description}}</p>
+          </div>
+          </div>
+         
+
+        </div>
+      </div>
+    </div>
+  </div> <!-- .site-section -->
 
 
-    
 
-    
+  <div class="container site-section">
+    <div class="row">
+      <div class="col-6 title-section">
+        <h2 class="heading">On This Day</h2>
+      </div>
+    </div>
 
+    <div class="row"  *ngIf="score">
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-inner">
+            <div class="col-lg-12" *ngFor="let fact of onThisDay; let i = index">
+              <div class="post-entry">
+              <div class="carousel-item" [ngClass]="{'active': i === 0}">
+                <div class="card pb-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card-header">
+                        <h5 class="card-title">{{fact.newsTitle}}</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6 d-flex align-items-center justify-content-center p-2">
+                      <img src="{{fact.imgSrc}}" alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
+                    </div>
+                    <div class="col-6">
+                      <div class="card-body">
+                        <p class="card-text">{{fact.newsDescription}}</p>
+                      </div>
+                    </div>
+                    <div class="card-overlay"></div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+       
 
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
 
-    
+        </button>
+      </div>
+    </div>
 
-    
+  </div>
+</div>
 
-
+  

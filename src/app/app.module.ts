@@ -9,6 +9,9 @@ import { RankingsComponent } from './rankings/rankings.component';
 import { MatchInfoComponent } from './match-info/match-info.component';
 import { LiveMatchComponent } from './live-match/live-match.component';
 import { SchdulepageComponent } from './schdulepage/schdulepage.component';
+import { PhotosComponent } from './photos/photos.component';
+import { NewsComponent } from './news/news.component';
+import { ExtraComponent } from './extra/extra.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +22,9 @@ import { SchdulepageComponent } from './schdulepage/schdulepage.component';
     MatchInfoComponent,
     LiveMatchComponent,
     SchdulepageComponent,
+    PhotosComponent,
+    NewsComponent,
+    ExtraComponent,
   ],
   imports: [
     BrowserModule,

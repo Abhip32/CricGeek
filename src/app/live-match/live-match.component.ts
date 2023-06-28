@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Sanitizer } from '@angular/core';
 
 @Component({
   selector: 'app-live-match',
@@ -14,49 +14,13 @@ export class LiveMatchComponent implements OnInit {
     
   }
 
-  hideIframe(): void {
-    var iframe = document.getElementById("myFrame1") as HTMLIFrameElement;
-    iframe.style.display = "none";
-    iframe.onload = function() {
-      // Do nothing
-    };
-    iframe.onerror = function() {
-      iframe.style.display = "none";
-    };
 
-    var iframe = document.getElementById("myFrame2") as HTMLIFrameElement;
-    iframe.style.display = "none";
-    iframe.onload = function() {
-      // Do nothing
-    };
-    iframe.onerror = function() {
-      iframe.style.display = "none";
-    };
 
-    var iframe = document.getElementById("myFrame3") as HTMLIFrameElement;
-    iframe.style.display = "none";
-    iframe.onload = function() {
-      // Do nothing
-    };
-    iframe.onerror = function() {
-      iframe.style.display = "none";
-    };
-
-    var iframe = document.getElementById("myFrame4") as HTMLIFrameElement;
-    iframe.style.display = "none";
-    iframe.onload = function() {
-      // Do nothing
-    };
-    iframe.onerror = function() {
-      iframe.style.display = "none";
-    };
-  }
-
-  selectedStream: string = 'https://stream.crichd.vip/update/star1hi.php';
+  selectedStream: any = 'https://stream.crichd.vip/update/star.php';
 
   onStreamSelect(event: Event): void {
     this.selectedStream =  (event.target as HTMLInputElement).value;
-    // ... rest of your code
+
   }
 
 

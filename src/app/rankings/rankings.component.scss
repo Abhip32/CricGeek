@@ -1,23 +1,45 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300);
 
-body { 
-  height: 100%;
-  background-color: #333; 
-  color: whitesmoke; 
-  font-size: 16px; 
-  font-family: 'Lato';
-} 
-h1 { font-size: 32px; }
-h2 { font-size: 26px; }
-h3 { font-size: 18px; }
-p { margin: 0 0 15px; line-height: 24px; color: gainsboro; }
-a { color: dodgerblue; text-decoration: none; border-bottom: 1px dotted; }
-a:hover { color: tomato; }
 
-.container1 { 
-  width: auto; 
-  height: auto;
-  padding: 1vw;
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+  background-color: black;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.nav-pills .nav-link {
+  margin-left: 1vw;
+  margin-right: 1vw;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.tab-content{
+  padding: 20px;
+  background-color: black;
+  height: min-content;
+  color: black;
+}
+
+.card {
+  margin: 2vw;
+  color: black;
+  margin-bottom: 10px;
+}
+
+
+
+
+
+.container { 
+	height: 100%;
+	margin-bottom: 10px;
 }
 
 /* ------------------- */
@@ -26,64 +48,63 @@ a:hover { color: tomato; }
 
 /* MAKE IT CUTE ----- */
 .tabs {
-  position: relative;
-  display: flex;
-  height: auto;
-  border-radius: 8px 8px 0 0;
+	position: relative;
+	display: flex;
+	min-height:180vh;
+	border-radius: 8px 8px 0 0;
+	overflow:auto;
 }
 
 .tabby-tab {
-  flex: 1;
+	flex: 1;
 }
 
 .tabby-tab label {
-    font-family: 'Montserrat',sans-serif;
-    color: white;
-  display: block;
-  box-sizing: border-box;
-  /* tab content must clear this */
-    height: 40px;
-  
-  padding: 10px;
-  text-align: center;
-  background: black;
-  cursor: pointer;
-  transition: background 0.5s ease;
-  
+	display: block;
+	box-sizing: border-box;
+	/* tab content must clear this */
+		height: 40px;
+	
+	padding: 10px;
+	text-align: center;
+	background: black;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background 0.5s ease;
+	
 }
 
 .tabby-tab label:hover {
-  background: rgb(199,0,0);
+	background: red;
 }
 
 .tabby-content {
-  position: absolute;
-  height: fit-content;
-  left: 0; bottom: 0; right: 0;
-  /* clear the tab labels */
-    top: 40px; 
-  
-  padding: 20px;
-  border-radius: 0 0 8px 8px;
-  background: rgb(199,0,0);
-
-  
-  
-  transition: 
-    opacity 0.8s ease,
-    transform 0.8s ease   ;
-  
-  /* show/hide */
-    opacity: 0;
-    transform: scale(0.1);
-    transform-origin: top left;
-  
+	position: absolute;
+	
+	left: 0; bottom: 0; right: 0;
+	/* clear the tab labels */
+		top: 40px; 
+	
+	padding: 20px;
+	border-radius: 0 0 8px 8px;
+	background: rgb(199,0,0);
+	height: min-content;
+	transition: 
+		opacity 0.8s ease,
+		transform 0.8s ease		;
+	
+	/* show/hide */
+		opacity: 0;
+		transform: scale(0.1);
+		transform-origin: top left;
+	
 }
 
 .tabby-content img {
-  float: left;
-  margin-right: 20px;
-  border-radius: 8px;
+	float: left;
+	margin-right: 20px;
+	border-radius: 8px;
 }
 
 
@@ -91,108 +112,60 @@ a:hover { color: tomato; }
 
 .tabby-tab [type=radio] { display: none; }
 [type=radio]:checked ~ label {
-  background: rgb(199,0,0);
-  z-index: 2;
+	background: rgb(199,0,0);
+	z-index: 2;
 }
 
 [type=radio]:checked ~ label ~ .tabby-content {
-  z-index: 1;
-  
-  /* show/hide */
-    opacity: 1;
-    transform: scale(1);
+	z-index: 1;
+	
+	/* show/hide */
+		opacity: 1;
+		transform: scale(1);
 }
 
 /* BREAKPOINTS ----- */
 @media screen and (max-width: 767px) {
-  .tabs { min-height: 400px;}
+	.tabs { min-height: 400px;}
 }
 
 @media screen and (max-width: 480px) {
-    table{
-        color: white;
-        width: 95vw;
-        font-family: 'Montserrat',sans-serif;
-        background-color: black;
-        th{
-          background-color: black;
-        }
-      }
-      
-      tr {
-        padding: 1.5vh;
-        color: white;
-        font-size: 1vh;
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
-      }
-      td {
-        padding: 1.5vh;
-        color: white;
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
-      }
-      th{
-        padding: 1.5vh;
-        color: white;
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
-      }
-
-    .card-body {
-        min-width: 98vw;
-    }
-    .container1{
-      height: auto;
-    }
-    .card {
-        width: auto;
-    }
-    .wrapper{
-        width: 50vh;
-        height: auto;
-    }
-  .tabs { min-height: auto;font-size: 2vh;}
-  .tabby-tab label { 
-    height: 60px;
-  }
-  .tabby-content { top: 60px;
-    width: auto;
-    padding: 0; }
-  .tabby-content img {
-    float: none;
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-
+	.tabs { min-height: 580px; }
+	.tabby-tab label { 
+		height: 60px;
+	}
+	.tabby-content { top: 60px; }
+	.tabby-content img {
+		float: none;
+		margin-right: 0;
+		margin-bottom: 20px;
+	}
 }
 
+
 table{
-    color: white;
-    width: 95vw;
-    font-family: 'Montserrat',sans-serif;
-    background-color: black;
-    th{
-      background-color: black;
-    }
+	color: white;
+	font-family: 'Montserrat',sans-serif;
+	background-color: black;
+	th{
+	  background-color: rgb(199,0,0);
+	}
   }
   
   tr {
-    padding: 1.5vw;
-    color: white;
-    font-size: 2vh;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+	padding: 1.5vw;
+	font-size: 2vh;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
   }
   td {
-    padding: 1.5vw;
-    color: white;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+	padding: 1.5vw;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
   }
   th{
-    padding: 1.5vw;
-    color: white;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+	padding: 1.5vw;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
   }
+  

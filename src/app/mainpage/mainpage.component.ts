@@ -75,28 +75,9 @@ export class MainpageComponent implements OnInit {
 
   async apilive(): Promise<void> {
     try {
-      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLiveDataFromCricbuzz');
-      this.rawmatchesdata = await response.data;
-      for (let i = 0; i < this.rawmatchesdata.length; i++) {
-        const match:any = this.rawmatchesdata[i];
-        const title: string = match.title;
-
-        // Extracting the team names from the title
-        const teams: string[] = title.split(' vs ');
-        const team1: string = teams[0];
-        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
-
-        const flag1: string = await this.getFlag(team1);
-        const flag2: string = await this.getFlag(team2);
-        this.rawmatchesdata[i].flag1 = flag1;
-        this.rawmatchesdata[i].flag2 = flag2;
-      }
-
-      this.currentmatchesdata = this.rawmatchesdata.filter((item: any) => item.status1 !== '');;
-      console.log(this.currentmatchesdata);
-
-      this.row = true;
-      this.score = false;
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLive');
+      this.currentmatchesdata = await response.data;
+      this.score=true;
     } catch (error) {
       console.error(error);
     }
@@ -104,26 +85,9 @@ export class MainpageComponent implements OnInit {
 
   async apiresult(): Promise<void> {
     try {
-      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getRecentDataFromCricbuzz');
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getRecent');
       this.resultsdata = await response.data;
-      for (let i = 0; i < this.resultsdata.length; i++) {
-        const match:any = this.resultsdata[i];
-        const title: string = match.title;
-
-        // Extracting the team names from the title
-        const teams: string[] = title.split(' vs ');
-        const team1: string = teams[0];
-        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
-
-        const flag1: string = await this.getFlag(team1);
-        const flag2: string = await this.getFlag(team2);
-        this.resultsdata[i].flag1 = flag1;
-        this.resultsdata[i].flag2 = flag2;
-      }
       console.log(this.resultsdata);
-
-      this.row = true;
-      this.score = false;
     } catch (error) {
       console.error(error);
     }
@@ -131,27 +95,9 @@ export class MainpageComponent implements OnInit {
 
   async apiupcoming(): Promise<void> {
     try {
-      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getUpcomingDataFromCricbuzz');
+      const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getUpcoming');
       this.upcomingmatchesdata = await response.data;
-      for (let i = 0; i < this.upcomingmatchesdata.length; i++) {
-        const match:any = this.upcomingmatchesdata[i];
-        const title: string = match.title;
-
-        // Extracting the team names from the title
-        const teams: string[] = title.split(' vs ');
-        const team1: string = teams[0];
-        const team2: string = teams[1].substring(0, teams[1].indexOf(','));
-
-        const flag1: string = await this.getFlag(team1);
-        const flag2: string = await this.getFlag(team2);
-        this.upcomingmatchesdata[i].flag1 = flag1;
-        this.upcomingmatchesdata[i].flag2 = flag2;
-        this.upcomingmatchesdata[i].team1 = team1;
-        this.upcomingmatchesdata[i].team2 = team2;
-      }
-
-      this.row = true;
-      this.score = false;
+      console.log(this.upcomingmatchesdata);
     } catch (error) {
       console.error(error);
     }

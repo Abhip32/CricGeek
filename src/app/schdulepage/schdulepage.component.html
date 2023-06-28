@@ -1,59 +1,62 @@
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-</head>
-<header style="background-image:url('assets/images/schduleHeader.jpg');position: relative;width: 99.4vw;">
-
-    <div class="text-heading">
-        <h4 style="font-size:5vh;position:absolute; top:20vh;left: 10vw;width: 25vw;font-family: 'Montserrat', sans-serif;">
-            <em style="color: white;">Mark Your Calendars for the Yearly Cricket Schedule!</em>
-        </h4>
-    </div>
-</header>
-
-<div class="container1" style="height: max-content;">
-    <div class="tabs">
-        <div class="tabby-tab">
-            <input type="radio" id="tab-1" name="tabby-tabs" checked>
-            <label for="tab-1"></label>
-            <div class="tabby-content">
-                <div class="Loader" *ngIf="!loadschdule">
-                    <div class="d-flex justify-content-center">
-                        <div class="spinner-border text-dark" role="status" style="width: 5vw;height: 5vw;">
-                            <span class="sr-only"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <table style="width: 100%;">
-                            <td>
-                              Schedule for this cricket year
-                            </td>
-                            <tr *ngFor="let data of schdule">
-                              <td>
-                                {{data.month}}
-                              </td>
-                              <td>
-                                {{data.tour}}
-                              </td>
-                              <td>
-                                {{data.destination}}
-                              </td>
-                            </tr>
-                          </table>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-    </div>
-
+<div class="site-wrap">
+<div class="hero overlay" style="background-image: url('assets/images/schduleHeader.jpg');">
+  <div class="container">
+      <div class="row align-items-center">
+          <div class="col-lg-5 mx-auto text-center">
+              <h1 class="text-white">Schdule</h1>
+              <p>Schdule of tours & series</p>
+          </div>
+      </div>
+  </div>
 </div>
+
+
+  <div class="Loader"  *ngIf="!loadschdule" style="min-height: 100vh;margin-top: 20vh;">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+  </div>
+  
+
+                <div  style="min-height: 100vh;"  *ngIf="loadschdule">
+                   <div class="p-5">
+                    <div class="row">
+                      <div class="col-6 title-section">
+                        <h2 class="heading">Schdule</h2>
+                      </div>
+                    </div>
+
+                    <table class="p-5" style="width: 100%;">
+                        <tr >
+                            <th style="background-color: rgb(199,0,0);"> 
+                                Schedule for this cricket year
+                              </th>
+                              <th style="background-color: rgb(199,0,0);"> 
+                                &nbsp;
+                              </th>
+                              <th style="background-color: rgb(199,0,0);"> 
+                                &nbsp;
+                              </th>
+                        </tr>
+                
+                        <tr *ngFor="let data of schdule">
+                          <td>
+                            {{data.month}}
+                          </td>
+                          <td>
+                            {{data.tour}}
+                          </td>
+                          <td>
+                            {{data.duration}}
+                          </td>
+                        </tr>
+                      </table>
+                      
+                   </div>
+                    </div>
+
+
+                  </div>
+
