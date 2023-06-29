@@ -8,12 +8,12 @@
  
     <div  *ngIf="score" style="min-height: min-content; margin-top: 15vh;">
       <div class="col-lg-12">
-        <div class="card m-3 border-none">
+        <div class="card m-1 border-none">
           <div class="widget-title" style="background-color: rgb(199,0,0);color: white;font-weight: 900;">
             <h2>{{currentmatchesdata.teamA}} V/s {{currentmatchesdata.teamB}}</h2>
           </div>
           <div class="card-body" >
-            <h6 class="text-center" style="background-color: green;color: white;padding: 5px;font-weight: bold;width: 100px;border-radius: 30px;">{{currentmatchesdata.status}}</h6>
+            <h6 class="text-center" style="background-color: green;color: white;padding: 5px;font-weight: bold;width: 150px;border-radius: 30px;">{{currentmatchesdata.status}}</h6>
             <h6>{{currentmatchesdata.title}} {{currentmatchesdata.subtitle.slice(0,currentmatchesdata.subtitle.length/2)}} , {{currentmatchesdata.day}}</h6>
             <div class="card-title d-flex align-items-center">
               <h6><img src={{currentmatchesdata.flagA}} style="font-size: 20vw;margin-right:2vw;width: 100px;"/></h6>
@@ -37,7 +37,7 @@
     </div>
     
 
-    <div class="p-5"  *ngIf="score">
+    <div class="m-2"  *ngIf="score">
       <ul class="nav nav-pills mb-3"  style="background-color: rgb(199,0,0);padding: 10px;" id="pills-tab" role="tablist">
         <li class="nav-item flex-fill" role="presentation">
           <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Players</button>
@@ -76,7 +76,7 @@
             <div class="accordion-item" *ngFor="let match of scoresheetdata; let i=index">
               <h2 class="accordion-header" id="heading{{i}}">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}" *ngFor="let heading of match[0].headings">
-                    <img src={{heading.teamLogo}} alt="Team Logo">
+                    <img src={{heading.teamLogo}} width="40px" alt="Team Logo">
                     <h5>{{ heading.inningHeading }}</h5>
                     <h5>{{ heading.scores }}</h5>
                 </button>
@@ -139,7 +139,7 @@
             <div class="accordion-item" *ngFor="let match of commdata.Innings; let i=index">
               <h2 class="accordion-header" id="heading{{i}}">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}" *ngFor="let heading of match.headings">
-                    <img src={{heading.teamLogo}} alt="Team Logo">
+                    <img src={{heading.teamLogo}} width="40px" alt="Team Logo">
                     <h5>{{ heading.inningHeading }}</h5>
                     <h5>{{ heading.scores }}</h5>
                 </button>

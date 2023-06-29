@@ -21,7 +21,7 @@
 }
 
 .tab-content{
-  padding: 20px;
+  padding: 0.5vw;
   background-color: black;
   height: min-content;
   color: black;
@@ -65,7 +65,7 @@
 	/* tab content must clear this */
 		height: 40px;
 	
-	padding: 10px;
+	padding: 1vw;
 	text-align: center;
 	background: black;
 	color: white;
@@ -86,7 +86,7 @@
 	/* clear the tab labels */
 		top: 40px; 
 	
-	padding: 20px;
+	padding: 2vw;
 	border-radius: 0 0 8px 8px;
 	background: rgb(199,0,0);
 	height: min-content;
