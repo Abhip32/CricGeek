@@ -77,6 +77,7 @@ export class MainpageComponent implements OnInit {
     try {
       const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLive');
       this.currentmatchesdata = await response.data;
+      console.log(this.currentmatchesdata);
       this.score=true;
     } catch (error) {
       console.error(error);

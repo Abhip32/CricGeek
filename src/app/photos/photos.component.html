@@ -28,13 +28,13 @@
       <div class="row">
         <!-- Gallery item -->
         <div class="col-xl-4 col-lg-4 col-md-6 mb-4" *ngFor="let photo of photos">
-            <div class="bg-white rounded shadow-sm">
-              <div class="image-container">
-                <img src="{{photo.img}}" alt="" class="img-fluid card-img-top">
+            <div class="bg-white rounded shadow-sm" >
+              <a class="image-container" href="{{photo.link}}">
+                <img src="{{photo.image}}" alt="" class="img-fluid card-img-top">
                 <div class="title-overlay">
-                  <h5 class="text-white">{{photo.title}}</h5>
+                  <h5 class="text-white">{{photo.text}}</h5>
                 </div>
-              </div>
+              </a>
              
             </div>
           </div>

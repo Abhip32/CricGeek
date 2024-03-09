@@ -9,9 +9,11 @@ import axios from 'axios';
 export class ExtraComponent implements OnInit {
 
   score = false;
+  scoress=false;
   title = 'CricGeek';
 
   news: any = [];
+  newss: any = [];
   newsplus: any = [];
   stats: any = [];
   specials: any = [];
@@ -22,7 +24,9 @@ export class ExtraComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.getNewsPlus();
     this.getNews();
+    this.getNewss();
     this.getNewsPlus();
     this.getInterviews();
     this.getOpinions();
@@ -32,6 +36,15 @@ export class ExtraComponent implements OnInit {
 
   }
 
+  async getNewss() {
+    try {
+      const response = await axios.get('https://cricket-api-nu.vercel.app/getNewss');
+      this.newss = response.data;
+      this.scoress=true
+    } catch (error) {
+      console.error('Error getting news:', error);
+    }
+  }
 
   async getNews() {
     try {

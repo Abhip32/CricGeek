@@ -23,39 +23,56 @@
 
   
   
-    <div *ngIf="score">
-    <div class="featuredMatch p-5" >
-      <h2>Featured Match</h2>
-      <h2 class="m-2" style="font-size: 20px;">{{currentmatchesdata[0].title}}</h2>
-      <br/>
-      <div class="container p-2">
-          <div class="row">
-              <div class="col-md-4 col-sm-6">
-                  <div class="text-center">
-                      <img class="img-fluid p-4" style="width: 150px;" src="{{currentmatchesdata[0].flagA}}" alt="Team 1 Flag" />
-                      <h4>{{currentmatchesdata[0].teamA}}</h4>
-                      <h4>{{currentmatchesdata[0].scoreA}}</h4>
+  <div *ngIf="score">
+    <div class="p-5">
+      <div id="carouselFeaturedMatch" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" style="background-color: black;">
+          <div class="carousel-item" *ngFor="let match of currentmatchesdata; let i = index" [class.active]="i === 0">
+            <div class="p-5">
+              <h2>Featured Match</h2>
+              <h2 class="m-2" style="font-size: 20px;">{{match.title}}</h2>
+              <br/>
+              <div class="container p-2">
+                <div class="row">
+                  <div class="col-md-4 col-sm-6">
+                    <div class="text-center">
+                      <img class="img-fluid p-4" style="width: 150px;" [src]="match.flagA" alt="Team 1 Flag" />
+                      <h4>{{match.teamA}}</h4>
+                      <h4>{{match.scoreA}}</h4>
+                    </div>
                   </div>
-              </div>
-              <div class="col-md-4 col-sm-12">
-                  <div class="text-center align-items-center justify-content-center">
+                  <div class="col-md-4 col-sm-12">
+                    <div class="text-center align-items-center justify-content-center">
                       <h3>V/s</h3>
+                    </div>
                   </div>
-              </div>
-              <div class="col-md-4 col-sm-6">
-                  <div class="text-center">
-                      <img class="img-fluid p-4" style="width: 150px;" src="{{currentmatchesdata[0].flagB}}" alt="Team 2 Flag" />
-                      <h4>{{currentmatchesdata[0].teamB}}</h4>
-                      <h4>{{currentmatchesdata[0].scoreB}}</h4>
+                  <div class="col-md-4 col-sm-6">
+                    <div class="text-center">
+                      <img class="img-fluid p-4" style="width: 150px;" [src]="match.flagB" alt="Team 2 Flag" />
+                      <h4>{{match.teamB}}</h4>
+                      <h4>{{match.scoreB}}</h4>
+                    </div>
                   </div>
+                  <div class="col-12 m-1">
+                    <h3 class="text-center" style="font-size: 20px;">{{match.progress}}</h3>
+                  </div>
+                </div>
               </div>
-              <div class="col-12 m-1">
-                  <h3 class="text-center" style="font-size: 20px;">{{currentmatchesdata[0].progress}}</h3>
-              </div>
+            </div>
           </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselFeaturedMatch" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselFeaturedMatch" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
+    </div>
   </div>
-
+  
 
 
   <div class="latest-news" style="margin-top: -10vh;">

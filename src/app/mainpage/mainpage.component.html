@@ -1,6 +1,4 @@
 <div class="site-wrap">
-
-
     <div class="hero overlay" style="background-image: url('assets/images/matchInfoHeader.jpg');">
         <div class="container">
             <div class="row align-items-center">
@@ -12,121 +10,77 @@
         </div>
     </div>
 
-    <div class="Loader"  *ngIf="!score" style="min-height: 100vh;margin-top: 20vh;">
+    <div class="Loader" *ngIf="!score" style="min-height: 100vh; margin-top: 20vh;">
         <div class="d-flex justify-content-center">
-            <div class="spinner-border text-white" role="status" style="width: 5vw;height: 5vw;">
+            <div class="spinner-border text-white" role="status" style="width: 5vw; height: 5vw;">
                 <span class="sr-only"></span>
             </div>
         </div>
     </div>
 
     <div class="site-section bg-dark" *ngIf="score">
-        <div class="container w-full" >
-           
+        <div class="container w-full">
+            <ul class="nav nav-pills mb-3" style="background-color: rgb(199,0,0); padding: 10px;" id="pills-tab" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">Recent</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Upcoming</button>
+                </li>
+            </ul>
 
-            <ul class="nav nav-pills mb-3" style="background-color: rgb(199,0,0);padding: 10px;" id="pills-tab" role="tablist">
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Live</button>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Recent</button>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Upcoming</button>
-                </li>
-                
-              </ul>
-              <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                     <div class="row">
-                        <div class="col-lg-12" *ngFor="let match of currentmatchesdata;let i = index">
+                        <div class="col-lg-12" *ngFor="let match of resultsdata; let i = index">
                             <div class="card m-3">
                                 <div class="card-body">
-                                    <h6 class="text-center" style="background-color: green;color: white;padding: 5px;font-weight: bold;width: 100px;border-radius: 30px;">{{match.status}}</h6>
-                                    <h6>{{match.title}}
-                                        {{match.subtitle.slice(0,match.subtitle.length/2)}}
-                                        ,
-                                        {{match.day}}</h6>
+                                    <h6>{{match.title}}, {{match.date}}</h6>
+                                    <h6>{{match?.details}}</h6>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagA}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamA}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreA}}</h6>
+                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamA}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreA}}</h6>
                                     </div>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagB}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamB}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreB}}</h6>
+                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamB}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreB}}</h6>
                                     </div>
-                                    <h6>{{match.progress}}</h6>
+                                    <h6>{{match.info}}</h6>
                                     <div class="Linkss mt-3">
-                                        <a href="Match/Live/{{i}}/Info{{match.link}}" class="btn" style="font-weight: bolder;background-color: rgb(199,0,0);color: whitesmoke;">Scoresheet</a>
+                                        <a [href]="match.linkScoreCard" class="btn" style="font-weight: bolder; background-color: rgb(199,0,0); color: whitesmoke;">Scoresheet</a>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+
+                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                     <div class="row">
-                        <div class="col-lg-12" *ngFor="let match of resultsdata;let i = index">
+                        <div class="col-lg-12" *ngFor="let match of upcomingmatchesdata; let i = index">
                             <div class="card m-3">
                                 <div class="card-body">
-                                    <h6 class="text-center" style="background-color: red;color: white;padding: 5px;font-weight: bold;width: 120px;border-radius: 30px;">{{match.status}}</h6>
-                                    <h6>{{match.title}}
-                                        {{match.subtitle.slice(0,match.subtitle.length/2)}},
-                                        {{match.day}}</h6>
+                                    <h6>{{match.title}}, {{match.date}}</h6>
+                                    <h6>{{match?.details}}</h6>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagA}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamA}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreA}}</h6>
+                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamA}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreA}}</h6>
                                     </div>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagB}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamB}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreB}}</h6>
+                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamB}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreB}}</h6>
                                     </div>
-                                    <h6>{{match.progress}}</h6>
-                                    <div class="Linkss mt-3">
-                                        <a href="Match/Completed/{{i}}/Info{{match.link}}" class="btn" style="font-weight: bolder;background-color: rgb(199,0,0);color: whitesmoke;">Scoresheet</a>
-                                    </div>
+                                    <h6>{{match.info}}</h6>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-                    <div class="row">
-                        <div class="col-lg-12" *ngFor="let match of upcomingmatchesdata">
-                            <div class="card m-3">
-                                <div class="card-body">
-                                    <h6 class="text-center" style="background-color: rgb(233, 233, 57);color: white;padding: 5px;font-weight: bold;width: 120px;border-radius: 30px;">{{match.status.slice(0,match.status.length/2)}}</h6>
-                                    <h6>{{match.title}}
-                                        {{match.subtitle.slice(0,match.subtitle.length/2)}},
-                                        {{match.day}}</h6>
-                                    <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagA}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamA}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreA}}</h6>
-                                    </div>
-                                    <div class="card-title d-flex align-items-center">
-                                        <h6><img src={{match.flagB}} style="font-size: 20vw;margin-right:2vw;"/></h6>
-                                        <h6 style="padding-right:1vw;">{{match.teamB}}</h6>
-                                        <h6 style="padding-right:0.5vw;">{{match.scoreB}}</h6>
-                                    </div>
-                                    <h6>{{match.progress}}</h6>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-              </div>
-
+            </div>
         </div>
+    </div>
 </div>

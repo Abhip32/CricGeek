@@ -25,35 +25,14 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLiveData();
-    this.getPOTW();
-    this.getOnThisDay()
     this.apiNews();
   }
-
-  async getFlag(flag: string)  {
-    try {
-      const response: AxiosResponse<any> = await axios.get(`https://cricket-api-nu.vercel.app/getTeamFlag/${flag}`);
-      console.log(response.data.data);
-      return response.data.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
 
 
   async getLiveData() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getLive');
-      this.currentmatchesdata = await response.data;    
-      this.getFlag(this.currentmatchesdata[0].teamA).then((flag) => {
-        this.currentmatchesdata[0].flagA=flag;
-      });
-      this.getFlag(this.currentmatchesdata[0].teamB).then((flag) => {
-        this.currentmatchesdata[0].flagB=flag;
-      });
-    
+      this.currentmatchesdata = await response.data; 
       this.score=true; 
     } catch (error) {
       console.error('Error getting live data:', error);
@@ -61,25 +40,7 @@ export class HomepageComponent implements OnInit {
   }
 
   
-  async getPOTW() {
-    try {
-      const response = await axios.get('https://cricket-api-nu.vercel.app/POTW');
-      this.POTW = await response.data;     
-    } catch (error) {
-      console.error('Error getting live data:', error);
-    }
-  }
 
-
-  async getOnThisDay() {
-    try {
-      const response = await axios.get('https://cricket-api-nu.vercel.app/onThisDay');
-      this.onThisDay = await response.data;   
-      console.log(this.onThisDay)  
-    } catch (error) {
-      console.error('Error getting live data:', error);
-    }
-  }
 
   async apiNews() {
     try {
