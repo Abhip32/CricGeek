@@ -7,17 +7,15 @@ import { MainpageComponent } from './mainpage/mainpage.component';
 import { MatchInfoComponent } from './match-info/match-info.component';
 import {RankingsComponent} from './rankings/rankings.component'
 import { SchdulepageComponent } from './schdulepage/schdulepage.component';
-import { PhotosComponent } from './photos/photos.component';
 import { ExtraComponent } from './extra/extra.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'Match_Info', component: MainpageComponent },
   { path: 'Rankings', component: RankingsComponent },
-  { path: ':detail/:id/:type/:match', component: MatchInfoComponent },
+  { path: 'Scorecard', component: MatchInfoComponent },
   { path: 'Live', component: LiveMatchComponent },
   { path: 'Schdule', component: SchdulepageComponent },
-  { path: 'Photos', component: PhotosComponent },
   { path: 'Extra', component: ExtraComponent },
 
 

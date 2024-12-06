@@ -9,7 +9,6 @@ import { RankingsComponent } from './rankings/rankings.component';
 import { MatchInfoComponent } from './match-info/match-info.component';
 import { LiveMatchComponent } from './live-match/live-match.component';
 import { SchdulepageComponent } from './schdulepage/schdulepage.component';
-import { PhotosComponent } from './photos/photos.component';
 import { ExtraComponent } from './extra/extra.component';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { ExtraComponent } from './extra/extra.component';
     MatchInfoComponent,
     LiveMatchComponent,
     SchdulepageComponent,
-    PhotosComponent,
     ExtraComponent,
   ],
   imports: [

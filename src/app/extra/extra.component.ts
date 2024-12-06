@@ -24,9 +24,7 @@ export class ExtraComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.getNewsPlus();
     this.getNews();
-    this.getNewss();
     this.getNewsPlus();
     this.getInterviews();
     this.getOpinions();
@@ -39,8 +37,8 @@ export class ExtraComponent implements OnInit {
   async getNewss() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getNewss');
-      this.newss = response.data;
-      this.scoress=true
+      this.newss = response.data.filter((news: any) => news.Images !== undefined);
+      this.scoress = true;
     } catch (error) {
       console.error('Error getting news:', error);
     }
@@ -49,8 +47,8 @@ export class ExtraComponent implements OnInit {
   async getNews() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getNews');
-      this.news = response.data;
-      this.score=true
+      this.news = response.data.filter((news: any) => news.Images !== undefined);
+      this.score = true;
     } catch (error) {
       console.error('Error getting news:', error);
     }
@@ -59,7 +57,7 @@ export class ExtraComponent implements OnInit {
   async getNewsPlus() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getNewsPlus');
-      this.newsplus = response.data;
+      this.newsplus = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.newsplus);
     } catch (error) {
       console.error('Error getting additional news:', error);
@@ -69,7 +67,7 @@ export class ExtraComponent implements OnInit {
   async getStats() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getStats');
-      this.stats = response.data;
+      this.stats = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.stats);
     } catch (error) {
       console.error('Error getting stats:', error);
@@ -79,7 +77,7 @@ export class ExtraComponent implements OnInit {
   async getOpinions() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getOpinions');
-      this.opinions = response.data;
+      this.opinions = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.opinions);
     } catch (error) {
       console.error('Error getting opinions:', error);
@@ -89,7 +87,7 @@ export class ExtraComponent implements OnInit {
   async getInterviews() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getInterviews');
-      this.interviews = response.data;
+      this.interviews = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.interviews);
     } catch (error) {
       console.error('Error getting interviews:', error);
@@ -99,7 +97,7 @@ export class ExtraComponent implements OnInit {
   async getSpecials() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getSpecials');
-      this.specials = response.data;
+      this.specials = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.specials);
     } catch (error) {
       console.error('Error getting specials:', error);
@@ -109,7 +107,7 @@ export class ExtraComponent implements OnInit {
   async getSpotlights() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getSpotlights');
-      this.spotlights = response.data;
+      this.spotlights = response.data.filter((news: any) => news.Images !== undefined);
       console.log(this.spotlights);
     } catch (error) {
       console.error('Error getting spotlights:', error);

@@ -30,7 +30,7 @@
           <div class="carousel-item" *ngFor="let match of currentmatchesdata; let i = index" [class.active]="i === 0">
             <div class="p-5">
               <h2>Featured Match</h2>
-              <h2 class="m-2" style="font-size: 20px;">{{match.title}}</h2>
+            <h2 class="m-2" style="font-size: 20px;">{{match.series}}</h2>
               <br/>
               <div class="container p-2">
                 <div class="row">
@@ -38,6 +38,7 @@
                     <div class="text-center">
                       <img class="img-fluid p-4" style="width: 150px;" [src]="match.flagA" alt="Team 1 Flag" />
                       <h4>{{match.scoreA}}</h4>
+                      <h4>{{match.teamA}}</h4>
                     </div>
                   </div>
                   <div class="col-md-4 col-sm-12">
@@ -49,6 +50,7 @@
                     <div class="text-center">
                       <img class="img-fluid p-4" style="width: 150px;" [src]="match.flagB" alt="Team 2 Flag" />
                       <h4>{{match.scoreB}}</h4>
+                      <h4>{{match.teamB}}</h4>
                     </div>
                   </div>
                   <div class="col-12 m-1">
@@ -76,39 +78,34 @@
   <div class="latest-news" style="margin-top: -10vh;">
     <div class="container pb-5">
       <div class="row">
-        <div class="col-12 title-section">
+        <div class="col-10 title-section">
           <h2 class="heading">Latest News</h2>
         </div>
       </div>
       <div class="row no-gutters">
         <div class="col-md-6" *ngFor="let news of news.slice(0,4)">
           <div class="post-entry">
-            <a href="#">
+            <a href={{news.Link}}>
               <h1>{{news.headline}}</h1>
-              <img src="{{news.Images[0]}}" alt="Image" class="img-fluid mt-5" height="100%">
+              <img src="{{news.Images}}" alt="Image" class="img-fluid mt-3" style="width: 100%; height: auto;">
             </a>
             <div class="caption">
               <div class="caption-inner">
-                <h3 class="mb-3">{{news.Headline[0]}}</h3>
+                <h3 class="mb-3">{{news.Headline}}</h3>
                 <div class="author d-flex align-items-center">
                   <div class="img mb-2 mr-3">
                     <img src="assets/images/cb.png" alt="">
                   </div>
                   <div class="text">
-                    <h4>{{news.tit[0]}}</h4>
+                    <h4>{{news.tit}}</h4>
                   </div>
                 </div>
               </div>
             </div> 
           </div>
         </div>
-       
-       
-
     </div>
   </div>
-  
-
   </div>
 </div>
 

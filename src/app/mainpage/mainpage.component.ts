@@ -16,6 +16,12 @@ interface Match {
   team2: string;
 }
 
+interface MatchTab {
+  id: string;
+  label: string;
+  isActive: boolean;
+}
+
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
@@ -36,6 +42,12 @@ export class MainpageComponent implements OnInit {
   datalodedresult = false;
   datalodedupcoming = false;
   datascoresheets = false;
+  activeTab = 'live';
+  matchTabs: MatchTab[] = [
+    { id: 'live', label: 'Live', isActive: true },
+    { id: 'recent', label: 'Recent', isActive: false },
+    { id: 'upcoming', label: 'Upcoming', isActive: false }
+  ];
 
   isNumeric(num: any): boolean {
     return !isNaN(num);
@@ -76,7 +88,8 @@ export class MainpageComponent implements OnInit {
   async apilive(): Promise<void> {
     try {
       const response: AxiosResponse<any> = await axios.get('https://cricket-api-nu.vercel.app/getLive');
-      this.currentmatchesdata = await response.data;
+      const allMatches = await response.data;
+      this.currentmatchesdata = allMatches.filter((match: any) => match.teamA && match.teamB);
       console.log(this.currentmatchesdata);
       this.score=true;
     } catch (error) {
@@ -102,5 +115,17 @@ export class MainpageComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  trackByMatchId(index: number, match: any): string {
+    return match.id || index;
+  }
+
+  selectTab(tabId: string): void {
+    this.activeTab = tabId;
+    this.matchTabs = this.matchTabs.map(tab => ({
+      ...tab,
+      isActive: tab.id === tabId
+    }));
   }
 }

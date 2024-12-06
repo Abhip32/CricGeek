@@ -32,8 +32,9 @@ export class HomepageComponent implements OnInit {
   async getLiveData() {
     try {
       const response = await axios.get('https://cricket-api-nu.vercel.app/getLive');
-      this.currentmatchesdata = await response.data; 
-      this.score=true; 
+      const allMatches = await response.data;
+      this.currentmatchesdata = allMatches.filter((match: any) => match.teamA && match.teamB);
+      this.score = true;
     } catch (error) {
       console.error('Error getting live data:', error);
     }

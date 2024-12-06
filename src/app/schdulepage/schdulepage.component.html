@@ -24,39 +24,27 @@
                    <div style="padding: 2vw;">
                     <div class="row">
                       <div class="col-6 title-section">
-                        <h2 class="heading">Schedule</h2>
+                        <h2 class="heading">Cricket Schedule 2024-2027</h2>
                       </div>
                     </div>
 
-                    <table style="width: 100%;padding: 2vw;">
-                        <tr >
-                            <th style="background-color: rgb(199,0,0);"> 
-                                Schedule for this cricket year
-                              </th>
-                              <th style="background-color: rgb(199,0,0);"> 
-                                &nbsp;
-                              </th>
-                              <th style="background-color: rgb(199,0,0);"> 
-                                &nbsp;
-                              </th>
-                        </tr>
-                
-                        <tr *ngFor="let data of schdule">
-                          <td>
-                            {{data.month}}
-                          </td>
-                          <td>
-                            {{data.tour}}
-                          </td>
-                          <td>
-                            {{data.duration}}
-                          </td>
-                        </tr>
-                      </table>
-                      
+                    <div *ngFor="let month of scheduleData | keyvalue: originalOrder">
+                        <h3 class="mt-4 mb-3">{{month.key}}</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: rgb(199,0,0); color: white;">Tournament</th>
+                                    <th style="background-color: rgb(199,0,0); color: white;">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let event of month.value">
+                                    <td style="color: rgb(255,255,255);">{{event.tour}}</td>
+                                    <td style="color: rgb(255,255,255);">{{event.duration}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                    </div>
                     </div>
-
-
-                  </div>
 

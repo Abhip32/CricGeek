@@ -9,6 +9,7 @@ import axios, { AxiosResponse } from 'axios';
 })
 
 export class MatchInfoComponent implements OnInit {
+  url:string=''
   index=false;
   match=true;
   row=false;
@@ -42,27 +43,31 @@ export class MatchInfoComponent implements OnInit {
   id:any;
   matchName:any;
   rawmatchesdata: any;
+  scorecarddata:any=[];
+  squadsdata:any=[];
+  matchnewsdata:any=[];
   constructor(private route: ActivatedRoute) {
-    this.route.params.subscribe( params => {
-      this.type=params['type']
-      this.id=params['id']
-      this.matchName=params['match']
-  
-      this.linkscorecard=params['detail']+"/"+params['id']+"/"+params['type']+"/"+params['match']
-      this.linkcommentry=params['detail']+"/"+params['id']+"/"+"commentary"+"/"+params['match']
-      this.linkplayer=params['detail']+"/"+params['id']+"/"+"squad"+"/"+params['match']
-      this.linkinfo=params['detail']+"/"+params['id']+"/"+"info"+"/"+params['match']
+ 
+    
+    this.route.queryParams.subscribe(params => {
 
-      this.state=params['state']=="Live"?"Live":"Completed"
-      this.ind=params['index'];
+      this.url = params['url'];
+      if (this.url) {        
+        this.apiscoresheet(this.url);
+        this.apiCommentry(this.url);
+        this.apiinfo(this.url);
+      } else {
+        console.error('URL parameter is undefined');
+      }
     });
-}
+  }
 
   ngOnInit(): void {
-    this.apiscoresheet(this.linkscorecard);
-    this.apiplayers(this.linkplayer)
-    this.apiCommentry(this.linkcommentry)
-    this.apiinfo(this.linkinfo);
+    this.apiscoresheet(this.url);
+    this.apiCommentry(this.url)
+    this.apiinfo(this.url);
+    this.getSquads(this.url);
+    this.getMatchNews(this.url);
   }
 
 
@@ -78,7 +83,7 @@ export class MatchInfoComponent implements OnInit {
 
     const options = {
       method: 'GET',
-      url: `https://cricket-api-nu.vercel.app/getScoreCard/${url}`,
+      url: `https://cricket-api-nu.vercel.app/getScorecard?url=${url}`,
     };
     
     axios.request(options).then( (response) => {
@@ -95,30 +100,10 @@ export class MatchInfoComponent implements OnInit {
   }
 
 
-  apiplayers(url:any)
-  {
-
-    const options = {
-      method: 'GET',
-      url: `https://cricket-api-nu.vercel.app/getScoreCard/${url}`,
-    };
-    
-    axios.request(options).then( (response) => {
-      this.playersdata=response.data;
-      console.log(this.playersdata);
-      this.score=true;
-        
-
-    }).catch(function (error) {
-      console.error(error);
-    });
-    
-  }
-
   apiCommentry(url:any){
     const options = {
       method: 'GET',
-      url: `https://cricket-api-nu.vercel.app/getScoreCard/${url}`,
+      url: `https://cricket-api-nu.vercel.app/getCommentary?url=${url}`,
     };
     
     axios.request(options).then( (response) => {
@@ -136,11 +121,11 @@ export class MatchInfoComponent implements OnInit {
   apiinfo(url:any){
     const options = {
       method: 'GET',
-      url: `https://cricket-api-nu.vercel.app/getScoreCard/${url}`,
+      url: `https://cricket-api-nu.vercel.app/getMiniScorecard?url=${url}`,
     };
     
     axios.request(options).then( (response) => {
-      this.infodata=response.data;
+      this.scorecarddata=response.data;
       console.log(this.infodata);
       this.score=true;
         
@@ -151,7 +136,35 @@ export class MatchInfoComponent implements OnInit {
   }
 
 
-  
+  getSquads(url: any) {
+    const options = {
+      method: 'GET',
+      url: `https://cricket-api-nu.vercel.app/getSquads?url=${url}`,
+    };
+
+    axios.request(options).then((response) => {
+      this.squadsdata = response.data;
+      console.log(this.squadsdata);
+      this.score = true;
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+
+  getMatchNews(url: any) {
+    const options = {
+      method: 'GET',
+      url: `https://cricket-api-nu.vercel.app/getMatchNews?url=${url}`,
+    };
+
+    axios.request(options).then((response) => {
+      this.matchnewsdata = response.data;
+      console.log(this.matchnewsdata);
+      this.score = true;
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
   
 
 

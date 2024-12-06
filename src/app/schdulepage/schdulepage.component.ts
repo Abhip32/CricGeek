@@ -1,19 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import axios from 'axios';
 
+interface ScheduleEvent {
+  tour: string;
+  duration: string;
+}
+
+interface ScheduleData {
+  [key: string]: ScheduleEvent[];
+}
+
 @Component({
   selector: 'app-schdulepage',
   templateUrl: './schdulepage.component.html',
   styleUrls: ['./schdulepage.component.scss']
 })
 export class SchdulepageComponent implements OnInit {
-  schdule:any[]=[];
-  loadschdule:boolean = false;
+  loadschdule = false;
+  scheduleData: ScheduleData = {};
 
   constructor() { }
 
   ngOnInit(): void {
     this.getSchdule()
+  }
+
+  originalOrder = (): number => {
+    return 0;
   }
 
   getSchdule(){
@@ -23,7 +36,7 @@ export class SchdulepageComponent implements OnInit {
     };
     
     axios.request(options).then( (response) => {
-      this.schdule=response.data;
+      this.scheduleData = response.data;
       this.loadschdule=true;
     }).catch(function (error) {
       console.error(error);

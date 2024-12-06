@@ -22,7 +22,10 @@
         <div class="container w-full">
             <ul class="nav nav-pills mb-3" style="background-color: rgb(199,0,0); padding: 10px;" id="pills-tab" role="tablist">
                 <li class="nav-item flex-fill" role="presentation">
-                    <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">Recent</button>
+                    <button class="nav-link active" id="pills-live-tab" data-bs-toggle="pill" data-bs-target="#pills-live" type="button" role="tab" aria-controls="pills-live" aria-selected="true">Live</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Recent</button>
                 </li>
                 <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Upcoming</button>
@@ -30,26 +33,53 @@
             </ul>
 
             <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="tab-pane fade show active" id="pills-live" role="tabpanel" aria-labelledby="pills-live-tab">
                     <div class="row">
-                        <div class="col-lg-12" *ngFor="let match of resultsdata; let i = index">
+                        <div class="col-lg-12" *ngFor="let match of currentmatchesdata; let i = index">
                             <div class="card m-3">
                                 <div class="card-body">
-                                    <h6>{{match.title}}, {{match.date}}</h6>
-                                    <h6>{{match?.details}}</h6>
+                                    <h6>{{match.series}}, {{match.title}}</h6>
+                                    <h6>{{match?.matchInfo?.replace('Today', '')}}</h6>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw; width: 30px; height: 30px;" /></h6>
+                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
                                         <h6 style="padding-right: 1vw;">{{match.teamA}}</h6>
                                         <h6 style="padding-right: 0.5vw;">{{match.scoreA}}</h6>
                                     </div>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw; width: 30px; height: 30px;" /></h6>
+                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
                                         <h6 style="padding-right: 1vw;">{{match.teamB}}</h6>
                                         <h6 style="padding-right: 0.5vw;">{{match.scoreB}}</h6>
                                     </div>
-                                    <h6>{{match.info}}</h6>
+                                    <h6>{{match.status}}</h6>
                                     <div class="Linkss mt-3">
-                                        <a [href]="match.linkScoreCard" class="btn" style="font-weight: bolder; background-color: rgb(199,0,0); color: whitesmoke;">Scoresheet</a>
+                                        <a [href]="'/Scorecard?url=' + match.links.scorecard" class="btn" style="font-weight: bolder; background-color: rgb(199,0,0); color: whitesmoke;">Live Score</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="row">
+                        <div class="col-lg-12" *ngFor="let match of resultsdata; let i = index">
+                            <div class="card m-3">
+                                <div class="card-body">
+                                    <h6>{{match.series}}, {{match.title}}</h6>
+                                    <h6>{{match?.matchInfo?.replace('Today', '')}}</h6>
+                                    <div class="card-title d-flex align-items-center">
+                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamA}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreA}}</h6>
+                                    </div>
+                                    <div class="card-title d-flex align-items-center">
+                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
+                                        <h6 style="padding-right: 1vw;">{{match.teamB}}</h6>
+                                        <h6 style="padding-right: 0.5vw;">{{match.scoreB}}</h6>
+                                    </div>
+                                    <h6>{{match.status}}</h6>
+                                    <div class="Linkss mt-3">
+                                        <a [href]="'/Scorecard?url=' + match.links.scorecard" class="btn" style="font-weight: bolder; background-color: rgb(199,0,0); color: whitesmoke;">Scoresheet</a>
                                     </div>
                                 </div>
                             </div>
@@ -62,19 +92,19 @@
                         <div class="col-lg-12" *ngFor="let match of upcomingmatchesdata; let i = index">
                             <div class="card m-3">
                                 <div class="card-body">
-                                    <h6>{{match.title}}, {{match.date}}</h6>
-                                    <h6>{{match?.details}}</h6>
+                                    <h6>{{match.series}}, {{match.title}}</h6>
+                                    <h6>{{match?.matchInfo?.replace('Today', '')}}</h6>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw; width: 30px; height: 30px;" /></h6>
+                                        <h6><img [src]="match.flagA" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
                                         <h6 style="padding-right: 1vw;">{{match.teamA}}</h6>
                                         <h6 style="padding-right: 0.5vw;">{{match.scoreA}}</h6>
                                     </div>
                                     <div class="card-title d-flex align-items-center">
-                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw; width: 30px; height: 30px;" /></h6>
+                                        <h6><img [src]="match.flagB" style="font-size: 20vw; margin-right: 2vw; width: 30px;" /></h6>
                                         <h6 style="padding-right: 1vw;">{{match.teamB}}</h6>
                                         <h6 style="padding-right: 0.5vw;">{{match.scoreB}}</h6>
                                     </div>
-                                    <h6>{{match.info}}</h6>
+                                    <h6>{{match.status}}</h6>
                                 </div>
                             </div>
                         </div>
