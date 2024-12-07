@@ -17,9 +17,9 @@ interface CommentaryTabProps {
 }
 
 export const CommentaryTab = ({ commentaryData, loading }: CommentaryTabProps) => {
-console.log(commentaryData)
+  console.log(commentaryData);
   if (loading) return <div>Loading...</div>;
-  if ( commentaryData.length === 0) return <div>No commentary available</div>;
+  if (!commentaryData || commentaryData.commentary.length === 0) return <div>No commentary available</div>;
 
   const isOverComment = (commentary: Commentary) => !commentary.over;
 
@@ -41,7 +41,7 @@ console.log(commentaryData)
       )}
       
       <div className="space-y-4">
-        {commentaryData.map((comment, index) => (
+        {commentaryData.commentary.map((comment, index) => (
           <div
             key={`${comment.over || 'comment'}-${index}`}
             className={`border border-gray-700 rounded-lg p-4 bg-black ${

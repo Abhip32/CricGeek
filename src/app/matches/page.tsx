@@ -4,15 +4,36 @@ import MatchCard from '@/components/matches/MatchCard'
 import React, { useState, useEffect } from 'react'
 import { cricketApi } from '@/services/api';
 
+type ApiEndpoint = 'getLiveMatches' | 'getRecentMatches' | 'getUpcomingMatches';
+
+interface Match {
+  id: string;
+  title: string;
+  series: string;
+  matchInfo: string;
+  teamA: string;
+  teamB: string;
+  date: string;
+  venue: string;
+  result: string;
+  status: string;
+  type: string;
+  scoreA: string;
+  scoreB: string;
+  flagA: string;
+  flagB: string;
+  links: any;
+}
+
 const Matches = () => {
   const [activeTab, setActiveTab] = useState(0)
-  const [matches, setMatches] = useState([])
+  const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(false)
 
   const tabs = [
-    { id: 0, label: 'Live Matches', endpoint: 'getLiveMatches' },
-    { id: 1, label: 'Recent Matches', endpoint: 'getRecentMatches' },
-    { id: 2, label: 'Upcoming Matches', endpoint: 'getUpcomingMatches' }
+    { id: 0, label: 'Live Matches', endpoint: 'getLiveMatches' as ApiEndpoint },
+    { id: 1, label: 'Recent Matches', endpoint: 'getRecentMatches' as ApiEndpoint },
+    { id: 2, label: 'Upcoming Matches', endpoint: 'getUpcomingMatches' as ApiEndpoint }
   ]
 
   useEffect(() => {
@@ -68,7 +89,11 @@ const Matches = () => {
           ) : matches.length > 0 ? (
             <div className="grid">
               {matches.map((match, index) => (
-                <MatchCard key={index} type={tabs[activeTab].endpoint} {...match} />
+                <MatchCard 
+                  key={index} 
+                  {...match} 
+                  type={tabs[activeTab].endpoint} 
+                />
               ))}
             </div>
           ) : (

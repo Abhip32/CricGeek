@@ -24,7 +24,7 @@ const ImageComponent = ({ src, alt }: { src: string; alt: string }) => {
 };
 
 type MatchCardProps = Match & {
-  type: 'getLiveMatches' | 'getRecentMatches' | 'getUpcomingMatches'
+  type: string
 };
 
 const MatchCard = ({

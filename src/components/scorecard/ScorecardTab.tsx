@@ -30,16 +30,17 @@ interface Inning {
 }
 
 interface ScorecardTabProps {
-  scoreData: { innings: Inning[] } | null;
+  scoreData: any;
+  miniScoreData: any;
   loading: boolean;
 }
 
-export const ScorecardTab = ({ scoreData, loading }: ScorecardTabProps) => {
+export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, miniScoreData, loading }) => {
   if (loading) return <div>Loading...</div>;
 
   return (
     <div>
-      {scoreData?.innings?.map((inning, index) => (
+      {scoreData?.innings?.map((inning:any, index:any) => (
         <InningSection key={index} inning={inning} />
       ))}
     </div>
