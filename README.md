@@ -1,28 +1,36 @@
-# CricGeek
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Welcome to CricGeek, a cricket application that provides live scores, news, photos, player rankings, and the ability to watch live cricket matches. This project aims to cater to cricket enthusiasts by offering a comprehensive platform for all things cricket-related. 
+## Getting Started
 
-You can find this website live at - https://cric-geek.vercel.app/
+First, run the development server:
 
-## Features
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-CricGeek offers the following features:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- Live Scores: Get real-time updates on ongoing cricket matches across all formats.
-- News: Stay updated with the latest cricket news from around the world.
-- Photos: Browse through a collection of cricket-related photos.
-- Player Rankings: Access rankings of players across all formats.
-- Live Match Streaming: Watch live cricket matches right from the application.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Technologies Used
+## Learn More
 
-CricGeek is built using the following technologies:
+To learn more about Next.js, take a look at the following resources:
 
-- Front-end:
-  - Angular Js
-  - Bootstrap
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Back-end:
-  - Node.js
-  - REST API
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
