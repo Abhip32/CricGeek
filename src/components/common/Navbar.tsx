@@ -29,7 +29,7 @@ const Navbar = () => {
               title="CricGeek"
               className="inline-flex rounded-md focus:outline-none focus:ring-2 focus:ring-offset-4 focus:ring-offset-secondary focus:ring-primary"
             >
-              CricGeek
+              <img src="images/logo.jpg" alt="CricGeek" width={100} height={100} />
             </a>
           </div>
 
