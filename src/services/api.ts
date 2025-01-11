@@ -101,7 +101,7 @@ export const cricketApi = {
 
   getSchedule: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/getSchdule`);
+      const response = await fetch(`${API_BASE_URL}/getschdule`);
       const data=await response.json();
       console.log(data);
       return data;
@@ -109,5 +109,56 @@ export const cricketApi = {
       throw new Error(error instanceof Error ? error.message : 'Failed to fetch schedule');
     }
   },
+  getBattingRankings: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getBattingRankings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to fetch batting rankings');
+    }
+  },
+
+  getBowlingRankings: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getBowlingRankings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to fetch bowling rankings');
+    }
+  },
+
+  getAllRounderRankings: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getAllRounderRankings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to fetch all-rounder rankings');
+    }
+  },
+
+  getTeamRankings: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getTeamRankings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      
+      return data;
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to fetch team rankings');
+    }
+  },
+
   // Add other API calls here as needed
 }; 

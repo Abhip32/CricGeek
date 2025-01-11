@@ -6,7 +6,9 @@ import { TabNavigation } from '@/components/scorecard/TabNavigation';
 import { ScorecardTab } from '@/components/scorecard/ScorecardTab';
 import { DetailsTab } from '@/components/scorecard/DetailsTab';
 import { SquadsTab } from '@/components/scorecard/SquadsTab';
+import MiniScoreCard from '@/components/scorecard/MiniScoreCard';
 import { CommentaryTab } from '@/components/scorecard/CommentaryTab';
+import Hero from '@/components/home/hero';
 
 const Page = () => {
   const params = useParams();
@@ -63,11 +65,15 @@ const Page = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-20">
-      <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="p-4">
-        {renderActiveTab()}
-      </div>
+    <div>
+      <MiniScoreCard data={miniScoreData}/>
+      <div className="container mx-auto bg-zinc-950 p-10 min-h-screen">
+
+        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div>
+          {renderActiveTab()}
+        </div>
+    </div>
     </div>
   );
 };

@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
+      <Navbar />
         <div className='min-h-screen'> 
           {children}
         </div>
-        <Footer />
+      <Footer/>
       </body>
     </html>
   );

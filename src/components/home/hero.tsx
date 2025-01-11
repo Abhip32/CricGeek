@@ -1,5 +1,5 @@
-import React from 'react'
-import Image from 'next/image'
+import React from 'react';
+import Image from 'next/image';
 
 interface HeroProps {
     image?: string;
@@ -9,37 +9,28 @@ interface HeroProps {
 }
 
 const Hero = ({ image, title1, title2, subtitle }: HeroProps) => {
+    const backgroundImageUrl = image;
     return (
-        <div>
-            <section
-                style={{
-                    backgroundImage: image ? `url('${image}')` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    position: 'relative'
-                }}
-            >
-                <div
-                    className="absolute inset-0 bg-black/10 bg-gradient-to-r from-black/95 to-transparent"
-                ></div>
+      <div className="relative pt-48 pb-12 bg-black xl:pt-60 sm:pb-16 lg:pb-32 xl:pb-48 2xl:pb-56">
 
-                <div
-                    className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-[80vh] lg:items-center lg:px-8"
-                >
-                    <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
-                        <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
-                            {title1}
-                            <strong className="block font-extrabold text-red-700">
-                                {title2}
-                            </strong>
-                        </h1>
-                        <h4 className='text-white'>{subtitle}</h4>
-                    </div>
-                </div>
-            </section>
-        </div>
-    )
-}
+  
+      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500">
+          <img className="object-cover w-full h-full" src={backgroundImageUrl} alt="" />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 to-transparent"></div>
+      </div>
+  
+      <div className="relative">
+          <div className="px-6 mx-auto sm:px-8 lg:px-12 max-w-7xl">
+              <div className="w-full">
+                  <p className="mt-2 md:mt-6 tracking-tighter text-white">
+                      <span className="text-2xl md:text-5xl">{title1} {title2}</span><br />
+                      <span className="text-xl md:text-3xl">{subtitle}</span>
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div>  
+    );
+};
 
-export default Hero
+export default Hero;

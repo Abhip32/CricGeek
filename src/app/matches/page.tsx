@@ -54,7 +54,7 @@ const Matches = () => {
   }, [activeTab])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-800">
       <Hero 
         image="/images/matchInfoHeader.jpg" 
         title1='MATCHES' 
@@ -71,7 +71,7 @@ const Matches = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
                 ${activeTab === tab.id 
-                  ? 'bg-red-600 text-white shadow-lg' 
+                  ? 'bg-white text-black shadow-lg' 
                   : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
                 }`}
             >
@@ -84,7 +84,7 @@ const Matches = () => {
         <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 shadow-xl">
           {loading ? (
             <div className="min-h-[400px] flex items-center justify-center">
-              <div className="text-red-400">Loading matches...</div>
+              <div className="text-white">Loading matches...</div>
             </div>
           ) : matches.length > 0 ? (
             <div className="grid">

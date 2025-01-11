@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { cricketApi } from '@/services/api';
+import Hero from '@/components/home/hero';
 interface Tournament {
   tour: string;
   duration: string;
@@ -36,22 +37,31 @@ const Page = () => {
   if (!scheduleData) return null;
 
   return (
-    <div className="container mx-auto mt-20 p-4 bg-black text-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Cricket Schedule</h1>
+    <div>
+            <Hero 
+        image="/images/schduleHeader.jpg" 
+        title1='Schedule' 
+        title2='INFO' 
+        subtitle='Check out the schedule of cricket season'
+      />
       
+
+    <div className="container mx-auto bg-black text-zinc-950 min-h-screen mx-auto p-10">
+      <h1 className="text-2xl font-bold mb-6">Cricket Schedule</h1>
       {Object.entries(scheduleData).map(([month, tournaments]) => (
-        <div key={month} className="mb-8">
+        <div key={month} className="pb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-300">{month}</h2>
-          <div className="space-y-4">
+          <div>
             {tournaments.map((tournament, index) => (
-              <div key={index} className="bg-gray-900 rounded-lg p-4">
-                <h3 className="font-medium text-white">{tournament.tour}</h3>
-                <p className="text-sm text-gray-400 mt-1">{tournament.duration}</p>
+              <div key={index} className="bg-white rounded-lg p-4 m-2">
+                <h3 className="font-medium">{tournament.tour}</h3>
+                <p className="text-sm  mt-1">{tournament.duration}</p>
               </div>
             ))}
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 };

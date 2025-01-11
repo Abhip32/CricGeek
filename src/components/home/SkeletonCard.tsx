@@ -1,5 +1,5 @@
 const SkeletonCard = () => (
-  <div className="min-w-[300px] p-4 rounded-lg bg-gray-100 animate-pulse">
+  <div className="min-w-[300px] p-4 m-2 rounded-lg bg-gray-100 animate-pulse">
     <div className="flex justify-between mb-4">
       <div className="h-6 w-24 bg-gray-200 rounded"></div>
       <div className="h-6 w-24 bg-gray-200 rounded"></div>

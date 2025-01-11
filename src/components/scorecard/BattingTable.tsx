@@ -15,16 +15,16 @@ interface BattingTableProps {
 export const BattingTable = ({ battingData }: BattingTableProps) => {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-black border border-gray-700">
+      <table className="min-w-full border border-gray-700">
         <thead>
-          <tr className="border-b border-gray-700 bg-red-600">
-            <th className="p-3 text-left text-white">Batter</th>
-            <th className="p-3 text-left text-white">Dismissal</th>
-            <th className="p-3 text-right text-white">R</th>
-            <th className="p-3 text-right text-white">B</th>
-            <th className="p-3 text-right text-white">4s</th>
-            <th className="p-3 text-right text-white">6s</th>
-            <th className="p-3 text-right text-white">SR</th>
+          <tr className="border-b border-gray-700 text-zinc-950 bg-white">
+            <th className="p-3 text-left">Batter</th>
+            <th className="p-3 text-left">Dismissal</th>
+            <th className="p-3 text-right">R</th>
+            <th className="p-3 text-right">B</th>
+            <th className="p-3 text-right">4s</th>
+            <th className="p-3 text-right">6s</th>
+            <th className="p-3 text-right">SR</th>
           </tr>
         </thead>
         <tbody>

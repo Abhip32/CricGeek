@@ -25,15 +25,11 @@ const News = () => {
 
   return (
     <section>
-      <h2 className="text-3xl font-bold text-left">Latest News</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {loading ? (
-          <>
-            <NewsSkeletonCard />
-            <NewsSkeletonCard />
-            <NewsSkeletonCard />
-            <NewsSkeletonCard />
-          </>
+           Array.from({ length: 4 }).map((_, index) => (
+            <NewsSkeletonCard key={index}/>
+           ))
         ) : (
           news.map((item: { id: number; [key: string]: any }, index: number) => (
             <NewsCard 

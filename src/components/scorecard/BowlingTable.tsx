@@ -18,15 +18,15 @@ export const BowlingTable = ({ bowlingData }: BowlingTableProps) => {
     <div className="overflow-x-auto">
       <table className="min-w-full bg-black border border-gray-700">
         <thead>
-          <tr className="border-b border-gray-700 bg-red-600">
-            <th className="p-3 text-left text-white">Bowler</th>
-            <th className="p-3 text-right text-white">O</th>
-            <th className="p-3 text-right text-white">M</th>
-            <th className="p-3 text-right text-white">R</th>
-            <th className="p-3 text-right text-white">W</th>
-            <th className="p-3 text-right text-white">NB</th>
-            <th className="p-3 text-right text-white">WD</th>
-            <th className="p-3 text-right text-white">ECO</th>
+          <tr className="border-b border-gray-700 bg-white text-zinc-950">
+            <th className="p-3 text-left ">Bowler</th>
+            <th className="p-3 text-right ">O</th>
+            <th className="p-3 text-right ">M</th>
+            <th className="p-3 text-right ">R</th>
+            <th className="p-3 text-right ">W</th>
+            <th className="p-3 text-right ">NB</th>
+            <th className="p-3 text-right ">WD</th>
+            <th className="p-3 text-right ">ECO</th>
           </tr>
         </thead>
         <tbody>

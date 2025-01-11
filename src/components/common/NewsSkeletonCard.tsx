@@ -1,11 +1,18 @@
 const NewsSkeletonCard = () => {
   return (
-    <div className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl p-4 sm:p-6 pb-6 sm:pb-8 pt-32 sm:pt-40 w-full h-[500px] bg-gray-800 animate-pulse">
-      <div className="absolute inset-0 bg-gray-700"></div>
-      <div className="relative z-10 mt-3 h-8 bg-gray-600 rounded w-3/4"></div>
-      <div className="relative z-10 mt-2 h-4 bg-gray-600 rounded w-full"></div>
-    </div>
+    <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full animate-pulse">
+      {/* Image Section */}
+      <div className="relative h-48 sm:h-auto bg-gray-300"></div>
+
+      {/* Content Section */}
+      <div className="sm:col-span-2 p-4 sm:p-6 flex flex-col justify-between">
+        <div className="h-6 bg-gray-300 rounded mb-4"></div>
+        <div className="h-4 bg-gray-300 rounded mb-2"></div>
+        <div className="h-4 bg-gray-300 rounded mb-2"></div>
+        <div className="h-4 bg-gray-300 rounded mt-4"></div>
+      </div>
+    </article>
   );
 };
 
-export default NewsSkeletonCard; 
+export default NewsSkeletonCard;

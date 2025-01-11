@@ -28,23 +28,23 @@ const ImageComponent = ({ src, alt }: { src: string; alt: string }) => {
 
 const MatchCarouselCard = ({ match }: { match: Match }) => {
   const CardContent = (
-    <div className="min-w-[300px] sm:min-w-[400px] w-full sm:w-[400px] h-full bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-colors shadow-lg">
+    <div className="min-w-[300px] sm:min-w-[400px] w-full sm:w-[400px] h-full rounded-lg p-4 hover:bg-gray-700 transition-colors shadow-lg bg-white">
       <div className="flex flex-col gap-2">
-        <div className="text-sm text-gray-400">{match.series}</div>
+        <div className="text-sm text-bold ">{match.series}</div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <ImageComponent src={match.flagA} alt={match.teamA} />
-            <span className="font-semibold">{match.teamA}</span>
-            <span className="text-gray-300">{match.scoreA}</span>
+            <span className="font-semibold ">{match.teamA}</span>
+            <span className="">{match.scoreA}</span>
           </div>
         </div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <ImageComponent src={match.flagB} alt={match.teamB} />
-            <span className="font-semibold">{match.teamB}</span>
-            <span className="text-gray-300">{match.scoreB}</span>
+            <span className="font-semibold ">{match.teamB}</span>
+            <span className="">{match.scoreB}</span>
           </div>
         </div>
 

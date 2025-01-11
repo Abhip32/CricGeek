@@ -9,17 +9,14 @@ interface Commentary {
 }
 
 interface CommentaryTabProps {
-  commentaryData: {
-    commentary: Commentary[];
-    currentInnings?: string;
-  } | null;
+  commentaryData:any;
   loading: boolean;
 }
 
 export const CommentaryTab = ({ commentaryData, loading }: CommentaryTabProps) => {
   console.log(commentaryData);
   if (loading) return <div>Loading...</div>;
-  if (!commentaryData || commentaryData.commentary.length === 0) return <div>No commentary available</div>;
+  if (!commentaryData) return <div className="text-white">No commentary available</div>;
 
   const isOverComment = (commentary: Commentary) => !commentary.over;
 
@@ -34,14 +31,8 @@ export const CommentaryTab = ({ commentaryData, loading }: CommentaryTabProps) =
 
   return (
     <div className="space-y-4">
-      {commentaryData.currentInnings && (
-        <h3 className="text-xl font-bold mb-4 text-white">
-          {commentaryData.currentInnings}
-        </h3>
-      )}
-      
       <div className="space-y-4">
-        {commentaryData.commentary.map((comment, index) => (
+        {commentaryData.map((comment:any, index:any) => (
           <div
             key={`${comment.over || 'comment'}-${index}`}
             className={`border border-gray-700 rounded-lg p-4 bg-black ${

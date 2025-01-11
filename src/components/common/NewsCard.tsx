@@ -1,21 +1,28 @@
 import { NewsItem } from "@/types/news";
 import Image from "next/image";
 
-const NewsCard = ({ title, description, image, headline}: NewsItem) => {
+const NewsCard = ({ title, description, image, headline }: NewsItem) => {
     return (
-        <article className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl p-4 sm:p-6 pb-6 sm:pb-8 pt-32 sm:pt-40 w-full h-[500px] shadow-lg transition-transform transform hover:scale-105">
-            <Image 
-                src={image} 
-                alt={title} 
-                className="absolute inset-0 h-full w-full object-cover object-top"
-                fill
-                priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900/60 to-transparent"></div>
-            <h3 className="relative z-10 mt-3 text-xl sm:text-2xl lg:text-3xl font-bold text-white line-clamp-2">{title}</h3>
-            <div className="relative z-10 mt-2 text-sm leading-6 text-gray-300 line-clamp-3">{headline}</div>
+        <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full">
+            {/* Image Section */}
+            <div className="relative w-full h-48 sm:h-auto">
+                <Image 
+                    src={image} 
+                    alt={title} 
+                    className="object-cover w-full h-full"
+                    fill
+                    priority
+                />
+            </div>
+
+            {/* Content Section */}
+            <div className="sm:col-span-2 p-4 sm:p-6 flex flex-col justify-between">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 line-clamp-2">{title}</h3>
+                <p className="mt-2 text-sm text-gray-600 line-clamp-3">{headline}</p>
+                <p className="mt-4 text-sm text-gray-500 line-clamp-4">{description}</p>
+            </div>
         </article>
     );
-}
+};
 
 export default NewsCard;
