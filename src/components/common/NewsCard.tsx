@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const NewsCard = ({ title, description, image, headline }: NewsItem) => {
     return (
-        <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full">
+        <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border hover:border-red-600 rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full">
             {/* Image Section */}
             <div className="relative w-full h-48 sm:h-auto">
                 <Image 

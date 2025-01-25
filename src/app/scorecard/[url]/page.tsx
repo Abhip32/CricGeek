@@ -67,7 +67,7 @@ const Page = () => {
   return (
     <div>
       <MiniScoreCard data={miniScoreData}/>
-      <div className="container mx-auto bg-zinc-950 p-10 min-h-screen">
+      <div className="container mx-auto bg-white min-h-screen">
 
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
         <div>

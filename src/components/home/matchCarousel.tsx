@@ -56,7 +56,7 @@ export default function MatchCarousel() {
 
 
   return (
-    <div>
+    <div className='m-5'>
       <Carousel>      
       <CarouselContent>
         {loading ? (

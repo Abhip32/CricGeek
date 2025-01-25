@@ -30,13 +30,13 @@ export const BattingTable = ({ battingData }: BattingTableProps) => {
         <tbody>
           {battingData.map((row, index) => (
             <tr key={index} className="border-b border-gray-700">
-              <td className="p-3 text-white font-medium">{row.name}</td>
-              <td className="p-3 text-gray-300">{row.dismissal.replace('► ►', '').trim()}</td>
-              <td className="p-3 text-right text-white">{row.runs}</td>
-              <td className="p-3 text-right text-gray-300">{row.balls}</td>
-              <td className="p-3 text-right text-gray-300">{row.fours}</td>
-              <td className="p-3 text-right text-gray-300">{row.sixes}</td>
-              <td className="p-3 text-right text-gray-300">{row.strikeRate}</td>
+              <td className="p-3  font-medium">{row.name}</td>
+              <td className="p-3 ">{row.dismissal?.replace('► ►', '').trim()}</td>
+              <td className="p-3 text-right ">{row.runs}</td>
+              <td className="p-3 text-right ">{row.balls}</td>
+              <td className="p-3 text-right ">{row.fours}</td>
+              <td className="p-3 text-right ">{row.sixes}</td>
+              <td className="p-3 text-right ">{row.strikeRate}</td>
             </tr>
           ))}
         </tbody>

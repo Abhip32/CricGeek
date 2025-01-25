@@ -30,8 +30,8 @@ export const SquadsTab = ({ squadsData, loading }: SquadsTabProps) => {
 
     return (
       <div className="flex-1">
-        <h3 className="text-xl font-bold mb-4 text-white">{team.name}</h3>
-        <div className="bg-black border border-gray-700 rounded-lg overflow-hidden">
+        <h3 className="text-xl font-bold mb-4 ">{team.name}</h3>
+        <div className="bg-white border border-gray-700 rounded-lg overflow-hidden">
           {team.players.map((player, index) => (
             <div
               key={player.name}
@@ -45,13 +45,13 @@ export const SquadsTab = ({ squadsData, loading }: SquadsTabProps) => {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 )}
-                <span className="text-white font-medium">
+                <span className=" font-medium">
                   {player.name}
                   {player.captain && <span className="ml-2 text-yellow-500">(C)</span>}
                   {player.wicketkeeper && <span className="ml-2 text-blue-500">(WK)</span>}
                 </span>
               </div>
-              <div className="text-sm text-gray-400 mt-2 sm:mt-0">
+              <div className="text-sm  mt-2 sm:mt-0">
                 {[
                   player.role,
                   player.battingStyle,

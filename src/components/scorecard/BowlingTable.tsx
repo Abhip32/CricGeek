@@ -16,7 +16,7 @@ interface BowlingTableProps {
 export const BowlingTable = ({ bowlingData }: BowlingTableProps) => {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-black border border-gray-700">
+      <table className="min-w-full border border-gray-700">
         <thead>
           <tr className="border-b border-gray-700 bg-white text-zinc-950">
             <th className="p-3 text-left ">Bowler</th>
@@ -32,14 +32,14 @@ export const BowlingTable = ({ bowlingData }: BowlingTableProps) => {
         <tbody>
           {bowlingData.map((row, index) => (
             <tr key={index} className="border-b border-gray-700">
-              <td className="p-3 text-white font-medium">{row.name}</td>
-              <td className="p-3 text-right text-gray-300">{row.overs}</td>
-              <td className="p-3 text-right text-gray-300">{row.maidens}</td>
-              <td className="p-3 text-right text-gray-300">{row.runs}</td>
-              <td className="p-3 text-right text-white">{row.wickets}</td>
-              <td className="p-3 text-right text-gray-300">{row.noBalls}</td>
-              <td className="p-3 text-right text-gray-300">{row.wides}</td>
-              <td className="p-3 text-right text-gray-300">{row.economy}</td>
+              <td className="p-3  font-medium">{row.name}</td>
+              <td className="p-3 text-right ">{row.overs}</td>
+              <td className="p-3 text-right ">{row.maidens}</td>
+              <td className="p-3 text-right ">{row.runs}</td>
+              <td className="p-3 text-right ">{row.wickets}</td>
+              <td className="p-3 text-right ">{row.noBalls}</td>
+              <td className="p-3 text-right ">{row.wides}</td>
+              <td className="p-3 text-right ">{row.economy}</td>
             </tr>
           ))}
         </tbody>

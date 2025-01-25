@@ -2,6 +2,7 @@
 import Hero from '@/components/home/hero'
 import MatchCard from '@/components/matches/MatchCard'
 import React, { useState, useEffect } from 'react'
+import Spinner from '@/components/common/Spinner'
 import { cricketApi } from '@/services/api';
 
 type ApiEndpoint = 'getLiveMatches' | 'getRecentMatches' | 'getUpcomingMatches';
@@ -54,17 +55,10 @@ const Matches = () => {
   }, [activeTab])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-800">
-      <Hero 
-        image="/images/matchInfoHeader.jpg" 
-        title1='MATCHES' 
-        title2='INFO' 
-        subtitle='Capture Live Cricket Action Across The Globe'
-      />
-      
+    <div className="min-h-screen bg-white">      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tab Navigation */}
-        <div className="flex justify-between space-x-2 rounded-xl bg-gray-800/50 p-1 backdrop-blur-lg mb-8">
+        <div className="flex justify-between space-x-2 rounded-xl bg-gray-200 border backdrop-blur-lg mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -72,7 +66,7 @@ const Matches = () => {
               className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
                 ${activeTab === tab.id 
                   ? 'bg-white text-black shadow-lg' 
-                  : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                  : 'text-gray-600 hover:bg-gray-700/50 hover:text-white'
                 }`}
             >
               {tab.label}
@@ -81,10 +75,10 @@ const Matches = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+        <div className="bg-gray-200 backdrop-blur-sm rounded-xl p-6 shadow-xl">
           {loading ? (
             <div className="min-h-[400px] flex items-center justify-center">
-              <div className="text-white">Loading matches...</div>
+              <Spinner/>
             </div>
           ) : matches.length > 0 ? (
             <div className="grid">

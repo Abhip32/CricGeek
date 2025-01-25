@@ -34,10 +34,10 @@ const News = () => {
           news.map((item: { id: number; [key: string]: any }, index: number) => (
             <NewsCard 
               key={`news-${item.id || index}`}
-              title={item.tit}
-              description={item.Content}
-              image={item.Images}
-              headline={item.Headline}
+              title={item.news_title}
+              description={item.news_content}
+              image={item.news_img}
+              headline={item.news_headlone}
               {...item}
             />
           ))
