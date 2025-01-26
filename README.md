@@ -32,6 +32,12 @@ Here are some screenshots showcasing the features of CricGeek:
 ### Scorecard
 ![Scorecard](screenshots/scorecard.png)
 
+### Squads
+![Squads](screenshots/squads.png)
+
+### Commantary
+![Squads](screenshots/commentary.png)
+
 ## Installation
 
 Clone this repository to your local machine:
