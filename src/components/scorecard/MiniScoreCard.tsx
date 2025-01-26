@@ -4,7 +4,7 @@ import NewsCard from '../common/NewsCard';
 
 const MiniScoreCard = ({ data, scoreData }: any) => {
   console.log(scoreData);
-  const { batting, bowling, matchInfo, title, venue } = data || {};
+  const { batting, bowling, matchInfo, title, venue, playerOfTheMatch, playerOfTheSeries } = data || {};
   const { team: battingTeam, score: battingScore, currentBatsmen } = batting || {};
   const { team: bowlingTeam, score: bowlingScore, currentBowlers } = bowling || {};
   const { team1, team2 } = matchInfo?.teams || {};
@@ -16,7 +16,7 @@ const MiniScoreCard = ({ data, scoreData }: any) => {
     const leftDiv = document.getElementById('left-container');
     if (leftDiv) {
       console.log(leftDiv.clientHeight)
-      if(leftDiv.clientHeight <300){
+      if(leftDiv.clientHeight >300){
         setLeftHeight(leftDiv.clientHeight);
     }
     else{
@@ -55,8 +55,7 @@ const MiniScoreCard = ({ data, scoreData }: any) => {
             <span className="text-xl font-bold">{team2?.name}</span>
           </div>
         </div>
-        {title && <div className="text-lg font-semibold mt-2">{title}</div>}
-        {venue && <div className="text-md text-gray-600 mt-1">{venue}</div>}
+
 
         {battingScore && (
           <div className="mt-4">
@@ -146,6 +145,9 @@ const MiniScoreCard = ({ data, scoreData }: any) => {
             )}
           </div>
         )}
+
+      {playerOfTheMatch && <div className="text-lg font-semibold mt-2">Player of the match : {playerOfTheMatch.name}</div>}
+      {playerOfTheSeries && <div className="text-lg font-semibold mt-2">Player of the series : {playerOfTheSeries.name}</div>}
       </div>
 
       {/* Right Div */}
