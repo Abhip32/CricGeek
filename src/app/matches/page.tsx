@@ -56,7 +56,8 @@ const Matches = () => {
 
   return (
     <div className="min-h-screen bg-white">      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+     <Hero image='/images/matchInfoHeader.jpg' heading='Capture Live Cricket Action Across the Glob' subtitle=''/>
+      <div className="max-w-7xl mx-auto py-8">
         {/* Tab Navigation */}
         <div className="flex justify-between space-x-2 rounded-xl bg-gray-200 border backdrop-blur-lg mb-8">
           {tabs.map((tab) => (
@@ -65,7 +66,7 @@ const Matches = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
                 ${activeTab === tab.id 
-                  ? 'bg-white text-black shadow-lg' 
+                  ? 'bg-red-600 text-white shadow-lg' 
                   : 'text-gray-600 hover:bg-gray-700/50 hover:text-white'
                 }`}
             >

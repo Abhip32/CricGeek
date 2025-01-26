@@ -4,14 +4,14 @@ interface TabNavigationProps {
 }
 
 export const TabNavigation = ({ activeTab, setActiveTab }: TabNavigationProps) => (
-  <div className="flex border-b mb-4">
+  <div className="flex border-b p-2">
     {['scorecard', 'squads', 'details','commentary'].map((tab) => (
       <button
         key={tab}
-        className={`flex-1 px-4 py-2 bg-gray-800 ${
+        className={`flex-1 px-4 py-2 ${
           activeTab === tab
-            ? 'border-b-2 bg-white text-zinc-950 font-bold'
-            : 'bg-zinc-950 text-white'
+                       ? 'bg-red-600 text-white shadow-lg' 
+                  : 'text-gray-800 bg-gray-200 hover:bg-gray-700/50 hover:text-white'
         }`}
         onClick={() => setActiveTab(tab)}
       >

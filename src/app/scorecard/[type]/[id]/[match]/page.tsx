@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
 import { cricketApi } from '@/services/api';
 import { useParams } from 'next/navigation';
@@ -8,10 +9,12 @@ import { DetailsTab } from '@/components/scorecard/DetailsTab';
 import { SquadsTab } from '@/components/scorecard/SquadsTab';
 import MiniScoreCard from '@/components/scorecard/MiniScoreCard';
 import { CommentaryTab } from '@/components/scorecard/CommentaryTab';
-import Hero from '@/components/home/hero';
+import Spinner from '@/components/common/Spinner';
 
 const Page = () => {
-  const params = useParams();
+  const params = useParams(); // params is now a promise-like object
+  const [resolvedParams, setResolvedParams] = useState<any>(null);
+
   const [scoreData, setScoreData] = useState(null);
   const [squadsData, setSquadsData] = useState(null);
   const [commentaryData, setCommentaryData] = useState(null);
@@ -19,35 +22,43 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('scorecard');
 
+  // Resolve params and fetch data
   useEffect(() => {
-    const fetchData = async () => {
+    const resolveParamsAndFetchData = async () => {
       try {
-        setLoading(true)
-        const decodedUrl = decodeURIComponent(params.url as string)
-        
+        // Resolve params if it is a promise-like object
+        const resolved = await params;
+        setResolvedParams(resolved);
+
+        const { type, id, match } = resolved || {};
+        if (!type || !id || !match) {
+          console.error('Invalid URL parameters');
+          return;
+        }
+
+        const decodedUrl = `/${type}/${id}/${match}`;
+
         // Fetch all data in parallel
         const [scoreResponse, miniScoreResponse, squadsResponse, commentaryResponse] = await Promise.all([
           cricketApi.getScoreCard(decodedUrl),
           cricketApi.getMiniScoreCard(decodedUrl),
           cricketApi.getSquads(decodedUrl),
-          cricketApi.getCommentary(decodedUrl)
-        ])
+          cricketApi.getCommentary(decodedUrl),
+        ]);
 
-        setScoreData(scoreResponse)
-        setSquadsData(squadsResponse)
-        setCommentaryData(commentaryResponse)
-        setMiniScoreData(miniScoreResponse)
+        setScoreData(scoreResponse);
+        setSquadsData(squadsResponse);
+        setCommentaryData(commentaryResponse);
+        setMiniScoreData(miniScoreResponse);
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error resolving params or fetching data:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    if (params.url) {
-      fetchData()
-    }
-  }, [params.url])
+    resolveParamsAndFetchData();
+  }, [params]);
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -65,17 +76,24 @@ const Page = () => {
   };
 
   return (
-    <div>
-      <MiniScoreCard data={miniScoreData}/>
-      <div className="container mx-auto bg-white min-h-screen">
-
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div>
-          {renderActiveTab()}
+    <div className="min-h-screen mx-auto">
+      {loading ? (
+        <div className="flex items-center justify-center w-full h-screen bg-white text-black shadow-lg">
+          <Spinner />
         </div>
-    </div>
+      ) : (
+        <>
+          <MiniScoreCard data={miniScoreData} scoreData={scoreData}/>
+          <br/>
+          <div className="container mx-auto bg-white min-h-screen">
+            <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+            <div>{renderActiveTab()}</div>
+          </div>
+        </>
+      )}
     </div>
   );
+  
 };
 
 export default Page;

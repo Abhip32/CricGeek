@@ -7,6 +7,7 @@ import Navbar from '@/components/common/Navbar'
 const Home = () => {
   return (
     <div className="min-h-screen">
+      <Hero image='/images/homebanner.jpeg' heading='Ultimate Destination For a True Cricket Fan' subtitle=''/>
       <div className="p-5">
         <div className="max-w-7xl mx-auto">
           <h1 className='text-2xl py-5 font-bold'>Live Matches</h1>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Spinner from '@/components/common/Spinner';
 import { cricketApi } from '@/services/api';
+import Hero from '@/components/home/hero'
 
 type Ranking = {
   name: string;
@@ -111,20 +112,21 @@ const RankingsDashboard: React.FC = () => {
   const subTabRankings = getSubTabRankings();
 
   return (
-    <div className="min-h-screen bg-white p-5">
+    <div className="min-h-screen bg-white">
+            <Hero image='/images/rankingsHeader.jpg' heading='ICC rankings of your favourite cricket heros' subtitle=''/>
         <div className="max-w-7xl mx-auto">
           <h1 className='text-2xl py-5 font-bold'>ICC Rankings</h1>
         </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto py-8">
         {/* Main Tab Navigation */}
         <div className="flex justify-between space-x-2 rounded-xl bg-gray-200 border backdrop-blur-lg mb-8">
           {mainTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveMainTab(tab.id)}
-              className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
+              className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all ease-in-out duration-200
                 ${activeMainTab === tab.id 
-                  ? 'bg-white text-black shadow-lg' 
+                  ? 'bg-red-600 text-white shadow-lg' 
                   : 'text-gray-800 hover:bg-gray-700/50 hover:text-white'
                 }`}
             >
@@ -139,7 +141,7 @@ const RankingsDashboard: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id)}
-              className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
+              className={`flex-1 px-6 py-3 text-sm font-medium rounded-lg transition-colors ease-in-out duration-200
                 ${activeSubTab === tab.id 
                   ? 'bg-white text-black shadow-lg' 
                   : 'text-gray-800 hover:bg-gray-700/50 hover:text-white'
@@ -163,7 +165,7 @@ const RankingsDashboard: React.FC = () => {
                   <img
                     src={ranking.photo}
                     alt={ranking.name}
-                    className="w-16 h-16 rounded-full mb-2"
+                    className="w-16 h-16 rounded-full mb-2 shadow-xl"
                   />
                   <h3 className="font-bold">{ranking.name}</h3>
                   <p>Country: {ranking.country}</p>

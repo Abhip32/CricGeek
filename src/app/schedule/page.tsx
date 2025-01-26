@@ -36,9 +36,9 @@ const Page = () => {
   if (loading) return <div className="flex justify-center items-center min-h-screen text-white"><Spinner/></div>;
 
   return (
-    <div>      
-
-    <div className="container mx-auto min-h-screen mx-auto p-10">
+    <div className='min-h-screen'>      
+      <Hero image='/images/schduleHeader.jpg' heading='Checkout Schedule For Upcoming Matches' subtitle=''/>
+    <div className="container max-w-7xl mx-auto py-8 ">
       <h1 className="text-2xl font-bold mb-6">Cricket Schedule</h1>
       {Object.entries(scheduleData).map(([month, tournaments]) => (
         <div key={month} className="pb-8">

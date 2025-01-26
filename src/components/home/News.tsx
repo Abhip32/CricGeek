@@ -37,7 +37,7 @@ const News = () => {
               title={item.news_title}
               description={item.news_content}
               image={item.news_img}
-              headline={item.news_headlone}
+              headline={item.news_headline}
               {...item}
             />
           ))

@@ -44,7 +44,7 @@ export const CommentaryTab = ({ commentaryData, loading }: CommentaryTabProps) =
                 <div
                   className={`${getBallClass(
                     comment
-                  )} w-12 h-12 rounded-full flex items-center justify-center  font-bold`}
+                  )} w-12 h-12 rounded-full flex items-center justify-center bg-red-600 text-white font-bold`}
                 >
                   {comment.over}
                 </div>

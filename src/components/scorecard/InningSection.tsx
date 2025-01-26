@@ -34,7 +34,7 @@ interface InningProps {
 
 export const InningSection = ({ inning }: InningProps) => {
   return (
-    <div className="mb-8">
+    <div className="mb-8 p-2">
       <h2 className="text-xl font-bold mb-4">{inning.header}</h2>
       
       <div className="space-y-6">
@@ -42,7 +42,7 @@ export const InningSection = ({ inning }: InningProps) => {
         
         {/* Extras and Total */}
         <div className=" border border-gray-700 p-4 rounded-lg space-y-2">
-          <div className="flex justify-between ">
+          <div className="flex justify-between">
             <span>Extras</span>
             <span>{inning.extras.total} ({inning.extras.details})</span>
           </div>

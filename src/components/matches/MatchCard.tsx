@@ -77,7 +77,7 @@ const MatchCard = ({
             {type !== 'getUpcomingMatches' && (
               <>
                 <Link 
-                  href={`/scorecard/${encodeURIComponent(links?.scorecard || '')}`}
+                  href={`/scorecard/${links?.scorecard}`}
                   className="text-xs  hover:bg-red-900 bg-red-600 p-2 font-bold text-white rounded-xl"
                 >
                   Scorecard

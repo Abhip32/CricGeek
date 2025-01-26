@@ -18,7 +18,7 @@ export const BowlingTable = ({ bowlingData }: BowlingTableProps) => {
     <div className="overflow-x-auto">
       <table className="min-w-full border border-gray-700">
         <thead>
-          <tr className="border-b border-gray-700 bg-white text-zinc-950">
+          <tr className="text-white bg-red-600">
             <th className="p-3 text-left ">Bowler</th>
             <th className="p-3 text-right ">O</th>
             <th className="p-3 text-right ">M</th>

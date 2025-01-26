@@ -29,7 +29,7 @@ export const SquadsTab = ({ squadsData, loading }: SquadsTabProps) => {
     if (!team) return null;
 
     return (
-      <div className="flex-1">
+      <div className="flex-1 p-2">
         <h3 className="text-xl font-bold mb-4 ">{team.name}</h3>
         <div className="bg-white border border-gray-700 rounded-lg overflow-hidden">
           {team.players.map((player, index) => (

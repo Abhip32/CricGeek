@@ -17,7 +17,7 @@ export const BattingTable = ({ battingData }: BattingTableProps) => {
     <div className="overflow-x-auto">
       <table className="min-w-full border border-gray-700">
         <thead>
-          <tr className="border-b border-gray-700 text-zinc-950 bg-white">
+          <tr className="text-white bg-red-600">
             <th className="p-3 text-left">Batter</th>
             <th className="p-3 text-left">Dismissal</th>
             <th className="p-3 text-right">R</th>

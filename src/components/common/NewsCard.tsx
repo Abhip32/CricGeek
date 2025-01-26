@@ -3,25 +3,18 @@ import Image from "next/image";
 
 const NewsCard = ({ title, description, image, headline }: NewsItem) => {
     return (
-        <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border hover:border-red-600 rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full">
-            {/* Image Section */}
-            <div className="relative w-full h-48 sm:h-auto">
-                <Image 
-                    src={image} 
-                    alt={title} 
-                    className="object-cover w-full h-full"
-                    fill
-                    priority
-                />
-            </div>
-
-            {/* Content Section */}
-            <div className="sm:col-span-2 p-4 sm:p-6 flex flex-col justify-between">
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 line-clamp-2">{title}</h3>
-                <p className="mt-2 text-sm text-gray-600 line-clamp-3">{headline}</p>
-                <p className="mt-4 text-sm text-gray-500 line-clamp-4">{description}</p>
-            </div>
-        </article>
+	<div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white">
+		<div className="w-full md:w-1/3 bg-white grid place-items-center">
+			<img src={image} alt="tailwind logo" className="rounded-xl" />
+        </div>
+			<div className="w-full md:w-2/3 bg-white flex flex-col space-y-2 p-3">
+				<div className="flex justify-between item-center">
+					<p className="text-gray-500 font-medium hidden md:block">{title}</p>
+				</div>
+				<h5 className="font-black text-gray-800 md:text-3xl text-xl">{headline}</h5>
+				<p className="md:text-lg text-gray-500 text-base">{description}</p>
+			</div>
+		</div>
     );
 };
 
