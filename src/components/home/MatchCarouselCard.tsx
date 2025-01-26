@@ -54,9 +54,9 @@ const MatchCarouselCard = ({ match }: { match: Match }) => {
   );
 
   return match.links?.livescore ? (
-    <Link href={match.links.livescore} target="_blank">
+    <div>
       {CardContent}
-    </Link>
+    </div>
   ) : (
     CardContent
   );
