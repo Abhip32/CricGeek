@@ -88,7 +88,7 @@ body {
     #e2e8f0 100%
   );
   background-size: 250% 100%;
-  animation: shimmerWave 1.6s ease-in-out infinite;
+  animation: shimmerWave 2.8s ease-in-out infinite;
 }
 
 .shimmer-block-subtle {
@@ -101,7 +101,7 @@ body {
     #f1f5f9 100%
   );
   background-size: 250% 100%;
-  animation: shimmerWave 1.6s ease-in-out infinite;
+  animation: shimmerWave 2.8s ease-in-out infinite;
 }
 
 /* Custom scrollbars */
