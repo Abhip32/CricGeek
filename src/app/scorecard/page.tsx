@@ -10,6 +10,7 @@ import ScorecardTab from '@/components/scorecard/ScorecardTab';
 import DetailsTab from '@/components/scorecard/DetailsTab';
 import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
+import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
 import EmptyState from '@/components/common/EmptyState';
 import { RefreshCw, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -95,9 +96,9 @@ function ScorecardContent() {
         <div className="flex items-center justify-between">
           <Link
             href="/matches"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-red-600 transition-colors group"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all shadow-2xs group"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-red-600 transition-transform group-hover:-translate-x-1" />
             <span>Back to Matches</span>
           </Link>
 
@@ -111,22 +112,10 @@ function ScorecardContent() {
           </button>
         </div>
 
-        {/* Header Hero Scorecard Banner */}
-        <MiniScoreCard 
-          summary={scoreData?.data?.summary} 
-          matchProp={matchProp}
-        />
-
-        {/* Tab Navigation */}
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        {/* Tab Content */}
-        {loading && !scoreData ? (
-          <div className="space-y-4 animate-pulse">
-            <div className="h-64 rounded-xl bg-white border border-slate-200" />
-            <div className="h-64 rounded-xl bg-white border border-slate-200" />
-          </div>
-        ) : error && !scoreData ? (
+        {/* Loading State Skeleton */}
+        {loading && !scoreData && !matchProp ? (
+          <ScorecardSkeleton />
+        ) : error && !scoreData && !matchProp ? (
           <EmptyState
             type="scorecard"
             title="Scorecard Unavailable"
@@ -135,8 +124,32 @@ function ScorecardContent() {
             onAction={() => fetchData()}
           />
         ) : (
-          <div className="min-h-[400px]">
-            {renderActiveTab()}
+          <div className="space-y-6">
+            {/* Header Hero Scorecard Banner */}
+            <MiniScoreCard 
+              summary={scoreData?.data?.summary} 
+              matchProp={matchProp}
+            />
+
+            {/* Tab Navigation */}
+            <TabNavigation
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              hasSquads={Boolean(squadsData && (squadsData.team1 || squadsData.team2 || squadsData.squads))}
+              hasCommentary={Boolean(commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0)}
+            />
+
+            {/* Tab Content */}
+            {loading && !scoreData ? (
+              <div className="space-y-4 animate-pulse">
+                <div className="h-64 rounded-xl bg-white border border-slate-200" />
+                <div className="h-64 rounded-xl bg-white border border-slate-200" />
+              </div>
+            ) : (
+              <div className="min-h-[400px]">
+                {renderActiveTab()}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -148,9 +161,8 @@ export default function ScorecardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 py-8 max-w-7xl mx-auto px-4 space-y-6">
-          <div className="h-64 rounded-xl bg-white border border-slate-200 animate-pulse" />
-          <div className="h-64 rounded-xl bg-white border border-slate-200 animate-pulse" />
+        <div className="min-h-screen bg-slate-50 py-8 max-w-7xl mx-auto px-4">
+          <ScorecardSkeleton />
         </div>
       }
     >

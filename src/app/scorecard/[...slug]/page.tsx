@@ -10,6 +10,7 @@ import ScorecardTab from '@/components/scorecard/ScorecardTab';
 import DetailsTab from '@/components/scorecard/DetailsTab';
 import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
+import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
 import EmptyState from '@/components/common/EmptyState';
 import { RefreshCw, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -123,27 +124,10 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
           </button>
         </div>
 
-        {/* Header Hero Scorecard Banner */}
-        <MiniScoreCard 
-          summary={scoreData?.data?.summary} 
-          matchProp={matchProp}
-        />
-
-        {/* Tab Navigation */}
-        <TabNavigation
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          hasSquads={Boolean(squadsData && (squadsData.team1 || squadsData.team2 || squadsData.squads))}
-          hasCommentary={Boolean(commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0)}
-        />
-
-        {/* Tab Content */}
-        {loading && !scoreData ? (
-          <div className="space-y-4 animate-pulse">
-            <div className="h-64 rounded-xl bg-white border border-slate-200" />
-            <div className="h-64 rounded-xl bg-white border border-slate-200" />
-          </div>
-        ) : error && !scoreData ? (
+        {/* Loading State Skeleton when no data is loaded yet */}
+        {loading && !scoreData && !matchProp ? (
+          <ScorecardSkeleton />
+        ) : error && !scoreData && !matchProp ? (
           <EmptyState
             type="scorecard"
             title="Scorecard Unavailable"
@@ -152,8 +136,32 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
             onAction={() => fetchData()}
           />
         ) : (
-          <div className="min-h-[400px]">
-            {renderActiveTab()}
+          <div className="space-y-6">
+            {/* Header Hero Scorecard Banner */}
+            <MiniScoreCard 
+              summary={scoreData?.data?.summary} 
+              matchProp={matchProp}
+            />
+
+            {/* Tab Navigation */}
+            <TabNavigation
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              hasSquads={Boolean(squadsData && (squadsData.team1 || squadsData.team2 || squadsData.squads))}
+              hasCommentary={Boolean(commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0)}
+            />
+
+            {/* Tab Content */}
+            {loading && !scoreData ? (
+              <div className="space-y-4 animate-pulse">
+                <div className="h-64 rounded-xl bg-white border border-slate-200" />
+                <div className="h-64 rounded-xl bg-white border border-slate-200" />
+              </div>
+            ) : (
+              <div className="min-h-[400px]">
+                {renderActiveTab()}
+              </div>
+            )}
           </div>
         )}
       </div>
