@@ -153,10 +153,7 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
 
             {/* Tab Content */}
             {loading && !scoreData ? (
-              <div className="space-y-4 animate-pulse">
-                <div className="h-64 rounded-xl bg-white border border-slate-200" />
-                <div className="h-64 rounded-xl bg-white border border-slate-200" />
-              </div>
+              <ScorecardTab scoreData={null} loading={true} />
             ) : (
               <div className="min-h-[400px]">
                 {renderActiveTab()}

@@ -3,6 +3,7 @@
 import React from 'react';
 import { InningSection } from './InningSection';
 import { ScorecardTable } from '@/types/match';
+import ScorecardTableSkeleton from './ScorecardTableSkeleton';
 import EmptyState from '../common/EmptyState';
 
 interface ScorecardTabProps {
@@ -13,12 +14,7 @@ interface ScorecardTabProps {
 
 export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }) => {
   if (loading) {
-    return (
-      <div className="space-y-4 animate-pulse">
-        <div className="h-64 rounded-xl bg-white border border-slate-200" />
-        <div className="h-64 rounded-xl bg-white border border-slate-200" />
-      </div>
-    );
+    return <ScorecardTableSkeleton />;
   }
 
   // Legacy format support
