@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { cricketApi } from '@/services/api';
-import { ScorecardResponse } from '@/types/match';
+import { ScorecardResponse, Match } from '@/types/match';
 import MiniScoreCard from '@/components/scorecard/MiniScoreCard';
 import TabNavigation from '@/components/scorecard/TabNavigation';
 import ScorecardTab from '@/components/scorecard/ScorecardTab';
@@ -17,6 +17,21 @@ import Link from 'next/link';
 function ScorecardContent() {
   const searchParams = useSearchParams();
   const matchUrl = searchParams.get('url') || undefined;
+
+  const [matchProp, setMatchProp] = useState<Match | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem('cricgeek_active_match');
+        if (stored) {
+          setMatchProp(JSON.parse(stored));
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, []);
 
   const [scoreData, setScoreData] = useState<ScorecardResponse | null>(null);
   const [squadsData, setSquadsData] = useState<any>(null);
@@ -74,54 +89,54 @@ function ScorecardContent() {
   };
 
   return (
-    <div className="min-h-screen py-8 sm:py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="min-h-screen bg-slate-50 py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Navigation & Controls Bar */}
         <div className="flex items-center justify-between">
           <Link
             href="/matches"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-white transition-colors group"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-red-600 transition-colors group"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-emerald-400" />
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span>Back to Matches</span>
           </Link>
 
           <button
             onClick={() => fetchData(true)}
             disabled={loading || refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold glass-panel border border-white/10 text-slate-300 hover:text-white hover:border-emerald-500/40 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>{refreshing ? 'Updating...' : 'Refresh Score'}</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
+            <span>{refreshing ? 'Updating...' : 'Refresh Scorecard'}</span>
           </button>
         </div>
 
-        {/* Loading State Skeleton */}
-        {loading ? (
-          <div className="space-y-6">
-            <div className="h-64 rounded-2xl glass-panel bg-white/5 animate-pulse" />
-            <div className="h-12 w-96 rounded-xl glass-panel bg-white/5 animate-pulse" />
-            <div className="h-80 rounded-2xl glass-panel bg-white/5 animate-pulse" />
+        {/* Header Hero Scorecard Banner */}
+        <MiniScoreCard 
+          summary={scoreData?.data?.summary} 
+          matchProp={matchProp}
+        />
+
+        {/* Tab Navigation */}
+        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+
+        {/* Tab Content */}
+        {loading && !scoreData ? (
+          <div className="space-y-4 animate-pulse">
+            <div className="h-64 rounded-xl bg-white border border-slate-200" />
+            <div className="h-64 rounded-xl bg-white border border-slate-200" />
           </div>
         ) : error && !scoreData ? (
           <EmptyState
+            type="scorecard"
             title="Scorecard Unavailable"
-            description={error}
+            message={error}
             actionLabel="Try Again"
             onAction={() => fetchData()}
           />
         ) : (
-          <div className="space-y-8">
-            {/* Header Hero Scorecard Banner */}
-            <MiniScoreCard summary={scoreData?.data?.summary} />
-
-            {/* Tab Navigation */}
-            <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-            {/* Tab Content */}
-            <div className="min-h-[400px]">
-              {renderActiveTab()}
-            </div>
+          <div className="min-h-[400px]">
+            {renderActiveTab()}
           </div>
         )}
       </div>
@@ -133,10 +148,9 @@ export default function ScorecardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
-          <div className="h-64 rounded-2xl glass-panel bg-white/5 animate-pulse" />
-          <div className="h-12 w-96 rounded-xl glass-panel bg-white/5 animate-pulse" />
-          <div className="h-80 rounded-2xl glass-panel bg-white/5 animate-pulse" />
+        <div className="min-h-screen bg-slate-50 py-8 max-w-7xl mx-auto px-4 space-y-6">
+          <div className="h-64 rounded-xl bg-white border border-slate-200 animate-pulse" />
+          <div className="h-64 rounded-xl bg-white border border-slate-200 animate-pulse" />
         </div>
       }
     >

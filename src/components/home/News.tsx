@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import NewsCard from '@/components/common/NewsCard';
-import NewsSkeletonCard from '@/components/common/NewsSkeletonCard';
-import EmptyState from '@/components/common/EmptyState';
 import { cricketApi } from '@/services/api';
 import { NewsItem } from '@/types/news';
-import { RefreshCw } from 'lucide-react';
+import NewsCard from '../common/NewsCard';
+import NewsSkeletonCard from '../common/NewsSkeletonCard';
+import EmptyState from '../common/EmptyState';
+import { Newspaper } from 'lucide-react';
 
 export const News = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -15,10 +15,10 @@ export const News = () => {
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const response = await cricketApi.getTopNews(6);
-      setNews(response);
-    } catch (error) {
-      console.warn('Failed to fetch news:', error);
+      const data = await cricketApi.getTopNews(8);
+      setNews(data || []);
+    } catch (err) {
+      console.warn('Failed to fetch news:', err);
       setNews([]);
     } finally {
       setLoading(false);
@@ -30,41 +30,42 @@ export const News = () => {
   }, []);
 
   return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between px-1">
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-          Top Stories & Match Previews
-        </span>
-        <button
-          onClick={fetchNews}
-          disabled={loading}
-          className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-emerald-400 transition-colors"
-        >
-          <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-emerald-400' : ''}`} />
-          <span className="hidden sm:inline">Refresh News</span>
-        </button>
-      </div>
+    <section className="bg-white py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
+        {/* Section Header */}
+        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div className="flex items-center gap-2.5">
+            <Newspaper className="w-5 h-5 text-red-600" />
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+              Top Cricket Headlines
+            </h2>
+          </div>
+          <span className="text-xs font-semibold text-slate-500">
+            Updated Hourly
+          </span>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* News Grid */}
         {loading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <NewsSkeletonCard key={index} />
-          ))
-        ) : news.length > 0 ? (
-          news.map((item, index) => (
-            <NewsCard
-              key={item.id || index}
-              {...item}
-            />
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <NewsSkeletonCard />
+            <NewsSkeletonCard />
+            <NewsSkeletonCard />
+            <NewsSkeletonCard />
+          </div>
+        ) : news.length === 0 ? (
+          <EmptyState
+            type="news"
+            title="No News Available"
+            message="Latest articles are currently updating. Please check back shortly."
+            actionLabel="Refresh News"
+            onAction={fetchNews}
+          />
         ) : (
-          <div className="col-span-full">
-            <EmptyState
-              type="news"
-              title="No news articles right now"
-              message="Failed to load recent news articles. Check your connection or click below to retry."
-              onRetry={fetchNews}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {news.map((item) => (
+              <NewsCard key={item.id} news={item} />
+            ))}
           </div>
         )}
       </div>

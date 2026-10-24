@@ -1,34 +1,39 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Hero from '@/components/home/hero';
+import React, { useEffect, useState, useMemo } from 'react';
+import { cricketApi } from '@/services/api';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
-import { cricketApi } from '@/services/api';
-import { Trophy, Medal, Search, RefreshCw, Users, User, ArrowUpRight } from 'lucide-react';
+import Hero from '@/components/home/hero';
+import { Trophy, Users, Shield, Search, RefreshCw } from 'lucide-react';
 
 export default function RankingsPage() {
-  const [activeType, setActiveType] = useState<'teams' | 'players'>('teams');
-  const [teamTables, setTeamTables] = useState<any[]>([]);
-  const [playerTables, setPlayerTables] = useState<any[]>([]);
+  const [category, setCategory] = useState<'teams' | 'players'>('teams');
+  const [selectedFormat, setSelectedFormat] = useState<'test' | 'odi' | 't20'>('test');
+  const [playerRole, setPlayerRole] = useState<'batting' | 'bowling' | 'allRounder'>('batting');
+
+  const [teamRankings, setTeamRankings] = useState<any>(null);
+  const [playerRankings, setPlayerRankings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeFormatIdx, setActiveFormatIdx] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchRankings = async () => {
-    setLoading(true);
+  const fetchRankings = async (isManual = false) => {
+    if (isManual) setRefreshing(true);
+    else setLoading(true);
+
     try {
-      const [teamsRes, playersRes] = await Promise.all([
+      const [teams, players] = await Promise.all([
         cricketApi.getTeamRankings(),
         cricketApi.getPlayerRankings()
       ]);
-      setTeamTables(Array.isArray(teamsRes) ? teamsRes : []);
-      setPlayerTables(Array.isArray(playersRes) ? playersRes : []);
+      setTeamRankings(teams);
+      setPlayerRankings(players);
     } catch (err) {
       console.warn('Failed to load rankings:', err);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -36,312 +41,377 @@ export default function RankingsPage() {
     fetchRankings();
   }, []);
 
-  // Current active tables based on type
-  const currentTables = activeType === 'teams' ? teamTables : playerTables;
-  const currentTable = currentTables[activeFormatIdx] || currentTables[0] || null;
+  // Resolve team ranking table
+  // API returns array: [{ tableTitle: 'ICC Test Rankings', teams: [...] }, { tableTitle: 'ICC ODI Rankings', ... }]
+  // Or legacy object format: { test: [...], odi: [...] }
+  const currentTeamList = useMemo(() => {
+    if (!teamRankings) return [];
+    
+    // Array format from backend
+    if (Array.isArray(teamRankings)) {
+      const targetTitlePattern = selectedFormat === 'test' 
+        ? /test/i 
+        : selectedFormat === 'odi' 
+        ? /\bodi\b/i 
+        : /t20/i;
+      
+      const foundBlock = teamRankings.find((block: any) => 
+        targetTitlePattern.test(block.tableTitle || '')
+      );
+      return foundBlock?.teams || [];
+    }
 
-  // Filter rows by search
-  const filteredRows = useMemo(() => {
-    if (!currentTable) return [];
-    const q = searchQuery.toLowerCase().trim();
-    const rows = currentTable.teams || currentTable.players || [];
+    // Object format fallback
+    if (selectedFormat === 'test') return teamRankings.test || teamRankings.testTeams || [];
+    if (selectedFormat === 'odi') return teamRankings.odi || teamRankings.odiTeams || [];
+    return teamRankings.t20 || teamRankings.t20Teams || [];
+  }, [teamRankings, selectedFormat]);
 
-    if (!q) return rows;
-    return rows.filter((r: any) => {
-      const name = r.teamName || r.playerName || '';
-      const country = r.country || '';
-      return name.toLowerCase().includes(q) || country.toLowerCase().includes(q);
+  // Resolve player ranking table
+  // API returns array: [{ tableTitle: 'Test Batters Rankings', players: [...] }, ...]
+  // Or legacy object format
+  const currentPlayerList = useMemo(() => {
+    if (!playerRankings) return [];
+
+    // Array format from backend
+    if (Array.isArray(playerRankings)) {
+      const formatStr = selectedFormat === 'test' ? 'test' : selectedFormat === 'odi' ? 'odi' : 't20';
+      const roleStr = playerRole === 'batting' ? 'batter' : playerRole === 'bowling' ? 'bowler' : 'all rounder';
+
+      const foundBlock = playerRankings.find((block: any) => {
+        const title = (block.tableTitle || '').toLowerCase();
+        // Check format matches (and not WODI/WT20 unless requested)
+        const formatMatch = formatStr === 'odi' 
+          ? (title.includes('odi') && !title.includes('wodi'))
+          : formatStr === 't20'
+          ? (title.includes('t20') && !title.includes('wt20'))
+          : title.includes('test');
+
+        const roleMatch = roleStr === 'all rounder'
+          ? title.includes('all rounder') || title.includes('all-rounder') || title.includes('allrounder')
+          : title.includes(roleStr);
+
+        return formatMatch && roleMatch;
+      });
+
+      return foundBlock?.players || [];
+    }
+
+    // Object format fallback
+    const formatBlock = playerRankings[selectedFormat] || playerRankings;
+    if (playerRole === 'batting') return formatBlock.batting || formatBlock.batters || [];
+    if (playerRole === 'bowling') return formatBlock.bowling || formatBlock.bowlers || [];
+    return formatBlock.allRounder || formatBlock.allrounders || [];
+  }, [playerRankings, selectedFormat, playerRole]);
+
+  const rawList = category === 'teams' ? currentTeamList : currentPlayerList;
+
+  // Normalize list entries for consistent rendering across both data formats
+  const normalizedList = useMemo(() => {
+    if (!Array.isArray(rawList)) return [];
+    return rawList.map((item: any, idx: number) => {
+      const rank = item.pos || item.rank || idx + 1;
+      const name = item.teamName || item.team || item.playerName || item.name || item.player || '—';
+      const flag = item.teamLogo || item.flag || item.playerImage || item.image || null;
+      const country = item.country || item.team || '';
+      const matches = item.matches || '—';
+      const points = item.points || '—';
+      const rating = item.rating || item.points || '—';
+
+      return {
+        rank,
+        name,
+        flag,
+        country,
+        matches,
+        points,
+        rating,
+        raw: item,
+      };
     });
-  }, [currentTable, searchQuery]);
+  }, [rawList]);
+
+  const filteredList = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return normalizedList;
+
+    return normalizedList.filter((item) => {
+      return item.name.toLowerCase().includes(q) || item.country.toLowerCase().includes(q);
+    });
+  }, [normalizedList, searchQuery]);
+
+  const top3 = filteredList.slice(0, 3);
+  const restList = filteredList.slice(3);
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen bg-slate-50">
       <Hero
         image="/images/rankingsHeader.jpg"
-        heading="Official ICC Rankings Leaderboard"
-        subtitle="Explore official rankings for international teams, world-class batsmen, deadly bowlers, and top all-rounders across Test, ODI, and T20."
+        heading="Official ICC Cricket Rankings"
+        subtitle="Official International Cricket Council standings for national teams and top-ranked players across all formats."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20 space-y-8">
-        {/* Controls Panel */}
-        <div className="rounded-2xl glass-panel p-4 border border-white/[0.08] shadow-2xl space-y-4">
-          {/* Main Mode Switcher: Teams vs Players */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/90 border border-white/5 w-full sm:w-auto">
-              <button
-                onClick={() => {
-                  setActiveType('teams');
-                  setActiveFormatIdx(0);
-                }}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold transition-all ${
-                  activeType === 'teams'
-                    ? 'bg-emerald-400 text-black shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Users className="w-4 h-4" />
-                <span>Team Rankings</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveType('players');
-                  setActiveFormatIdx(0);
-                }}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold transition-all ${
-                  activeType === 'players'
-                    ? 'bg-emerald-400 text-black shadow-md'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <User className="w-4 h-4" />
-                <span>Player Rankings</span>
-              </button>
-            </div>
-
-            {/* Search and Refresh */}
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <div className="relative flex-1 sm:w-72">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Filter team or player..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-950/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
-                />
-              </div>
-
-              <button
-                onClick={fetchRankings}
-                disabled={loading}
-                className="p-2.5 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-white/10"
-                title="Refresh rankings"
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-emerald-400' : ''}`} />
-              </button>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+        {/* Category Switcher & Refresh */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setCategory('teams'); setSearchQuery(''); }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+                category === 'teams'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <Shield className="w-4 h-4" />
+              <span>Team Rankings</span>
+            </button>
+            <button
+              onClick={() => { setCategory('players'); setSearchQuery(''); }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+                category === 'players'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              <span>Player Rankings</span>
+            </button>
           </div>
 
-          {/* Format Sub-tabs (Test, ODI, T20, etc.) */}
-          {currentTables.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-white/[0.06]">
-              {currentTables.map((tbl: any, idx: number) => {
-                const isSelected = activeFormatIdx === idx;
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveFormatIdx(idx)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                      isSelected
-                        ? 'bg-slate-800 text-emerald-400 border border-emerald-500/40 shadow-sm'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-900'
-                    }`}
-                  >
-                    {tbl.tableTitle || `Format ${idx + 1}`}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <button
+            onClick={() => fetchRankings(true)}
+            disabled={loading || refreshing}
+            className="self-start sm:self-auto inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
+            <span>{refreshing ? 'Updating...' : 'Refresh'}</span>
+          </button>
         </div>
 
-        {/* Content Display */}
-        {loading ? (
-          <div className="space-y-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-16 rounded-2xl glass-card p-4 animate-shimmer" />
+        {/* Filter Controls: Format (Test, ODI, T20) & Role (if players) */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Format Pills */}
+            {(['test', 'odi', 't20'] as const).map((fmt) => (
+              <button
+                key={fmt}
+                onClick={() => setSelectedFormat(fmt)}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                  selectedFormat === fmt
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {fmt === 't20' ? 'T20I' : fmt.toUpperCase()}
+              </button>
             ))}
-          </div>
-        ) : currentTable && filteredRows.length > 0 ? (
-          <div className="space-y-6">
-            {/* Header info */}
-            <div className="flex items-baseline justify-between px-1">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-black text-white">
-                  {currentTable.tableTitle || 'ICC Standings'}
-                </h3>
-                {currentTable.lastUpdated && (
-                  <p className="text-xs text-slate-400 mt-0.5">{currentTable.lastUpdated}</p>
-                )}
-              </div>
-              <span className="text-xs font-semibold text-emerald-400">
-                Top {filteredRows.length} Standings
-              </span>
-            </div>
 
-            {/* Podium for Top 3 (if no search filter applied) */}
-            {!searchQuery && filteredRows.length >= 3 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            {/* Role Pills if Players */}
+            {category === 'players' && (
+              <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+                {(['batting', 'bowling', 'allRounder'] as const).map((role) => (
+                  <button
+                    key={role}
+                    onClick={() => setPlayerRole(role)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
+                      playerRole === role
+                        ? 'bg-red-600 text-white font-bold shadow-xs'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {role === 'allRounder' ? 'All-Rounder' : role}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-64">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder={category === 'teams' ? 'Search team...' : 'Search player or country...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-2xs"
+            />
+          </div>
+        </div>
+
+        {/* Content */}
+        {loading ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+            </div>
+            <div className="h-64 bg-white border border-slate-200 rounded-xl animate-pulse" />
+          </div>
+        ) : filteredList.length === 0 ? (
+          <EmptyState
+            type="rankings"
+            title="No Rankings Available"
+            message="No ranking records found for this format or search criteria."
+            onRetry={fetchRankings}
+          />
+        ) : (
+          <div className="space-y-6">
+            {/* Top 3 Podium */}
+            {!searchQuery && top3.length === 3 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* 2nd Place */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl glass-card p-5 border border-slate-700/60 flex items-center gap-4 relative overflow-hidden order-2 md:order-1"
-                >
-                  <div className="absolute top-2 right-3 text-2xl font-black text-slate-600/30">#2</div>
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-300 text-black font-black text-sm flex-shrink-0 shadow-lg">
+                <div className="order-2 md:order-1 bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs flex flex-col items-center text-center space-y-2">
+                  <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center text-sm font-extrabold text-slate-700">
                     🥈
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-sm font-bold text-white block truncate">
-                      {filteredRows[1].teamName || filteredRows[1].playerName}
-                    </span>
-                    <span className="text-xs text-slate-400">
-                      Rating: <strong className="text-white">{filteredRows[1].rating}</strong>
-                      {filteredRows[1].country && ` • ${filteredRows[1].country}`}
-                    </span>
+                  <ImageWithFallback
+                    src={top3[1].flag}
+                    alt={top3[1].name}
+                    width={44}
+                    height={30}
+                    fallbackText={top3[1].name}
+                  />
+                  <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
+                    {top3[1].name}
+                  </h3>
+                  {category === 'players' && top3[1].country && (
+                    <span className="text-[11px] font-semibold text-slate-500">{top3[1].country}</span>
+                  )}
+                  <div className="text-xs text-slate-500 font-semibold pt-1">
+                    Rating: <span className="text-slate-900 font-bold">{top3[1].rating}</span>
                   </div>
-                </motion.div>
+                </div>
 
-                {/* 1st Place (Gold Podium) */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="rounded-2xl glass-card p-5 border border-amber-500/40 bg-gradient-to-b from-amber-500/10 to-transparent flex items-center gap-4 relative overflow-hidden order-1 md:order-2 shadow-lg shadow-amber-500/10"
-                >
-                  <div className="absolute top-2 right-3 text-2xl font-black text-amber-500/30">#1</div>
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-amber-400 text-black font-black text-base flex-shrink-0 shadow-xl shadow-amber-400/30">
-                    👑
+                {/* 1st Place (Champion) */}
+                <div className="order-1 md:order-2 bg-white border-2 border-amber-300 rounded-xl p-5 shadow-sm flex flex-col items-center text-center space-y-2 relative">
+                  <div className="absolute -top-3 px-3 py-0.5 rounded-full bg-amber-400 text-amber-950 font-black text-[10px] uppercase tracking-wider shadow-xs">
+                    Rank 1 Champion
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-base font-black text-amber-300 block truncate">
-                      {filteredRows[0].teamName || filteredRows[0].playerName}
-                    </span>
-                    <span className="text-xs text-slate-300">
-                      Rating: <strong className="text-amber-300">{filteredRows[0].rating}</strong>
-                      {filteredRows[0].points && ` • Points: ${filteredRows[0].points}`}
-                      {filteredRows[0].country && ` • ${filteredRows[0].country}`}
-                    </span>
+                  <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-base font-extrabold text-amber-700 mt-1">
+                    🥇
                   </div>
-                </motion.div>
+                  <ImageWithFallback
+                    src={top3[0].flag}
+                    alt={top3[0].name}
+                    width={52}
+                    height={36}
+                    fallbackText={top3[0].name}
+                  />
+                  <h3 className="font-extrabold text-slate-900 text-base truncate max-w-full">
+                    {top3[0].name}
+                  </h3>
+                  {category === 'players' && top3[0].country && (
+                    <span className="text-xs font-semibold text-slate-500">{top3[0].country}</span>
+                  )}
+                  <div className="text-xs text-slate-600 font-semibold pt-1">
+                    Rating: <span className="text-red-600 font-extrabold text-sm">{top3[0].rating}</span>
+                  </div>
+                </div>
 
                 {/* 3rd Place */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl glass-card p-5 border border-slate-700/60 flex items-center gap-4 relative overflow-hidden order-3 md:order-3"
-                >
-                  <div className="absolute top-2 right-3 text-2xl font-black text-slate-600/30">#3</div>
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-amber-700/80 text-white font-black text-sm flex-shrink-0 shadow-lg">
+                <div className="order-3 bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs flex flex-col items-center text-center space-y-2">
+                  <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-sm font-extrabold text-amber-800">
                     🥉
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-sm font-bold text-white block truncate">
-                      {filteredRows[2].teamName || filteredRows[2].playerName}
-                    </span>
-                    <span className="text-xs text-slate-400">
-                      Rating: <strong className="text-white">{filteredRows[2].rating}</strong>
-                      {filteredRows[2].country && ` • ${filteredRows[2].country}`}
-                    </span>
+                  <ImageWithFallback
+                    src={top3[2].flag}
+                    alt={top3[2].name}
+                    width={44}
+                    height={30}
+                    fallbackText={top3[2].name}
+                  />
+                  <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
+                    {top3[2].name}
+                  </h3>
+                  {category === 'players' && top3[2].country && (
+                    <span className="text-[11px] font-semibold text-slate-500">{top3[2].country}</span>
+                  )}
+                  <div className="text-xs text-slate-500 font-semibold pt-1">
+                    Rating: <span className="text-slate-900 font-bold">{top3[2].rating}</span>
                   </div>
-                </motion.div>
+                </div>
               </div>
             )}
 
-            {/* Table Leaderboard */}
-            <div className="rounded-2xl glass-panel border border-white/[0.08] overflow-hidden shadow-2xl">
+            {/* Full Leaderboard Table */}
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-900/90 text-slate-400 font-bold uppercase tracking-wider border-b border-white/[0.06]">
-                    <tr>
-                      <th className="py-3.5 px-4 w-16 text-center">Rank</th>
-                      <th className="py-3.5 px-4">{activeType === 'teams' ? 'Team' : 'Player'}</th>
-                      {activeType === 'players' && <th className="py-3.5 px-4">Country</th>}
-                      {activeType === 'teams' && <th className="py-3.5 px-4 text-center">Matches</th>}
-                      {activeType === 'teams' && <th className="py-3.5 px-4 text-center">Points</th>}
-                      <th className="py-3.5 px-4 text-right">Rating</th>
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+                      <th className="py-3 px-4 w-16 text-center">Rank</th>
+                      <th className="py-3 px-4">
+                        {category === 'teams' ? 'Team' : 'Player'}
+                      </th>
+                      {category === 'teams' ? (
+                        <>
+                          <th className="py-3 px-4 text-center">Matches</th>
+                          <th className="py-3 px-4 text-center">Points</th>
+                          <th className="py-3 px-4 text-right">Rating</th>
+                        </>
+                      ) : (
+                        <>
+                          <th className="py-3 px-4">Country</th>
+                          <th className="py-3 px-4 text-right">Rating</th>
+                        </>
+                      )}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.04]">
-                    {filteredRows.map((row: any, idx: number) => {
-                      const rank = row.pos || row.rank || idx + 1;
-                      const name = row.teamName || row.playerName;
-                      const logo = row.teamLogo;
-                      const link = row.teamLink || row.playerLink;
-
-                      const isTop3 = Number(rank) <= 3;
-
-                      return (
-                        <tr
-                          key={idx}
-                          className="hover:bg-white/[0.03] transition-colors"
-                        >
-                          <td className="py-3.5 px-4 text-center font-bold">
-                            {rank === '1' || rank === 1 ? (
-                              <span className="text-amber-400">🥇 1</span>
-                            ) : rank === '2' || rank === 2 ? (
-                              <span className="text-slate-300">🥈 2</span>
-                            ) : rank === '3' || rank === 3 ? (
-                              <span className="text-amber-600">🥉 3</span>
-                            ) : (
-                              <span className="text-slate-400">{rank}</span>
-                            )}
-                          </td>
-
-                          <td className="py-3.5 px-4">
-                            <div className="flex items-center gap-3">
-                              {logo && (
-                                <ImageWithFallback
-                                  src={logo}
-                                  alt={name}
-                                  fallbackText={name}
-                                  width={26}
-                                  height={26}
-                                />
-                              )}
-                              <span className={`font-bold ${isTop3 ? 'text-white' : 'text-slate-200'}`}>
-                                {name}
-                              </span>
-                              {link && (
-                                <a
-                                  href={link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-slate-500 hover:text-emerald-400 ml-1"
-                                >
-                                  <ArrowUpRight className="w-3 h-3" />
-                                </a>
-                              )}
-                            </div>
-                          </td>
-
-                          {activeType === 'players' && (
-                            <td className="py-3.5 px-4 text-slate-400 font-semibold">
-                              {row.country || '-'}
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredList.map((item, idx) => (
+                      <tr
+                        key={idx}
+                        className="hover:bg-red-50/40 transition-colors"
+                      >
+                        <td className="py-3 px-4 text-center font-bold text-slate-800">
+                          {item.rank}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <ImageWithFallback
+                              src={item.flag}
+                              alt={item.name}
+                              width={26}
+                              height={18}
+                              fallbackText={item.name}
+                            />
+                            <span className="font-bold text-slate-900">
+                              {item.name}
+                            </span>
+                          </div>
+                        </td>
+                        {category === 'teams' ? (
+                          <>
+                            <td className="py-3 px-4 text-center text-slate-600 font-medium">
+                              {item.matches}
                             </td>
-                          )}
-
-                          {activeType === 'teams' && (
-                            <td className="py-3.5 px-4 text-center text-slate-300 font-medium">
-                              {row.matches || '-'}
+                            <td className="py-3 px-4 text-center text-slate-600 font-medium">
+                              {item.points}
                             </td>
-                          )}
-
-                          {activeType === 'teams' && (
-                            <td className="py-3.5 px-4 text-center text-slate-300 font-medium">
-                              {row.points || '-'}
+                            <td className="py-3 px-4 text-right font-extrabold text-slate-900">
+                              {item.rating}
                             </td>
-                          )}
-
-                          <td className="py-3.5 px-4 text-right font-black text-emerald-400">
-                            {row.rating || '-'}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          </>
+                        ) : (
+                          <>
+                            <td className="py-3 px-4 text-slate-600 font-medium">
+                              {item.country || '—'}
+                            </td>
+                            <td className="py-3 px-4 text-right font-extrabold text-slate-900">
+                              {item.rating}
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-        ) : (
-          <EmptyState
-            type="rankings"
-            title="No rankings available"
-            message="Unable to load ICC rankings table. Please check back later."
-            onRetry={fetchRankings}
-          />
         )}
       </div>
     </div>

@@ -2,139 +2,123 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Match } from '@/types/match';
-import ImageWithFallback from '@/components/common/ImageWithFallback';
-import StatusBadge from '@/components/common/StatusBadge';
-import { ChevronRight, Trophy, MapPin } from 'lucide-react';
+import ImageWithFallback from '../common/ImageWithFallback';
+import StatusBadge from '../common/StatusBadge';
+import { MapPin, ChevronRight, Trophy } from 'lucide-react';
+import { getCleanScorecardPath } from '../home/MatchCarouselCard';
 
-interface MatchCardProps extends Match {
-  type?: string;
+interface MatchCardProps {
+  match: Match;
 }
 
-export const MatchCard: React.FC<MatchCardProps> = ({
-  series,
-  title,
-  matchInfo,
-  teamA,
-  teamB,
-  scoreA,
-  scoreB,
-  oversA,
-  oversB,
-  status,
-  result,
-  flagA,
-  flagB,
-  link,
-  isLive,
-  type
-}) => {
-  const scorecardHref = link 
-    ? `/scorecard?url=${encodeURIComponent(link)}`
-    : '/scorecard';
+export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
+  const scorecardHref = getCleanScorecardPath(match.link);
+
+  const handleClick = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('cricgeek_active_match', JSON.stringify(match));
+      } catch (e) {
+        // ignore
+      }
+    }
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -3 }}
-      transition={{ duration: 0.2 }}
-      className="rounded-2xl glass-card p-5 border border-white/[0.08] hover:border-emerald-500/40 transition-all flex flex-col justify-between"
-    >
-      <div className="space-y-4">
-        {/* Top Header: Series Name & Status Badge */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 block truncate">
-              {series || 'International Cricket'}
-            </span>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-0.5 truncate">
-              <MapPin className="w-3 h-3 text-slate-500 flex-shrink-0" />
-              <span className="truncate">{matchInfo?.replace('Today - Today', '') || 'Match Fixture'}</span>
-            </div>
-          </div>
-          <StatusBadge status={status} isLive={isLive} />
+    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+      {/* Top Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-2">
+        <div className="min-w-0">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate block">
+            {match.series || 'Match'}
+          </span>
+          {match.matchInfo && (
+            <p className="text-[11px] text-slate-500 truncate mt-0.5">
+              {match.matchInfo}
+            </p>
+          )}
         </div>
-
-        {/* Teams and Scores Breakdown */}
-        <div className="space-y-3.5 bg-slate-900/50 p-3.5 rounded-xl border border-white/[0.04]">
-          {/* Team A */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <ImageWithFallback
-                src={flagA}
-                alt={teamA}
-                fallbackText={teamA}
-                width={32}
-                height={32}
-              />
-              <span className="text-sm font-bold text-white truncate">
-                {teamA}
-              </span>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <span className="text-sm font-black text-white block">
-                {scoreA || '-'}
-              </span>
-              {oversA && (
-                <span className="text-[10px] text-slate-400 font-medium block">
-                  {oversA}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Team B */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <ImageWithFallback
-                src={flagB}
-                alt={teamB}
-                fallbackText={teamB}
-                width={32}
-                height={32}
-              />
-              <span className="text-sm font-bold text-white truncate">
-                {teamB}
-              </span>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <span className="text-sm font-black text-white block">
-                {scoreB || '-'}
-              </span>
-              {oversB && (
-                <span className="text-[10px] text-slate-400 font-medium block">
-                  {oversB}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Result summary banner */}
-        {result && (
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400/90 bg-emerald-500/[0.07] px-3 py-1.5 rounded-lg border border-emerald-500/15">
-            <Trophy className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="truncate">{result}</span>
-          </div>
-        )}
+        <StatusBadge status={match.status} />
       </div>
 
-      {/* Footer Navigation */}
-      <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+      {/* Teams & Scores */}
+      <div className="space-y-3 py-1">
+        {/* Team 1 */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <ImageWithFallback
+              src={match.flagA}
+              alt={match.teamA}
+              width={32}
+              height={22}
+              fallbackText={match.teamA}
+            />
+            <span className="text-sm sm:text-base font-bold text-slate-900 truncate">
+              {match.teamA}
+            </span>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900">
+              {match.scoreA || '—'}
+            </span>
+            {match.oversA && (
+              <span className="text-xs text-slate-500 font-medium ml-1.5">
+                {match.oversA}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Team 2 */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <ImageWithFallback
+              src={match.flagB}
+              alt={match.teamB}
+              width={32}
+              height={22}
+              fallbackText={match.teamB}
+            />
+            <span className="text-sm sm:text-base font-bold text-slate-900 truncate">
+              {match.teamB}
+            </span>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900">
+              {match.scoreB || '—'}
+            </span>
+            {match.oversB && (
+              <span className="text-xs text-slate-500 font-medium ml-1.5">
+                {match.oversB}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer: Result & Scorecard Button */}
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
+        <p className="text-slate-600 font-medium truncate" title={match.result || match.target}>
+          {match.result ? (
+            <span className="font-semibold text-slate-800">{match.result}</span>
+          ) : match.target ? (
+            <span className="text-slate-700">Target {match.target}</span>
+          ) : (
+            <span className="text-slate-500">Upcoming Fixture</span>
+          )}
+        </p>
+
         <Link
           href={scorecardHref}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-200 hover:bg-emerald-500 hover:text-black hover:shadow-md hover:shadow-emerald-500/20 transition-all duration-200"
+          onClick={handleClick}
+          className="inline-flex items-center gap-1 font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
         >
-          <span>Full Scorecard</span>
+          <span>Scorecard</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </Link>
-        <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
-          CricGeek Feed
-        </span>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

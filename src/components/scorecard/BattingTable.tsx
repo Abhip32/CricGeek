@@ -19,7 +19,6 @@ interface BattingTableProps {
 }
 
 export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }) => {
-  // Normalize rows from either table format or legacy battingData
   const rows = React.useMemo(() => {
     if (battingData && Array.isArray(battingData)) {
       return battingData.map((r) => ({
@@ -35,23 +34,18 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }
 
     if (table && Array.isArray(table.rows)) {
       return table.rows.map((row) => {
-        // Cricinfo has headers like "BATTING", "R", "B", "M", "4s", "6s", "SR"
-        // Batter cell often contains dismissal inside or as a following line
         let name = '';
         let dismissal = '';
 
         const battingCell = row['BATTING'] || row['Batting'] || row['Batter'] || Object.values(row)[0] || '';
         
-        // Parse name and dismissal if combined
         if (battingCell.includes('\n')) {
           const parts = battingCell.split('\n');
           name = parts[0]?.trim() || '';
           dismissal = parts.slice(1).join(' ').trim();
         } else {
-          // If separate dismissal key exists
           dismissal = row['Dismissal'] || row['dismissal'] || '';
           name = battingCell;
-          // Clean up "c ... b ..."
           if (!dismissal && /(c\s+|b\s+|lbw|run out|not out|st\s+)/i.test(name)) {
             const match = name.match(/^(.*?)(c\s+.*|b\s+.*|lbw.*|run out.*|not out.*|st\s+.*)$/i);
             if (match) {
@@ -84,65 +78,60 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }
 
   if (!rows || rows.length === 0) {
     return (
-      <div className="py-6 text-center text-slate-500 text-sm">
-        No batting data available for this innings.
+      <div className="py-5 text-center text-slate-500 text-xs">
+        No batting data recorded for this innings.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-white/10 glass-panel">
+    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-white/10 bg-slate-900/60 text-slate-400 font-semibold text-xs tracking-wider uppercase">
-            <th className="py-3 px-4">Batter</th>
-            <th className="py-3 px-3 text-right">R</th>
-            <th className="py-3 px-3 text-right">B</th>
-            <th className="py-3 px-3 text-right">4s</th>
-            <th className="py-3 px-3 text-right">6s</th>
-            <th className="py-3 px-4 text-right">SR</th>
+          <tr className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+            <th className="py-2.5 px-4">Batter</th>
+            <th className="py-2.5 px-3 text-right">R</th>
+            <th className="py-2.5 px-3 text-right">B</th>
+            <th className="py-2.5 px-3 text-right">4s</th>
+            <th className="py-2.5 px-3 text-right">6s</th>
+            <th className="py-2.5 px-4 text-right">SR</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-slate-100">
           {rows.map((batter, idx) => {
             const runsNum = parseInt(String(batter.runs), 10);
             const isMilestone = !isNaN(runsNum) && runsNum >= 50;
-            const isCentury = !isNaN(runsNum) && runsNum >= 100;
 
             return (
               <tr 
                 key={idx}
-                className="transition-colors hover:bg-white/[0.03] group"
+                className="hover:bg-red-50/30 transition-colors"
               >
-                <td className="py-3 px-4">
-                  <div className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                <td className="py-2.5 px-4">
+                  <span className="font-bold text-slate-900 block leading-tight">
                     {batter.name}
-                  </div>
+                  </span>
                   {batter.dismissal && (
-                    <div className="text-xs text-slate-400 italic mt-0.5 max-w-md truncate">
+                    <span className="text-xs text-slate-500 italic mt-0.5 block max-w-md truncate">
                       {batter.dismissal}
-                    </div>
+                    </span>
                   )}
                 </td>
-                <td className="py-3 px-3 text-right">
-                  <span className={`font-bold ${
-                    isCentury ? 'text-amber-400 font-extrabold' : 
-                    isMilestone ? 'text-emerald-400 font-extrabold' : 
-                    'text-white'
-                  }`}>
+                <td className="py-2.5 px-3 text-right">
+                  <span className={`font-bold ${isMilestone ? 'text-red-600 font-extrabold text-base' : 'text-slate-900'}`}>
                     {batter.runs}
                   </span>
                 </td>
-                <td className="py-3 px-3 text-right text-slate-300 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
                   {batter.balls}
                 </td>
-                <td className="py-3 px-3 text-right text-slate-400 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
                   {batter.fours}
                 </td>
-                <td className="py-3 px-3 text-right text-slate-400 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
                   {batter.sixes}
                 </td>
-                <td className="py-3 px-4 text-right text-slate-300 font-medium font-mono text-xs">
+                <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs">
                   {batter.sr}
                 </td>
               </tr>

@@ -10,12 +10,13 @@ interface InningProps {
     header?: string;
     batting?: any[];
     bowling?: any[];
-    extras?: { total: number; details: string };
-    total?: { runs: number; details: string };
+    extras?: { total: number | string; details: string };
+    total?: { runs?: number | string; score?: string; details: string };
+    didNotBat?: string[];
     fallOfWickets?: string[];
   };
   title?: string;
-  battingTable?: ScorecardTable;
+  battingTable?: ScorecardTable & { extras?: any; total?: any; didNotBat?: string[]; fallOfWickets?: string[] };
   bowlingTable?: ScorecardTable;
 }
 
@@ -27,61 +28,90 @@ export const InningSection: React.FC<InningProps> = ({
 }) => {
   const heading = title || inning?.header || battingTable?.title || 'Innings Scorecard';
 
+  const extras = battingTable?.extras || inning?.extras;
+  const total = battingTable?.total || inning?.total;
+  const didNotBat = battingTable?.didNotBat || inning?.didNotBat || [];
+  const fallOfWickets = battingTable?.fallOfWickets || inning?.fallOfWickets || [];
+
   return (
-    <div className="mb-10 space-y-6">
-      {/* Innings Title Banner */}
-      <div className="flex items-center gap-3">
-        <div className="w-1.5 h-6 rounded-full bg-gradient-to-b from-emerald-400 to-cyan-500" />
-        <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+    <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
+      {/* Innings Title */}
+      <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+        <span className="w-1.5 h-5 rounded-full bg-red-600 flex-shrink-0" />
+        <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
           {heading}
         </h2>
       </div>
 
       {/* Batting Section */}
       <div className="space-y-2">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">
+        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
           Batting
         </h3>
         <BattingTable table={battingTable} battingData={inning?.batting} />
       </div>
 
-      {/* Extras and Total if available */}
-      {(inning?.extras || inning?.total) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {inning.extras && (
-            <div className="glass-panel p-4 rounded-xl border border-white/5 flex justify-between items-center text-sm">
-              <span className="text-slate-400">Extras</span>
-              <span className="font-semibold text-white">
-                {inning.extras.total} <span className="text-xs text-slate-500">({inning.extras.details})</span>
+      {/* Extras and Total Chips */}
+      {(extras || total) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          {extras && (
+            <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-center justify-between text-xs">
+              <span className="font-bold text-slate-600">Extras</span>
+              <span className="font-bold text-slate-900">
+                {extras.total} {extras.details && <span className="font-normal text-slate-500 text-[11px]">({extras.details})</span>}
               </span>
             </div>
           )}
-          {inning.total && (
-            <div className="glass-panel p-4 rounded-xl border border-white/5 flex justify-between items-center text-sm">
-              <span className="text-slate-400 font-semibold">Total</span>
-              <span className="text-base font-bold text-emerald-400">
-                {inning.total.runs} <span className="text-xs text-slate-400 font-normal">({inning.total.details})</span>
+          {total && (
+            <div className="bg-red-50/70 border border-red-200 p-3 rounded-lg flex items-center justify-between text-xs">
+              <span className="font-bold text-red-800">Total</span>
+              <span className="font-extrabold text-red-700 text-sm">
+                {total.score || total.runs} {total.details && <span className="font-normal text-red-900 text-xs">({total.details})</span>}
               </span>
             </div>
           )}
         </div>
       )}
 
-      {/* Fall of Wickets if available */}
-      {inning?.fallOfWickets && inning.fallOfWickets.length > 0 && (
-        <div className="glass-panel p-4 rounded-xl border border-white/5 space-y-2">
-          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      {/* Did Not Bat */}
+      {didNotBat.length > 0 && (
+        <div className="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
+          <span className="font-bold text-slate-500 uppercase tracking-wider text-[11px] mr-1">
+            Did Not Bat:
+          </span>
+          {didNotBat.map((name, i) => (
+            <span
+              key={i}
+              className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-medium text-xs border border-slate-200"
+            >
+              {name}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Fall of Wickets */}
+      {fallOfWickets.length > 0 && (
+        <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg space-y-1.5">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
             Fall of Wickets
-          </h4>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
-            {inning.fallOfWickets.join(', ')}
-          </p>
+          </span>
+          <div className="flex flex-wrap gap-2 text-xs text-slate-700">
+            {fallOfWickets.map((fow, i) => (
+              <span
+                key={i}
+                className="px-2 py-0.5 rounded bg-white border border-slate-200 font-mono text-[11px] text-slate-800 shadow-2xs"
+              >
+                {fow}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Bowling Section */}
-      <div className="space-y-2 pt-2">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider pl-1">
+      <div className="space-y-2 pt-2 border-t border-slate-100">
+        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
           Bowling
         </h3>
         <BowlingTable table={bowlingTable} bowlingData={inning?.bowling} />

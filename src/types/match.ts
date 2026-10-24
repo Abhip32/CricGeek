@@ -21,8 +21,8 @@ export interface Match {
   target?: string;
   status: string;
   result: string;
-  flagA: string;
-  flagB: string;
+  flagA: string | null;
+  flagB: string | null;
   isLive?: boolean;
   link: string;
   links?: {
@@ -47,7 +47,7 @@ export interface UpcomingMatch {
   teams: string;
   teamDetails?: Array<{
     name: string;
-    flag: string;
+    flag: string | null;
   }>;
   venueInfo: string;
   seriesName: string;
@@ -60,6 +60,10 @@ export interface ScorecardTable {
   type: 'Batting' | 'Bowling' | string;
   headers: string[];
   rows: Record<string, string>[];
+  extras?: { total: number | string; details: string };
+  total?: { score?: string; runs?: number | string; details: string };
+  didNotBat?: string[];
+  fallOfWickets?: string[];
 }
 
 export interface ScorecardSummary {
@@ -67,6 +71,7 @@ export interface ScorecardSummary {
   status: string;
   result: string;
   venue: string;
+  playerOfTheMatch?: string;
   teams: Array<{
     teamName: string;
     teamLogo: string | null;
@@ -80,6 +85,7 @@ export interface ScorecardResponse {
   tableCount: number;
   data: {
     summary: ScorecardSummary;
+    details?: Record<string, string>;
     tables: ScorecardTable[];
   };
 }

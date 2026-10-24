@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RefreshCw, Trophy, Radio, Calendar, Sparkles } from 'lucide-react';
+import { RefreshCw, Trophy, Radio, Calendar, FileText } from 'lucide-react';
 
 interface EmptyStateProps {
   title?: string;
@@ -28,32 +28,32 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const getIcon = () => {
     switch (type) {
       case 'live':
-        return <Radio className="w-10 h-10 text-emerald-400" />;
+        return <Radio className="w-8 h-8 text-red-600" />;
       case 'schedule':
-        return <Calendar className="w-10 h-10 text-cyan-400" />;
+        return <Calendar className="w-8 h-8 text-red-600" />;
       case 'rankings':
-        return <Trophy className="w-10 h-10 text-amber-400" />;
+        return <Trophy className="w-8 h-8 text-amber-500" />;
       case 'scorecard':
-        return <Sparkles className="w-10 h-10 text-emerald-400" />;
+        return <FileText className="w-8 h-8 text-red-600" />;
       default:
-        return <Radio className="w-10 h-10 text-slate-400" />;
+        return <Radio className="w-8 h-8 text-slate-400" />;
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl glass-panel border border-white/5 my-6 max-w-lg mx-auto">
-      <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/40 mb-4 shadow-inner">
+    <div className="flex flex-col items-center justify-center p-10 text-center rounded-xl bg-white border border-slate-200 shadow-xs my-6 max-w-md mx-auto">
+      <div className="p-3.5 rounded-full bg-slate-50 border border-slate-200 mb-3 shadow-inner">
         {getIcon()}
       </div>
-      <h3 className="text-lg font-bold text-white mb-1.5">{title}</h3>
-      <p className="text-sm text-slate-400 max-w-sm mb-6 leading-relaxed">{displayMessage}</p>
+      <h3 className="text-base font-bold text-slate-900 mb-1">{title}</h3>
+      <p className="text-xs text-slate-500 max-w-sm mb-5 leading-relaxed">{displayMessage}</p>
       {handleAction && (
         <button
           onClick={handleAction}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-xs"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          {actionLabel}
+          <span>{actionLabel}</span>
         </button>
       )}
     </div>

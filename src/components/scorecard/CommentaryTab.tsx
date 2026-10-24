@@ -2,7 +2,6 @@
 
 import React from 'react';
 import EmptyState from '../common/EmptyState';
-import { motion } from 'framer-motion';
 
 interface CommentaryItem {
   over?: string;
@@ -22,10 +21,10 @@ interface CommentaryTabProps {
 export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, loading }) => {
   if (loading) {
     return (
-      <div className="space-y-4 animate-pulse">
-        <div className="h-20 rounded-xl glass-panel bg-white/5" />
-        <div className="h-20 rounded-xl glass-panel bg-white/5" />
-        <div className="h-20 rounded-xl glass-panel bg-white/5" />
+      <div className="space-y-3 animate-pulse">
+        <div className="h-16 rounded-xl bg-white border border-slate-200" />
+        <div className="h-16 rounded-xl bg-white border border-slate-200" />
+        <div className="h-16 rounded-xl bg-white border border-slate-200" />
       </div>
     );
   }
@@ -35,50 +34,41 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
   if (list.length === 0) {
     return (
       <EmptyState
-        title="No Live Commentary"
-        description="Ball-by-ball commentary is not available for this match or will start when the match goes live."
+        type="scorecard"
+        title="Live Commentary Not Available"
+        message="Ball-by-ball commentary is not active for this fixture or will commence when the match starts."
       />
     );
   }
 
   const getBallBadgeStyle = (item: CommentaryItem) => {
     if (item.wicket) {
-      return 'bg-rose-500/20 text-rose-400 border border-rose-500/40';
+      return 'bg-red-600 text-white font-extrabold';
     }
     if (item.boundary === 'six' || (item.runs && item.runs === 6)) {
-      return 'bg-purple-500/20 text-purple-300 border border-purple-500/40';
+      return 'bg-purple-600 text-white font-extrabold';
     }
     if (item.boundary === 'four' || (item.runs && item.runs === 4)) {
-      return 'bg-blue-500/20 text-blue-300 border border-blue-500/40';
+      return 'bg-blue-600 text-white font-extrabold';
     }
     if (item.runs && item.runs > 0) {
-      return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      return 'bg-slate-800 text-white font-bold';
     }
-    return 'bg-white/5 text-slate-400 border border-white/10';
+    return 'bg-slate-100 text-slate-700 font-bold border border-slate-200';
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-3"
-    >
+    <div className="space-y-3">
       {list.map((item, idx) => {
-        const isOverSummary = !item.over?.includes('.');
         return (
           <div
             key={idx}
-            className={`p-4 rounded-xl border transition-colors ${
-              isOverSummary 
-                ? 'glass-panel border-white/10 bg-slate-900/60' 
-                : 'glass-card border-white/5 hover:border-white/10'
-            }`}
+            className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors"
           >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3.5">
               {item.over && (
                 <div
-                  className={`w-11 h-11 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 font-mono shadow-md ${getBallBadgeStyle(
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs flex-shrink-0 font-mono shadow-2xs ${getBallBadgeStyle(
                     item
                   )}`}
                 >
@@ -87,11 +77,11 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
               )}
 
               <div className="flex-1">
-                <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
                   {item.text}
                 </p>
                 {item.timestamp && (
-                  <span className="text-[11px] text-slate-500 mt-1 block">
+                  <span className="text-[10px] text-slate-400 mt-1 block">
                     {item.timestamp}
                   </span>
                 )}
@@ -100,7 +90,7 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
           </div>
         );
       })}
-    </motion.div>
+    </div>
   );
 };
 

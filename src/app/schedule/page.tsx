@@ -1,227 +1,194 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { cricketApi } from '@/services/api';
 import { UpcomingMatch } from '@/types/match';
-import Hero from '@/components/home/hero';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
-import { Calendar, Clock, MapPin, ChevronRight, RefreshCw, Search } from 'lucide-react';
+import Hero from '@/components/home/hero';
+import { Calendar, Search, MapPin, Clock, RefreshCw } from 'lucide-react';
 
 export default function SchedulePage() {
-  const [scheduleData, setScheduleData] = useState<UpcomingMatch[]>([]);
+  const [schedule, setSchedule] = useState<UpcomingMatch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDate, setSelectedDate] = useState<string>('');
 
-  const fetchSchedule = async (dateFilter?: string) => {
-    setLoading(true);
+  const fetchSchedule = async (isManual = false) => {
+    if (isManual) setRefreshing(true);
+    else setLoading(true);
+
     try {
-      const response = await cricketApi.getUpcomingMatches(dateFilter);
-      setScheduleData(response);
+      const data = await cricketApi.getUpcomingMatches();
+      setSchedule(data || []);
     } catch (err) {
-      console.warn('Failed to load schedule:', err);
-      setScheduleData([]);
+      console.warn('Failed to fetch schedule:', err);
+      setSchedule([]);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchSchedule(selectedDate);
-  }, [selectedDate]);
+    fetchSchedule();
+  }, []);
 
-  // Group matches by date
-  const groupedByDate = useMemo(() => {
+  const filteredSchedule = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    const groups: Record<string, UpcomingMatch[]> = {};
+    if (!q) return schedule;
 
-    scheduleData.forEach((match) => {
-      if (q) {
-        const matchesQuery = 
-          match.teams.toLowerCase().includes(q) ||
-          match.seriesName.toLowerCase().includes(q) ||
-          match.venueInfo.toLowerCase().includes(q);
-        if (!matchesQuery) return;
-      }
-
-      const key = match.date || 'Upcoming Matches';
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(match);
+    return schedule.filter((item) => {
+      return (
+        item.teams.toLowerCase().includes(q) ||
+        item.seriesName.toLowerCase().includes(q) ||
+        item.venueInfo.toLowerCase().includes(q) ||
+        item.date.toLowerCase().includes(q)
+      );
     });
+  }, [schedule, searchQuery]);
 
+  // Group fixtures by date
+  const groupedSchedule = useMemo(() => {
+    const groups: Record<string, UpcomingMatch[]> = {};
+    filteredSchedule.forEach((item) => {
+      const dateKey = item.date || 'Upcoming';
+      if (!groups[dateKey]) groups[dateKey] = [];
+      groups[dateKey].push(item);
+    });
     return groups;
-  }, [scheduleData, searchQuery]);
+  }, [filteredSchedule]);
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen bg-slate-50">
       <Hero
         image="/images/schduleHeader.jpg"
-        heading="Global Cricket Schedule & Fixtures"
-        subtitle="Explore international tours, bilateral series, World Cups, and domestic championship fixtures across all timezones."
+        heading="Cricket Match Schedule"
+        subtitle="Upcoming international and domestic fixtures, series schedules, and match venues."
       />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20 space-y-8">
-        {/* Controls Bar */}
-        <div className="rounded-2xl glass-panel p-4 border border-white/[0.08] shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Search bar */}
-          <div className="relative w-full sm:w-96">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+        {/* Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Search */}
+          <div className="relative max-w-md w-full">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter fixtures by team, venue, or tournament..."
+              placeholder="Search teams, series, or stadiums..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-950/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+              className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-2xs"
             />
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex items-center gap-3">
             <button
-              onClick={() => {
-                setSelectedDate('');
-                fetchSchedule('');
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 border border-white/10 text-slate-300 hover:text-white"
+              onClick={() => fetchSchedule(true)}
+              disabled={loading || refreshing}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
-              <span>All Dates</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
+              <span>{refreshing ? 'Updating...' : 'Refresh'}</span>
             </button>
           </div>
         </div>
 
-        {/* Schedule List */}
-        <div className="space-y-8">
-          {loading ? (
-            <div className="space-y-6">
-              {[1, 2].map((group) => (
-                <div key={group} className="space-y-3">
-                  <div className="h-6 w-36 rounded-md bg-slate-800/80 animate-pulse" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[1, 2, 3].map((card) => (
-                      <div key={card} className="h-44 rounded-2xl glass-card p-4 animate-shimmer" />
-                    ))}
-                  </div>
-                </div>
-              ))}
+        {/* Schedule List grouped by Date */}
+        {loading ? (
+          <div className="space-y-6">
+            <div className="h-8 w-48 bg-slate-200 rounded animate-pulse" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
             </div>
-          ) : Object.keys(groupedByDate).length > 0 ? (
-            Object.entries(groupedByDate).map(([dateHeader, fixtures]) => (
-              <motion.div
-                key={dateHeader}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
-              >
-                {/* Date Header Badge */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-bold tracking-wide">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{dateHeader}</span>
-                  </div>
-                  <div className="h-[1px] flex-1 bg-white/[0.06]" />
-                  <span className="text-xs font-semibold text-slate-500">
-                    {fixtures.length} {fixtures.length === 1 ? 'Match' : 'Matches'}
+          </div>
+        ) : Object.keys(groupedSchedule).length === 0 ? (
+          <EmptyState
+            type="schedule"
+            title="No Scheduled Matches Found"
+            message="No fixtures match your search query."
+            actionLabel="Reset Search"
+            onAction={() => setSearchQuery('')}
+          />
+        ) : (
+          <div className="space-y-8">
+            {Object.entries(groupedSchedule).map(([date, matches]) => (
+              <div key={date} className="space-y-3">
+                {/* Date Header Banner */}
+                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+                  <Calendar className="w-4 h-4 text-red-600" />
+                  <h2 className="text-sm font-bold text-slate-900">
+                    {date}
+                  </h2>
+                  <span className="text-xs font-semibold px-2 py-0.2 rounded-full bg-slate-200 text-slate-700">
+                    {matches.length} {matches.length === 1 ? 'match' : 'matches'}
                   </span>
                 </div>
 
-                {/* Fixtures Grid */}
+                {/* Fixture Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {fixtures.map((fixture, idx) => {
-                    const team1 = fixture.teamDetails?.[0];
-                    const team2 = fixture.teamDetails?.[1];
-                    const parts = fixture.teams.split(/\s+(?:vs|v)\s+/i);
-                    const team1Name = team1?.name || parts[0] || 'Team 1';
-                    const team2Name = team2?.name || parts[1] || 'Team 2';
-
-                    return (
-                      <div
-                        key={idx}
-                        className="rounded-2xl glass-card p-4 border border-white/[0.08] hover:border-cyan-500/40 transition-all flex flex-col justify-between"
-                      >
-                        <div className="space-y-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400 truncate block flex-1">
-                              {fixture.seriesName || 'Series'}
-                            </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700/60">
-                              <Clock className="w-3 h-3 text-cyan-400" />
-                              {fixture.startTime || 'TBD'}
-                            </span>
-                          </div>
-
-                          {/* Teams */}
-                          <div className="space-y-2 bg-slate-900/60 p-3 rounded-xl border border-white/[0.04]">
-                            <div className="flex items-center gap-2.5">
-                              <ImageWithFallback
-                                src={team1?.flag}
-                                alt={team1Name}
-                                fallbackText={team1Name}
-                                width={26}
-                                height={26}
-                              />
-                              <span className="text-xs font-bold text-white truncate">
-                                {team1Name}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                              <ImageWithFallback
-                                src={team2?.flag}
-                                alt={team2Name}
-                                fallbackText={team2Name}
-                                width={26}
-                                height={26}
-                              />
-                              <span className="text-xs font-bold text-white truncate">
-                                {team2Name}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Venue */}
-                          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 truncate">
-                            <MapPin className="w-3 h-3 text-slate-500 flex-shrink-0" />
-                            <span className="truncate">{fixture.venueInfo || 'Venue TBA'}</span>
-                          </div>
-                        </div>
-
-                        {/* Card footer */}
-                        <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[11px]">
-                          <span className="text-slate-500 font-medium">Fixture Details</span>
-                          {fixture.link && (
-                            <a
-                              href={fixture.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-cyan-400 font-bold hover:text-cyan-300"
-                            >
-                              <span>View Match</span>
-                              <ChevronRight className="w-3 h-3" />
-                            </a>
-                          )}
+                  {matches.map((fixture, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-3"
+                    >
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
+                        <span className="font-bold text-slate-500 uppercase tracking-wider truncate">
+                          {fixture.seriesName || 'Series'}
+                        </span>
+                        <div className="flex items-center gap-1 text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-semibold">
+                          <Clock className="w-3 h-3 text-blue-600" />
+                          <span>{fixture.startTime || 'TBD'}</span>
                         </div>
                       </div>
-                    );
-                  })}
+
+                      <div className="space-y-2 py-1">
+                        {fixture.teamDetails && fixture.teamDetails.length >= 2 ? (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2.5">
+                              <ImageWithFallback
+                                src={fixture.teamDetails[0].flag}
+                                alt={fixture.teamDetails[0].name}
+                                width={26}
+                                height={26}
+                                fallbackText={fixture.teamDetails[0].name}
+                              />
+                              <span className="text-sm font-bold text-slate-900 truncate">
+                                {fixture.teamDetails[0].name}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2.5">
+                              <ImageWithFallback
+                                src={fixture.teamDetails[1].flag}
+                                alt={fixture.teamDetails[1].name}
+                                width={26}
+                                height={26}
+                                fallbackText={fixture.teamDetails[1].name}
+                              />
+                              <span className="text-sm font-bold text-slate-900 truncate">
+                                {fixture.teamDetails[1].name}
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                            {fixture.teams}
+                          </h3>
+                        )}
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                        <span className="truncate">{fixture.venueInfo || 'Venue TBA'}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </motion.div>
-            ))
-          ) : (
-            <EmptyState
-              type="schedule"
-              title="No fixtures scheduled"
-              message="No upcoming fixtures match your search criteria. Try clearing search filters."
-              onRetry={() => {
-                setSearchQuery('');
-                setSelectedDate('');
-                fetchSchedule('');
-              }}
-            />
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

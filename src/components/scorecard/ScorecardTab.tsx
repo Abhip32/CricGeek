@@ -4,7 +4,6 @@ import React from 'react';
 import { InningSection } from './InningSection';
 import { ScorecardTable } from '@/types/match';
 import EmptyState from '../common/EmptyState';
-import { motion } from 'framer-motion';
 
 interface ScorecardTabProps {
   scoreData: any;
@@ -15,37 +14,33 @@ interface ScorecardTabProps {
 export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }) => {
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-48 rounded-2xl glass-panel bg-white/5" />
-        <div className="h-48 rounded-2xl glass-panel bg-white/5" />
+      <div className="space-y-4 animate-pulse">
+        <div className="h-64 rounded-xl bg-white border border-slate-200" />
+        <div className="h-64 rounded-xl bg-white border border-slate-200" />
       </div>
     );
   }
 
-  // 1. Check legacy format (scoreData.innings)
+  // Legacy format support
   if (scoreData?.innings && Array.isArray(scoreData.innings) && scoreData.innings.length > 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="space-y-8"
-      >
+      <div className="space-y-6">
         {scoreData.innings.map((inning: any, index: number) => (
           <InningSection key={index} inning={inning} />
         ))}
-      </motion.div>
+      </div>
     );
   }
 
-  // 2. Modern Scraper format (scoreData.data.tables or scoreData.tables)
+  // Modern Scraper format (scoreData.data.tables or scoreData.tables)
   const tables: ScorecardTable[] = scoreData?.data?.tables || scoreData?.tables || [];
 
   if (!tables || tables.length === 0) {
     return (
       <EmptyState
-        title="Scorecard Unavailable"
-        description="Detailed innings scorecard is not yet published or is being updated by the match officials."
+        type="scorecard"
+        title="Scorecard In Progress"
+        message="The full match scorecard is being updated or will be published once the innings gets underway."
       />
     );
   }
@@ -63,7 +58,6 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
     const table = tables[i];
     if (table.type === 'Batting') {
       if (currentBatting) {
-        // Push previous batting table without bowling
         inningsPairs.push({
           title: currentBatting.title || `Innings ${inningsPairs.length + 1}`,
           battingTable: currentBatting
@@ -85,7 +79,6 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
         });
       }
     } else {
-      // General table
       inningsPairs.push({
         title: table.title || `Match Data`,
         battingTable: table
@@ -101,12 +94,7 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-8"
-    >
+    <div className="space-y-6">
       {inningsPairs.map((pair, idx) => (
         <InningSection
           key={idx}
@@ -115,7 +103,7 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
           bowlingTable={pair.bowlingTable}
         />
       ))}
-    </motion.div>
+    </div>
   );
 };
 
