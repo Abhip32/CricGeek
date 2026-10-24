@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Match } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
 import StatusBadge from '../common/StatusBadge';
-import { ChevronRight } from 'lucide-react';
+import { MapPin, ChevronRight, Trophy } from 'lucide-react';
 import { getCleanScorecardPath } from '../home/MatchCarouselCard';
 
 interface MatchCardProps {
@@ -26,15 +26,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
   };
 
   return (
-    <div className="w-full bg-white/[0.035] hover:bg-white/[0.075] backdrop-blur-xl border border-white/[0.08] hover:border-red-500/40 rounded-2xl p-5 shadow-lg hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.65),0_0_25px_rgba(220,38,38,0.25)] transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1 group">
+    <div className="w-full bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4">
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] gap-3 min-w-0">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-3 min-w-0">
         <div className="min-w-0 flex-1">
-          <span className="text-xs font-bold text-slate-400 group-hover:text-slate-300 uppercase tracking-wider truncate block" title={match.series}>
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate block" title={match.series}>
             {match.series || 'Match'}
           </span>
           {match.matchInfo && (
-            <p className="text-[11px] text-slate-400 truncate mt-0.5" title={match.matchInfo}>
+            <p className="text-[11px] text-slate-500 truncate mt-0.5" title={match.matchInfo}>
               {match.matchInfo}
             </p>
           )}
@@ -54,16 +54,16 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
               height={22}
               fallbackText={match.teamA}
             />
-            <span className="text-sm sm:text-base font-bold text-slate-100 truncate">
+            <span className="text-sm sm:text-base font-bold text-slate-900 truncate">
               {match.teamA}
             </span>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-base sm:text-lg font-extrabold text-white">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900">
               {match.scoreA || '—'}
             </span>
             {match.oversA && (
-              <span className="text-xs text-slate-400 font-medium ml-1.5">
+              <span className="text-xs text-slate-500 font-medium ml-1.5">
                 {match.oversA}
               </span>
             )}
@@ -80,16 +80,16 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
               height={22}
               fallbackText={match.teamB}
             />
-            <span className="text-sm sm:text-base font-bold text-slate-100 truncate">
+            <span className="text-sm sm:text-base font-bold text-slate-900 truncate">
               {match.teamB}
             </span>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-base sm:text-lg font-extrabold text-white">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900">
               {match.scoreB || '—'}
             </span>
             {match.oversB && (
-              <span className="text-xs text-slate-400 font-medium ml-1.5">
+              <span className="text-xs text-slate-500 font-medium ml-1.5">
                 {match.oversB}
               </span>
             )}
@@ -98,21 +98,21 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
       </div>
 
       {/* Footer: Result & Scorecard Button */}
-      <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-3 text-xs">
-        <p className="text-slate-300 font-medium truncate" title={match.result || match.target}>
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
+        <p className="text-slate-600 font-medium truncate" title={match.result || match.target}>
           {match.result ? (
-            <span className="font-semibold text-slate-200">{match.result}</span>
+            <span className="font-semibold text-slate-800">{match.result}</span>
           ) : match.target ? (
-            <span className="text-slate-300">Target {match.target}</span>
+            <span className="text-slate-700">Target {match.target}</span>
           ) : (
-            <span className="text-slate-400">Upcoming Fixture</span>
+            <span className="text-slate-500">Upcoming Fixture</span>
           )}
         </p>
 
         <Link
           href={scorecardHref}
           onClick={handleClick}
-          className="inline-flex items-center gap-1 font-bold text-red-400 hover:text-red-300 transition-colors flex-shrink-0 group-hover:translate-x-0.5"
+          className="inline-flex items-center gap-1 font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
         >
           <span>Scorecard</span>
           <ChevronRight className="w-3.5 h-3.5" />

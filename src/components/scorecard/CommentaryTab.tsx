@@ -43,18 +43,18 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
 
   const getBallBadgeStyle = (item: CommentaryItem) => {
     if (item.wicket) {
-      return 'bg-red-500/20 text-red-400 border border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.4)] font-extrabold';
+      return 'bg-red-600 text-white font-extrabold';
     }
     if (item.boundary === 'six' || (item.runs && item.runs === 6)) {
-      return 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_12px_rgba(168,85,247,0.4)] font-extrabold';
+      return 'bg-purple-600 text-white font-extrabold';
     }
     if (item.boundary === 'four' || (item.runs && item.runs === 4)) {
-      return 'bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.4)] font-extrabold';
+      return 'bg-blue-600 text-white font-extrabold';
     }
     if (item.runs && item.runs > 0) {
-      return 'bg-white/10 text-white font-bold border border-white/10';
+      return 'bg-slate-800 text-white font-bold';
     }
-    return 'bg-white/[0.04] text-slate-400 font-bold border border-white/[0.06]';
+    return 'bg-slate-100 text-slate-700 font-bold border border-slate-200';
   };
 
   return (
@@ -63,12 +63,12 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
         return (
           <div
             key={idx}
-            className="p-4 rounded-2xl bg-white/[0.035] backdrop-blur-xl border border-white/[0.08] shadow-md hover:border-white/20 transition-all"
+            className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors"
           >
             <div className="flex items-start gap-3.5">
               {item.over && (
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs flex-shrink-0 font-mono shadow-sm ${getBallBadgeStyle(
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs flex-shrink-0 font-mono shadow-2xs ${getBallBadgeStyle(
                     item
                   )}`}
                 >
@@ -77,11 +77,11 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
               )}
 
               <div className="flex-1">
-                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
                   {item.text}
                 </p>
                 {item.timestamp && (
-                  <span className="text-[10px] text-slate-500 mt-1 block">
+                  <span className="text-[10px] text-slate-400 mt-1 block">
                     {item.timestamp}
                   </span>
                 )}

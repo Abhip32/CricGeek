@@ -39,16 +39,16 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
   const team2 = teams[1] || null;
 
   return (
-    <div className="w-full bg-white/[0.035] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-lg overflow-hidden">
+    <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
       {/* Top Banner: Title, Venue & Status */}
-      <div className="p-4 sm:p-5 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-3 bg-white/[0.02]">
+      <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
         <div>
-          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+          <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
             {resolvedSummary.matchTitle || 'Match Center'}
           </h1>
           {resolvedSummary.venue && (
-            <p className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-slate-500" />
+            <p className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-slate-400" />
               <span>{resolvedSummary.venue}</span>
             </p>
           )}
@@ -62,7 +62,7 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
       {/* Center: Teams Scoreboard */}
       <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-11 items-center gap-4 sm:gap-6">
         {/* Team 1 */}
-        <div className="md:col-span-5 flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/15 transition-all">
+        <div className="md:col-span-5 flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100">
           <div className="flex items-center gap-3 min-w-0">
             <ImageWithFallback
               src={team1?.teamLogo}
@@ -72,17 +72,17 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
               fallbackText={team1?.teamName}
             />
             <div className="min-w-0">
-              <h2 className="text-base sm:text-lg font-bold text-white truncate">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
                 {team1?.teamName || 'Team 1'}
               </h2>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
-            <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+            <div className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {team1?.score || '—'}
             </div>
             {team1?.overs && (
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-slate-500 font-medium">
                 {team1.overs}
               </span>
             )}
@@ -91,13 +91,13 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
 
         {/* VS Divider */}
         <div className="md:col-span-1 flex items-center justify-center">
-          <span className="text-xs font-black tracking-widest text-slate-500 uppercase">
+          <span className="text-xs font-black tracking-widest text-slate-400 uppercase">
             VS
           </span>
         </div>
 
         {/* Team 2 */}
-        <div className="md:col-span-5 flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/15 transition-all">
+        <div className="md:col-span-5 flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100">
           <div className="flex items-center gap-3 min-w-0">
             <ImageWithFallback
               src={team2?.teamLogo}
@@ -107,17 +107,17 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
               fallbackText={team2?.teamName}
             />
             <div className="min-w-0">
-              <h2 className="text-base sm:text-lg font-bold text-white truncate">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
                 {team2?.teamName || 'Team 2'}
               </h2>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
-            <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+            <div className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {team2?.score || '—'}
             </div>
             {team2?.overs && (
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-slate-500 font-medium">
                 {team2.overs}
               </span>
             )}
@@ -127,18 +127,18 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
 
       {/* Match Result & Player of the Match */}
       {(resolvedSummary.result || resolvedSummary.playerOfTheMatch) && (
-        <div className="px-5 py-3.5 bg-white/[0.02] border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="px-5 py-3.5 bg-red-50/50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
           {resolvedSummary.result ? (
-            <div className="flex items-center gap-2 text-slate-200 font-semibold">
-              <Trophy className="w-4 h-4 text-red-500 flex-shrink-0" />
+            <div className="flex items-center gap-2 text-slate-800 font-semibold">
+              <Trophy className="w-4 h-4 text-red-600 flex-shrink-0" />
               <span>{resolvedSummary.result}</span>
             </div>
           ) : <div />}
 
           {resolvedSummary.playerOfTheMatch && (
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-slate-200 font-semibold text-xs shadow-sm">
-              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-              <span>Player of the Match: <strong className="text-white">{resolvedSummary.playerOfTheMatch}</strong></span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 font-semibold text-xs shadow-2xs">
+              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+              <span>Player of the Match: <strong className="text-slate-900">{resolvedSummary.playerOfTheMatch}</strong></span>
             </div>
           )}
         </div>

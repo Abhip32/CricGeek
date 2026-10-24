@@ -34,10 +34,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                 isActive
-                  ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-[0_0_18px_rgba(220,38,38,0.5)] border border-red-400/40'
-                  : 'bg-white/[0.04] border border-white/10 text-slate-300 hover:bg-white/[0.08] hover:text-white hover:border-white/20'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <Icon className="w-4 h-4" />

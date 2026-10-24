@@ -6,7 +6,7 @@ import { UpcomingMatch } from '@/types/match';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
 import Hero from '@/components/home/hero';
-import { Calendar, Search, MapPin, Clock, RefreshCw, X } from 'lucide-react';
+import { Calendar, Search, MapPin, Clock, RefreshCw } from 'lucide-react';
 
 export default function SchedulePage() {
   const [schedule, setSchedule] = useState<UpcomingMatch[]>([]);
@@ -60,7 +60,7 @@ export default function SchedulePage() {
   }, [filteredSchedule]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Hero
         image="/images/schduleHeader.jpg"
         heading="Cricket Match Schedule"
@@ -77,25 +77,17 @@ export default function SchedulePage() {
               placeholder="Search teams, series, or stadiums..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-9 py-2 text-xs bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-md"
+              className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-2xs"
             />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => fetchSchedule(true)}
               disabled={loading || refreshing}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-white/[0.04] border border-white/10 text-slate-300 hover:bg-white/[0.1] hover:border-red-500/40 hover:text-white transition-all shadow-md disabled:opacity-50 active:scale-95"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-500' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
               <span>{refreshing ? 'Updating...' : 'Refresh'}</span>
             </button>
           </div>
@@ -104,11 +96,11 @@ export default function SchedulePage() {
         {/* Schedule List grouped by Date */}
         {loading ? (
           <div className="space-y-6">
-            <div className="h-8 w-48 rounded-xl shimmer-block" />
+            <div className="h-8 w-48 bg-slate-200 rounded animate-pulse" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="h-44 bg-white/[0.035] border border-white/[0.07] rounded-2xl shimmer-block" />
-              <div className="h-44 bg-white/[0.035] border border-white/[0.07] rounded-2xl shimmer-block" />
-              <div className="h-44 bg-white/[0.035] border border-white/[0.07] rounded-2xl shimmer-block" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
+              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
             </div>
           </div>
         ) : Object.keys(groupedSchedule).length === 0 ? (
@@ -122,14 +114,14 @@ export default function SchedulePage() {
         ) : (
           <div className="space-y-8">
             {Object.entries(groupedSchedule).map(([date, matches]) => (
-              <div key={date} className="space-y-3.5">
+              <div key={date} className="space-y-3">
                 {/* Date Header Banner */}
-                <div className="flex items-center gap-2.5 border-b border-white/[0.08] pb-2.5">
-                  <Calendar className="w-4 h-4 text-red-500" />
-                  <h2 className="text-sm font-bold text-white tracking-wide">
+                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+                  <Calendar className="w-4 h-4 text-red-600" />
+                  <h2 className="text-sm font-bold text-slate-900">
                     {date}
                   </h2>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/[0.08] text-slate-300 border border-white/10">
+                  <span className="text-xs font-semibold px-2 py-0.2 rounded-full bg-slate-200 text-slate-700">
                     {matches.length} {matches.length === 1 ? 'match' : 'matches'}
                   </span>
                 </div>
@@ -139,21 +131,21 @@ export default function SchedulePage() {
                   {matches.map((fixture, idx) => (
                     <div
                       key={idx}
-                      className="w-full bg-white/[0.035] hover:bg-white/[0.075] backdrop-blur-xl border border-white/[0.08] hover:border-red-500/40 rounded-2xl p-5 shadow-lg hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.65),0_0_24px_rgba(220,38,38,0.22)] transition-all duration-300 flex flex-col justify-between space-y-3.5 hover:-translate-y-1"
+                      className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-3"
                     >
-                      <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06] text-xs">
-                        <span className="font-bold text-slate-400 uppercase tracking-wider truncate">
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
+                        <span className="font-bold text-slate-500 uppercase tracking-wider truncate">
                           {fixture.seriesName || 'Series'}
                         </span>
-                        <div className="flex items-center gap-1.5 text-blue-400 bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/30 backdrop-blur-md font-semibold">
-                          <Clock className="w-3 h-3 text-blue-400" />
+                        <div className="flex items-center gap-1 text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-semibold">
+                          <Clock className="w-3 h-3 text-blue-600" />
                           <span>{fixture.startTime || 'TBD'}</span>
                         </div>
                       </div>
 
                       <div className="space-y-2 py-1">
                         {fixture.teamDetails && fixture.teamDetails.length >= 2 ? (
-                          <div className="space-y-2.5">
+                          <div className="space-y-2">
                             <div className="flex items-center gap-2.5">
                               <ImageWithFallback
                                 src={fixture.teamDetails[0].flag}
@@ -162,7 +154,7 @@ export default function SchedulePage() {
                                 height={26}
                                 fallbackText={fixture.teamDetails[0].name}
                               />
-                              <span className="text-sm font-bold text-white truncate">
+                              <span className="text-sm font-bold text-slate-900 truncate">
                                 {fixture.teamDetails[0].name}
                               </span>
                             </div>
@@ -174,20 +166,20 @@ export default function SchedulePage() {
                                 height={26}
                                 fallbackText={fixture.teamDetails[1].name}
                               />
-                              <span className="text-sm font-bold text-white truncate">
+                              <span className="text-sm font-bold text-slate-900 truncate">
                                 {fixture.teamDetails[1].name}
                               </span>
                             </div>
                           </div>
                         ) : (
-                          <h3 className="text-sm font-bold text-white leading-snug">
+                          <h3 className="text-sm font-bold text-slate-900 leading-snug">
                             {fixture.teams}
                           </h3>
                         )}
                       </div>
 
-                      <div className="pt-2.5 border-t border-white/[0.06] flex items-center gap-1.5 text-xs text-slate-400">
-                        <MapPin className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                      <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
                         <span className="truncate">{fixture.venueInfo || 'Venue TBA'}</span>
                       </div>
                     </div>
