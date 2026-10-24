@@ -28,13 +28,13 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4">
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-2">
-        <div className="min-w-0">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate block">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-3 min-w-0">
+        <div className="min-w-0 flex-1">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate block" title={match.series}>
             {match.series || 'Match'}
           </span>
           {match.matchInfo && (
-            <p className="text-[11px] text-slate-500 truncate mt-0.5">
+            <p className="text-[11px] text-slate-500 truncate mt-0.5" title={match.matchInfo}>
               {match.matchInfo}
             </p>
           )}

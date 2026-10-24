@@ -36,8 +36,8 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
   return (
     <div className="w-[300px] sm:w-[340px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-4 shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between">
       {/* Series Title & Status */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-100 gap-2">
-        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">
+      <div className="flex items-center justify-between pb-2 border-b border-slate-100 gap-2 min-w-0">
+        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0" title={match.series}>
           {match.series || 'Match Fixture'}
         </span>
         <StatusBadge status={match.status} />
