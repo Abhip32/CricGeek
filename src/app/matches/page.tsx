@@ -105,8 +105,8 @@ function MatchesContent() {
         </div>
 
         {/* Tab Navigation: Live / Recent / Upcoming */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-2">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full sm:w-auto">
             {[
               { id: 'live', label: 'Live Now', count: liveMatches.length, icon: Flame },
               { id: 'recent', label: 'Recent Results', count: recentMatches.length, icon: Clock },
@@ -118,13 +118,13 @@ function MatchesContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex-shrink-0 ${
                     isActive
                       ? 'bg-red-600 text-white shadow-xs'
                       : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{tab.label}</span>
                   <span className={`px-1.5 py-0.2 rounded-full text-[11px] ${
                     isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'

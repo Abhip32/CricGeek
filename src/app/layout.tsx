@@ -14,6 +14,12 @@ export const metadata = {
   description: 'Your premier cricket companion for live scores, ball-by-ball updates, match schedules, and official ICC rankings.',
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {

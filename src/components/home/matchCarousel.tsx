@@ -52,39 +52,41 @@ export const MatchCarousel = () => {
     <section className="bg-slate-50 py-8 border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
         {/* Section Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className={`w-2.5 h-2.5 rounded-full ${isLiveActive ? 'bg-red-600 animate-pulse' : 'bg-slate-400'}`} />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isLiveActive ? 'bg-red-600 animate-pulse' : 'bg-slate-400'}`} />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">
               {isLiveActive ? 'Live Matches' : 'Recent Matches'}
             </h2>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 flex-shrink-0">
               {matches.length}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 ml-auto">
             <Link
               href="/matches"
-              className="text-xs font-bold text-red-600 hover:text-red-700 transition-colors mr-2"
+              className="text-xs font-bold text-red-600 hover:text-red-700 transition-colors whitespace-nowrap"
             >
               View All Matches →
             </Link>
 
-            <button
-              onClick={() => handleScroll('left')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
-              aria-label="Previous"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleScroll('right')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
-              aria-label="Next"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <button
+                onClick={() => handleScroll('left')}
+                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleScroll('right')}
+                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+                aria-label="Next"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
