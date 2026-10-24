@@ -8,24 +8,20 @@
 
 ## 📸 Application Screenshots
 
-### 🏠 Live Match Hub & News Dashboard
-| Home Dashboard | Live Matches Center |
-|:---:|:---:|
-| ![Home Dashboard](screenshots/home.png) | ![Live Matches](screenshots/matches.png) |
+### 🏠 Live Match Hub & Completed Results
+| Home Dashboard | Live Match Center | Completed Fixtures & Results |
+|:---:|:---:|:---:|
+| ![Home Dashboard](screenshots/home.png) | ![Live Matches](screenshots/matches.png) | ![Recent Results](screenshots/matches-recent.png) |
 
-### 📊 Comprehensive Scorecards & Live Commentary
-| Innings Scorecard Breakdown | Ball-by-Ball Commentary Stream |
-|:---:|:---:|
-| ![Interactive Scorecard](screenshots/scorecard.png) | ![Live Commentary](screenshots/commentary.png) |
+### 📊 Comprehensive Scorecards & Detailed Breakdowns
+| Innings Scorecard Breakdown | Ball-by-Ball & Bowling Breakdown | Match Info & Ground Details |
+|:---:|:---:|:---:|
+| ![Interactive Scorecard](screenshots/scorecard.png) | ![Scorecard Breakdown](screenshots/commentary.png) | ![Match Info](screenshots/squads.png) |
 
-### 🏆 Rankings, Schedules & Squad Lineups
-| Official ICC Rankings | Tournament Schedules & Fixtures |
-|:---:|:---:|
-| ![ICC Rankings](screenshots/rankings.png) | ![Tournament Schedule](screenshots/schedule.png) |
-
-| Playing XI & Squad Lineups |
-|:---:|
-| ![Squads Lineup](screenshots/squads.png) |
+### 🏆 Rankings & Tournament Schedules
+| Official ICC Team Rankings | ICC Player Rankings | Tournament Schedules & Fixtures |
+|:---:|:---:|:---:|
+| ![ICC Team Rankings](screenshots/rankings.png) | ![ICC Player Rankings](screenshots/rankings%20variation.png) | ![Tournament Schedule](screenshots/schedule.png) |
 
 ---
 
