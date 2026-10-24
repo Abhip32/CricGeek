@@ -1,18 +1,24 @@
-const NewsSkeletonCard = () => {
+'use client';
+
+import React from 'react';
+
+export default function NewsSkeletonCard() {
   return (
-    <article className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 w-full animate-pulse">
-      {/* Image Section */}
-      <div className="relative h-48 sm:h-auto bg-gray-300"></div>
-
-      {/* Content Section */}
-      <div className="sm:col-span-2 p-4 sm:p-6 flex flex-col justify-between">
-        <div className="h-6 bg-gray-300 rounded mb-4"></div>
-        <div className="h-4 bg-gray-300 rounded mb-2"></div>
-        <div className="h-4 bg-gray-300 rounded mb-2"></div>
-        <div className="h-4 bg-gray-300 rounded mt-4"></div>
+    <div className="relative flex flex-col sm:flex-row gap-4 rounded-2xl glass-card p-4 border border-white/5 overflow-hidden">
+      <div className="absolute inset-0 animate-shimmer" />
+      <div className="w-full sm:w-1/3 h-44 sm:h-auto rounded-xl bg-slate-800/80 flex-shrink-0" />
+      <div className="w-full sm:w-2/3 flex flex-col justify-between py-1 space-y-3">
+        <div className="space-y-2">
+          <div className="h-3 w-20 bg-slate-800/80 rounded" />
+          <div className="h-5 w-5/6 bg-slate-800/80 rounded-md" />
+          <div className="h-4 w-full bg-slate-800/80 rounded" />
+          <div className="h-4 w-3/4 bg-slate-800/80 rounded" />
+        </div>
+        <div className="flex justify-between items-center pt-2">
+          <div className="h-3 w-28 bg-slate-800/80 rounded" />
+          <div className="h-3 w-16 bg-slate-800/80 rounded" />
+        </div>
       </div>
-    </article>
+    </div>
   );
-};
-
-export default NewsSkeletonCard;
+}
