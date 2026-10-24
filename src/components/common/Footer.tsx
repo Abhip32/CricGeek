@@ -42,7 +42,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/matches" className="hover:text-red-600 transition-colors">
+                <Link href="/matches?tab=live" className="hover:text-red-600 transition-colors">
                   All Matches
                 </Link>
               </li>

@@ -12,7 +12,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/matches', label: 'Matches' },
+    { href: '/matches?tab=live', label: 'Matches' },
     { href: '/schedule', label: 'Schedule' },
     { href: '/rankings', label: 'Rankings' },
   ];
@@ -35,7 +35,8 @@ export const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+            const basePath = link.href.split('?')[0];
+            const isActive = pathname === basePath || (basePath !== '/' && pathname.startsWith(basePath));
             return (
               <Link
                 key={link.href}
@@ -83,7 +84,8 @@ export const Navbar = () => {
       {isOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-2 shadow-lg">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+            const basePath = link.href.split('?')[0];
+            const isActive = pathname === basePath || (basePath !== '/' && pathname.startsWith(basePath));
             return (
               <Link
                 key={link.href}

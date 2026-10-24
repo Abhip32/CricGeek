@@ -7,7 +7,6 @@ import MatchCarouselCard from './MatchCarouselCard';
 import SkeletonCard from './SkeletonCard';
 import EmptyState from '../common/EmptyState';
 import { ChevronLeft, ChevronRight, Radio } from 'lucide-react';
-import Link from 'next/link';
 
 export const MatchCarousel = () => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -63,41 +62,31 @@ export const MatchCarousel = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-            <Link
-              href="/matches"
-              className="text-xs font-bold text-red-600 hover:text-red-700 transition-colors whitespace-nowrap"
+          <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+            <button
+              onClick={() => handleScroll('left')}
+              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              aria-label="Previous"
             >
-              <span className="hidden xs:inline sm:inline">View All Matches →</span>
-              <span className="inline xs:hidden sm:hidden">View All →</span>
-            </Link>
-
-            <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
-              <button
-                onClick={() => handleScroll('left')}
-                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
-                aria-label="Previous"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleScroll('right')}
-                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
-                aria-label="Next"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => handleScroll('right')}
+              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              aria-label="Next"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
         {/* Carousel Scroll Container */}
         {loading ? (
           <div className="flex gap-4 overflow-x-hidden py-1">
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
+            <SkeletonCard className="w-[300px] sm:w-[340px] flex-shrink-0" />
+            <SkeletonCard className="w-[300px] sm:w-[340px] flex-shrink-0" />
+            <SkeletonCard className="w-[300px] sm:w-[340px] flex-shrink-0" />
+            <SkeletonCard className="w-[300px] sm:w-[340px] flex-shrink-0" />
           </div>
         ) : matches.length === 0 ? (
           <EmptyState

@@ -95,7 +95,7 @@ function ScorecardContent() {
         {/* Navigation & Controls Bar */}
         <div className="flex items-center justify-between">
           <Link
-            href="/matches"
+            href="/matches?tab=live"
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all shadow-2xs group"
           >
             <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-red-600 transition-transform group-hover:-translate-x-1" />
