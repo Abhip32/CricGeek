@@ -6,7 +6,7 @@ import { Match } from '@/types/match';
 import MatchCarouselCard from './MatchCarouselCard';
 import SkeletonCard from './SkeletonCard';
 import EmptyState from '../common/EmptyState';
-import { ChevronLeft, ChevronRight, Radio } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const MatchCarousel = () => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -48,16 +48,16 @@ export const MatchCarousel = () => {
   };
 
   return (
-    <section className="bg-slate-50 py-8 border-b border-slate-200">
+    <section className="relative py-8 border-b border-white/[0.08]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
         {/* Section Header */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isLiveActive ? 'bg-red-600 animate-pulse' : 'bg-slate-400'}`} />
-            <h2 className="text-sm sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isLiveActive ? 'bg-red-500 animate-ping' : 'bg-slate-500'}`} />
+            <h2 className="text-sm sm:text-lg font-bold text-white tracking-tight whitespace-nowrap">
               {isLiveActive ? 'Live Matches' : 'Recent Matches'}
             </h2>
-            <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 flex-shrink-0">
+            <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-white/[0.08] text-slate-300 border border-white/10 flex-shrink-0">
               {matches.length}
             </span>
           </div>
@@ -65,14 +65,14 @@ export const MatchCarousel = () => {
           <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
             <button
               onClick={() => handleScroll('left')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              className="p-2 rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.1] hover:border-red-500/40 hover:text-white transition-all shadow-md active:scale-95"
               aria-label="Previous"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => handleScroll('right')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              className="p-2 rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.1] hover:border-red-500/40 hover:text-white transition-all shadow-md active:scale-95"
               aria-label="Next"
             >
               <ChevronRight className="w-4 h-4" />

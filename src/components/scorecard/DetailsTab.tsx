@@ -79,34 +79,34 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, loading }) =>
 
   if (detailsList.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-xl">
+      <div className="p-8 text-center text-slate-400 bg-white/[0.035] border border-white/[0.08] rounded-2xl">
         No match info details available for this match.
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-      <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center gap-2.5">
-        <Info className="w-4 h-4 text-red-600" />
-        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+    <div className="bg-white/[0.035] backdrop-blur-xl border border-white/[0.08] rounded-2xl overflow-hidden shadow-lg">
+      <div className="p-4 sm:p-5 border-b border-white/[0.06] bg-white/[0.02] flex items-center gap-2.5">
+        <Info className="w-4 h-4 text-red-500" />
+        <h3 className="text-sm font-bold text-white uppercase tracking-wider">
           Match Information
         </h3>
       </div>
 
-      <div className="divide-y divide-slate-100">
+      <div className="divide-y divide-white/[0.05]">
         {detailsList.map((item, idx) => {
           const Icon = item.icon || Info;
           return (
             <div
               key={idx}
-              className="p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 hover:bg-slate-50/50 transition-colors"
+              className="p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 hover:bg-white/[0.03] transition-colors"
             >
-              <div className="flex items-center gap-2.5 text-slate-600">
-                <Icon className="w-4 h-4 text-slate-400 flex-shrink-0" />
+              <div className="flex items-center gap-2.5 text-slate-400">
+                <Icon className="w-4 h-4 text-slate-500 flex-shrink-0" />
                 <span className="text-xs font-semibold">{item.label}</span>
               </div>
-              <div className="text-xs sm:text-sm font-bold text-slate-900 sm:text-right max-w-xl">
+              <div className="text-xs sm:text-sm font-bold text-white sm:text-right max-w-xl">
                 {item.value}
               </div>
             </div>

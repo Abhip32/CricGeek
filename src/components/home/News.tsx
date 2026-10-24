@@ -30,17 +30,17 @@ export const News = () => {
   }, []);
 
   return (
-    <section className="bg-white py-12">
+    <section className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Section Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
           <div className="flex items-center gap-2.5">
-            <Newspaper className="w-5 h-5 text-red-600" />
-            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+            <Newspaper className="w-5 h-5 text-red-500" />
+            <h2 className="text-xl font-bold text-white tracking-tight">
               Top Cricket Headlines
             </h2>
           </div>
-          <span className="text-xs font-semibold text-slate-500">
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-slate-300">
             Updated Hourly
           </span>
         </div>

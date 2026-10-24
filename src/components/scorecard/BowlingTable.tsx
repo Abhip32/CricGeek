@@ -63,17 +63,17 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }
 
   if (!rows || rows.length === 0) {
     return (
-      <div className="py-5 text-center text-slate-500 text-xs">
+      <div className="py-5 text-center text-slate-400 text-xs">
         No bowling data recorded for this innings.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
+    <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-white/[0.02] shadow-sm backdrop-blur-md">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+          <tr className="bg-white/[0.04] text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-white/[0.08]">
             <th className="py-2.5 px-4">Bowler</th>
             <th className="py-2.5 px-3 text-right">O</th>
             <th className="py-2.5 px-3 text-right">M</th>
@@ -84,7 +84,7 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }
             <th className="py-2.5 px-3 text-right hidden sm:table-cell">NB</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-white/[0.05]">
           {rows.map((bowler, idx) => {
             const wicketsNum = parseInt(String(bowler.wickets), 10);
             const hasWickets = !isNaN(wicketsNum) && wicketsNum > 0;
@@ -92,26 +92,26 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }
             return (
               <tr 
                 key={idx}
-                className="hover:bg-red-50/30 transition-colors"
+                className="hover:bg-red-500/[0.07] transition-colors"
               >
-                <td className="py-2.5 px-4 font-bold text-slate-900">
+                <td className="py-2.5 px-4 font-bold text-white">
                   {bowler.name}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-300 font-medium">
                   {bowler.overs}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-400 font-medium">
                   {bowler.maidens}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-300 font-medium">
                   {bowler.runs}
                 </td>
                 <td className="py-2.5 px-3 text-right">
-                  <span className={`font-bold ${hasWickets ? 'text-red-600 font-extrabold text-base' : 'text-slate-500'}`}>
+                  <span className={`font-bold ${hasWickets ? 'text-red-400 font-extrabold text-base' : 'text-slate-400'}`}>
                     {bowler.wickets}
                   </span>
                 </td>
-                <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs">
+                <td className="py-2.5 px-4 text-right text-slate-400 font-mono text-xs">
                   {bowler.economy}
                 </td>
                 <td className="py-2.5 px-3 text-right text-slate-500 font-medium hidden sm:table-cell">

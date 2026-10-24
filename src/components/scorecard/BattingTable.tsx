@@ -78,17 +78,17 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }
 
   if (!rows || rows.length === 0) {
     return (
-      <div className="py-5 text-center text-slate-500 text-xs">
+      <div className="py-5 text-center text-slate-400 text-xs">
         No batting data recorded for this innings.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
+    <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-white/[0.02] shadow-sm backdrop-blur-md">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+          <tr className="bg-white/[0.04] text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-white/[0.08]">
             <th className="py-2.5 px-4">Batter</th>
             <th className="py-2.5 px-3 text-right">R</th>
             <th className="py-2.5 px-3 text-right">B</th>
@@ -97,7 +97,7 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }
             <th className="py-2.5 px-4 text-right">SR</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-white/[0.05]">
           {rows.map((batter, idx) => {
             const runsNum = parseInt(String(batter.runs), 10);
             const isMilestone = !isNaN(runsNum) && runsNum >= 50;
@@ -105,33 +105,33 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData }
             return (
               <tr 
                 key={idx}
-                className="hover:bg-red-50/30 transition-colors"
+                className="hover:bg-red-500/[0.07] transition-colors"
               >
                 <td className="py-2.5 px-4">
-                  <span className="font-bold text-slate-900 block leading-tight">
+                  <span className="font-bold text-white block leading-tight">
                     {batter.name}
                   </span>
                   {batter.dismissal && (
-                    <span className="text-xs text-slate-500 italic mt-0.5 block max-w-md truncate">
+                    <span className="text-xs text-slate-400 italic mt-0.5 block max-w-md truncate">
                       {batter.dismissal}
                     </span>
                   )}
                 </td>
                 <td className="py-2.5 px-3 text-right">
-                  <span className={`font-bold ${isMilestone ? 'text-red-600 font-extrabold text-base' : 'text-slate-900'}`}>
+                  <span className={`font-bold ${isMilestone ? 'text-red-400 font-extrabold text-base' : 'text-white'}`}>
                     {batter.runs}
                   </span>
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-300 font-medium">
                   {batter.balls}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-400 font-medium">
                   {batter.fours}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-400 font-medium">
                   {batter.sixes}
                 </td>
-                <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs">
+                <td className="py-2.5 px-4 text-right text-slate-400 font-mono text-xs">
                   {batter.sr}
                 </td>
               </tr>

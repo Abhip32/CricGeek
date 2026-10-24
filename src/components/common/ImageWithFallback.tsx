@@ -42,7 +42,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     return (
       <div
         style={{ width, height }}
-        className={`flex-shrink-0 rounded-md bg-slate-100 border border-slate-200/80 flex items-center justify-center font-bold text-slate-700 tracking-wider shadow-2xs ${className}`}
+        className={`flex-shrink-0 rounded-md bg-white/[0.08] border border-white/15 flex items-center justify-center font-bold text-slate-200 tracking-wider shadow-sm ${className}`}
         title={alt}
       >
         <span style={{ fontSize: Math.max(9, Math.floor(Math.min(width, height) * 0.45)) }}>
@@ -55,7 +55,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   return (
     <div
       style={{ width, height }}
-      className={`relative flex-shrink-0 overflow-hidden rounded-md border border-slate-200/80 bg-white shadow-2xs ${className}`}
+      className={`relative flex-shrink-0 overflow-hidden rounded-md border border-white/15 bg-white/[0.04] shadow-sm ${className}`}
       title={alt}
     >
       <Image
