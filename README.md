@@ -2,6 +2,31 @@
 
 **CricGeek** is a high-octane, luxury sports web application engineered with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**. It connects to the companion [Cricket-Api](https://github.com/Abhip32/Cricket-Api) to deliver real-time ball-by-ball updates, live match scorecards, upcoming tournament schedules, ICC player and team rankings, and breaking news.
 
+![CricGeek Home Showcase](screenshots/home.png)
+
+---
+
+## 📸 Application Screenshots
+
+### 🏠 Live Match Hub & News Dashboard
+| Home Dashboard | Live Matches Center |
+|:---:|:---:|
+| ![Home Dashboard](screenshots/home.png) | ![Live Matches](screenshots/matches.png) |
+
+### 📊 Comprehensive Scorecards & Live Commentary
+| Innings Scorecard Breakdown | Ball-by-Ball Commentary Stream |
+|:---:|:---:|
+| ![Interactive Scorecard](screenshots/scorecard.png) | ![Live Commentary](screenshots/commentary.png) |
+
+### 🏆 Rankings, Schedules & Squad Lineups
+| Official ICC Rankings | Tournament Schedules & Fixtures |
+|:---:|:---:|
+| ![ICC Rankings](screenshots/rankings.png) | ![Tournament Schedule](screenshots/schedule.png) |
+
+| Playing XI & Squad Lineups |
+|:---:|
+| ![Squads Lineup](screenshots/squads.png) |
+
 ---
 
 ## ✨ Features & Modern Architecture
