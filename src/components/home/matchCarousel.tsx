@@ -97,6 +97,7 @@ export const MatchCarousel = () => {
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
+            <SkeletonCard />
           </div>
         ) : matches.length === 0 ? (
           <EmptyState

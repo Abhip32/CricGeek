@@ -68,6 +68,42 @@ body {
   background-color: #fef2f2;
 }
 
+/* Enhanced Shimmer Animation */
+@keyframes shimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-block {
+  background: linear-gradient(
+    90deg,
+    #e2e8f0 0%,
+    #f8fafc 40%,
+    #cbd5e1 50%,
+    #f8fafc 60%,
+    #e2e8f0 100%
+  );
+  background-size: 250% 100%;
+  animation: shimmerWave 1.6s ease-in-out infinite;
+}
+
+.shimmer-block-subtle {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 0%,
+    #ffffff 45%,
+    #e2e8f0 55%,
+    #ffffff 65%,
+    #f1f5f9 100%
+  );
+  background-size: 250% 100%;
+  animation: shimmerWave 1.6s ease-in-out infinite;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
