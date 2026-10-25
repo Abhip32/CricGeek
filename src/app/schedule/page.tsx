@@ -5,6 +5,7 @@ import { useUpcomingMatches } from '@/hooks/useCricketQueries';
 import { UpcomingMatch } from '@/types/match';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
+import ScheduleSkeleton from '@/components/schedule/ScheduleSkeleton';
 import Hero from '@/components/home/hero';
 import { Calendar, Search, MapPin, Clock, RefreshCw } from 'lucide-react';
 
@@ -75,14 +76,7 @@ export default function SchedulePage() {
 
         {/* Schedule List grouped by Date */}
         {loading ? (
-          <div className="space-y-6">
-            <div className="h-8 w-48 bg-slate-200 rounded animate-pulse" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-            </div>
-          </div>
+          <ScheduleSkeleton />
         ) : Object.keys(groupedSchedule).length === 0 ? (
           <EmptyState
             type="schedule"
@@ -119,7 +113,7 @@ export default function SchedulePage() {
                           {item.seriesName || 'Series'}
                         </span>
                         <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                          {item.matchInfo || 'Fixture'}
+                          {item.startTime || 'Fixture'}
                         </span>
                       </div>
 

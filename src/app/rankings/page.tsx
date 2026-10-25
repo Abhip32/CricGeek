@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useTeamRankings, usePlayerRankings } from '@/hooks/useCricketQueries';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
+import RankingsSkeleton from '@/components/rankings/RankingsSkeleton';
 import Hero from '@/components/home/hero';
 import { Trophy, Users, Shield, Search, RefreshCw } from 'lucide-react';
 
@@ -234,14 +235,7 @@ export default function RankingsPage() {
 
         {/* Content */}
         {loading ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-              <div className="h-44 bg-white border border-slate-200 rounded-xl animate-pulse" />
-            </div>
-            <div className="h-64 bg-white border border-slate-200 rounded-xl animate-pulse" />
-          </div>
+          <RankingsSkeleton />
         ) : filteredList.length === 0 ? (
           <EmptyState
             type="rankings"
