@@ -53,6 +53,7 @@ export interface UpcomingMatch {
   seriesName: string;
   startTime: string;
   link: string;
+  matchInfo?: string;
 }
 
 export interface ScorecardTable {

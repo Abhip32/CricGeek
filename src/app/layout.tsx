@@ -1,5 +1,6 @@
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
+import QueryProvider from '@/providers/QueryProvider';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -28,11 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-red-500 selection:text-white">
-        <Navbar />
-        <main className="flex-1 w-full">
-          {children}
-        </main>
-        <Footer />
+        <QueryProvider>
+          <Navbar />
+          <main className="flex-1 w-full">
+            {children}
+          </main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );

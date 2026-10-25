@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { cricketApi } from '@/services/api';
+import React, { useState, useMemo } from 'react';
+import { useTeamRankings, usePlayerRankings } from '@/hooks/useCricketQueries';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
 import Hero from '@/components/home/hero';
@@ -11,42 +11,38 @@ export default function RankingsPage() {
   const [category, setCategory] = useState<'teams' | 'players'>('teams');
   const [selectedFormat, setSelectedFormat] = useState<'test' | 'odi' | 't20'>('test');
   const [playerRole, setPlayerRole] = useState<'batting' | 'bowling' | 'allRounder'>('batting');
-
-  const [teamRankings, setTeamRankings] = useState<any>(null);
-  const [playerRankings, setPlayerRankings] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchRankings = async (isManual = false) => {
-    if (isManual) setRefreshing(true);
-    else setLoading(true);
+  // React Query hooks with automatic caching and background syncing
+  const {
+    data: teamRankings,
+    isLoading: isTeamLoading,
+    isFetching: isTeamFetching,
+    refetch: refetchTeams
+  } = useTeamRankings();
 
-    try {
-      const [teams, players] = await Promise.all([
-        cricketApi.getTeamRankings(),
-        cricketApi.getPlayerRankings()
-      ]);
-      setTeamRankings(teams);
-      setPlayerRankings(players);
-    } catch (err) {
-      console.warn('Failed to load rankings:', err);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+  const {
+    data: playerRankings,
+    isLoading: isPlayerLoading,
+    isFetching: isPlayerFetching,
+    refetch: refetchPlayers
+  } = usePlayerRankings();
+
+  const loading = category === 'teams' ? isTeamLoading : isPlayerLoading;
+  const refreshing = isTeamFetching || isPlayerFetching;
+
+  const handleRefresh = async () => {
+    if (category === 'teams') {
+      await refetchTeams();
+    } else {
+      await refetchPlayers();
     }
   };
 
-  useEffect(() => {
-    fetchRankings();
-  }, []);
-
   // Resolve team ranking table
-  // API returns array: [{ tableTitle: 'ICC Test Rankings', teams: [...] }, { tableTitle: 'ICC ODI Rankings', ... }]
-  // Or legacy object format: { test: [...], odi: [...] }
   const currentTeamList = useMemo(() => {
     if (!teamRankings) return [];
-    
+
     // Array format from backend
     if (Array.isArray(teamRankings)) {
       const targetTitlePattern = selectedFormat === 'test' 
@@ -54,7 +50,7 @@ export default function RankingsPage() {
         : selectedFormat === 'odi' 
         ? /\bodi\b/i 
         : /t20/i;
-      
+
       const foundBlock = teamRankings.find((block: any) => 
         targetTitlePattern.test(block.tableTitle || '')
       );
@@ -68,8 +64,6 @@ export default function RankingsPage() {
   }, [teamRankings, selectedFormat]);
 
   // Resolve player ranking table
-  // API returns array: [{ tableTitle: 'Test Batters Rankings', players: [...] }, ...]
-  // Or legacy object format
   const currentPlayerList = useMemo(() => {
     if (!playerRankings) return [];
 
@@ -80,7 +74,6 @@ export default function RankingsPage() {
 
       const foundBlock = playerRankings.find((block: any) => {
         const title = (block.tableTitle || '').toLowerCase();
-        // Check format matches (and not WODI/WT20 unless requested)
         const formatMatch = formatStr === 'odi' 
           ? (title.includes('odi') && !title.includes('wodi'))
           : formatStr === 't20'
@@ -141,7 +134,6 @@ export default function RankingsPage() {
   }, [normalizedList, searchQuery]);
 
   const top3 = filteredList.slice(0, 3);
-  const restList = filteredList.slice(3);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -180,8 +172,8 @@ export default function RankingsPage() {
           </div>
 
           <button
-            onClick={() => fetchRankings(true)}
-            disabled={loading || refreshing}
+            onClick={handleRefresh}
+            disabled={refreshing}
             className="self-start sm:self-auto inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
@@ -255,7 +247,7 @@ export default function RankingsPage() {
             type="rankings"
             title="No Rankings Available"
             message="No ranking records found for this format or search criteria."
-            onRetry={fetchRankings}
+            onRetry={handleRefresh}
           />
         ) : (
           <div className="space-y-6">

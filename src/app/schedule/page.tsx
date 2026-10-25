@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { cricketApi } from '@/services/api';
+import React, { useState, useMemo } from 'react';
+import { useUpcomingMatches } from '@/hooks/useCricketQueries';
 import { UpcomingMatch } from '@/types/match';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import EmptyState from '@/components/common/EmptyState';
@@ -9,30 +9,10 @@ import Hero from '@/components/home/hero';
 import { Calendar, Search, MapPin, Clock, RefreshCw } from 'lucide-react';
 
 export default function SchedulePage() {
-  const [schedule, setSchedule] = useState<UpcomingMatch[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchSchedule = async (isManual = false) => {
-    if (isManual) setRefreshing(true);
-    else setLoading(true);
-
-    try {
-      const data = await cricketApi.getUpcomingMatches();
-      setSchedule(data || []);
-    } catch (err) {
-      console.warn('Failed to fetch schedule:', err);
-      setSchedule([]);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSchedule();
-  }, []);
+  // React Query hook
+  const { data: schedule = [], isLoading: loading, isFetching: refreshing, refetch } = useUpcomingMatches();
 
   const filteredSchedule = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -83,8 +63,8 @@ export default function SchedulePage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => fetchSchedule(true)}
-              disabled={loading || refreshing}
+              onClick={() => refetch()}
+              disabled={refreshing}
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
@@ -128,59 +108,69 @@ export default function SchedulePage() {
 
                 {/* Fixture Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {matches.map((fixture, idx) => (
+                  {matches.map((item, idx) => (
                     <div
                       key={idx}
-                      className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-3"
+                      className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-4 hover:border-slate-300 hover:shadow-md transition-all"
                     >
+                      {/* Top Header: Series & Match Number */}
                       <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
-                        <span className="font-bold text-slate-500 uppercase tracking-wider truncate">
-                          {fixture.seriesName || 'Series'}
+                        <span className="font-bold text-slate-500 uppercase tracking-wider truncate" title={item.seriesName}>
+                          {item.seriesName || 'Series'}
                         </span>
-                        <div className="flex items-center gap-1 text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-semibold">
-                          <Clock className="w-3 h-3 text-blue-600" />
-                          <span>{fixture.startTime || 'TBD'}</span>
-                        </div>
+                        <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                          {item.matchInfo || 'Fixture'}
+                        </span>
                       </div>
 
-                      <div className="space-y-2 py-1">
-                        {fixture.teamDetails && fixture.teamDetails.length >= 2 ? (
+                      {/* Teams & Logos */}
+                      <div className="space-y-2.5 py-1">
+                        {item.teamDetails && item.teamDetails.length >= 2 ? (
                           <div className="space-y-2">
                             <div className="flex items-center gap-2.5">
                               <ImageWithFallback
-                                src={fixture.teamDetails[0].flag}
-                                alt={fixture.teamDetails[0].name}
+                                src={item.teamDetails[0].flag}
+                                alt={item.teamDetails[0].name}
                                 width={26}
                                 height={26}
-                                fallbackText={fixture.teamDetails[0].name}
+                                fallbackText={item.teamDetails[0].name}
                               />
                               <span className="text-sm font-bold text-slate-900 truncate">
-                                {fixture.teamDetails[0].name}
+                                {item.teamDetails[0].name}
                               </span>
                             </div>
                             <div className="flex items-center gap-2.5">
                               <ImageWithFallback
-                                src={fixture.teamDetails[1].flag}
-                                alt={fixture.teamDetails[1].name}
+                                src={item.teamDetails[1].flag}
+                                alt={item.teamDetails[1].name}
                                 width={26}
                                 height={26}
-                                fallbackText={fixture.teamDetails[1].name}
+                                fallbackText={item.teamDetails[1].name}
                               />
                               <span className="text-sm font-bold text-slate-900 truncate">
-                                {fixture.teamDetails[1].name}
+                                {item.teamDetails[1].name}
                               </span>
                             </div>
                           </div>
                         ) : (
                           <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                            {fixture.teams}
+                            {item.teams}
                           </h3>
                         )}
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                        <span className="truncate">{fixture.venueInfo || 'Venue TBA'}</span>
+                      {/* Footer: Venue & Time */}
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div className="flex items-center gap-1 min-w-0">
+                          <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-slate-400" />
+                          <span className="truncate max-w-[160px]" title={item.venueInfo}>
+                            {item.venueInfo || 'Venue TBA'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 font-semibold text-slate-700 flex-shrink-0">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{item.startTime || 'TBD'}</span>
+                        </div>
                       </div>
                     </div>
                   ))}

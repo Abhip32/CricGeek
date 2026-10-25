@@ -1,44 +1,23 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { cricketApi } from '@/services/api';
-import { Match } from '@/types/match';
+import React, { useRef } from 'react';
+import { useLiveMatches, useRecentMatches } from '@/hooks/useCricketQueries';
 import MatchCarouselCard from './MatchCarouselCard';
 import SkeletonCard from './SkeletonCard';
 import EmptyState from '../common/EmptyState';
-import { ChevronLeft, ChevronRight, Radio } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const MatchCarousel = () => {
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isLiveActive, setIsLiveActive] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const fetchMatches = async () => {
-    setLoading(true);
-    try {
-      // First try live matches
-      const live = await cricketApi.getLiveMatches();
-      if (live && live.length > 0) {
-        setMatches(live);
-        setIsLiveActive(true);
-      } else {
-        // Fall back to recent matches
-        const recent = await cricketApi.getRecentMatches();
-        setMatches(recent || []);
-        setIsLiveActive(false);
-      }
-    } catch (err) {
-      console.warn('Carousel fetch error:', err);
-      setMatches([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // React Query hooks with auto-polling on live matches
+  const { data: liveMatches, isLoading: isLiveLoading } = useLiveMatches();
+  const { data: recentMatches, isLoading: isRecentLoading } = useRecentMatches();
 
-  useEffect(() => {
-    fetchMatches();
-  }, []);
+  const hasLive = Array.isArray(liveMatches) && liveMatches.length > 0;
+  const isLiveActive = hasLive;
+  const matches = hasLive ? liveMatches : (recentMatches || []);
+  const loading = isLiveLoading || (!hasLive && isRecentLoading);
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {

@@ -1,33 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { cricketApi } from '@/services/api';
-import { NewsItem } from '@/types/news';
+import React from 'react';
+import { useTopNews } from '@/hooks/useCricketQueries';
 import NewsCard from '../common/NewsCard';
 import NewsSkeletonCard from '../common/NewsSkeletonCard';
 import EmptyState from '../common/EmptyState';
 import { Newspaper } from 'lucide-react';
 
 export const News = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchNews = async () => {
-    setLoading(true);
-    try {
-      const data = await cricketApi.getTopNews(8);
-      setNews(data || []);
-    } catch (err) {
-      console.warn('Failed to fetch news:', err);
-      setNews([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNews();
-  }, []);
+  const { data: news = [], isLoading, isFetching, refetch } = useTopNews(8);
 
   return (
     <section className="bg-white py-12">
@@ -41,12 +22,12 @@ export const News = () => {
             </h2>
           </div>
           <span className="text-xs font-semibold text-slate-500">
-            Updated Hourly
+            {isFetching && !isLoading ? 'Updating...' : 'Updated Hourly'}
           </span>
         </div>
 
         {/* News Grid */}
-        {loading ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <NewsSkeletonCard />
             <NewsSkeletonCard />
@@ -59,7 +40,7 @@ export const News = () => {
             title="No News Available"
             message="Latest articles are currently updating. Please check back shortly."
             actionLabel="Refresh News"
-            onAction={fetchNews}
+            onAction={() => refetch()}
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

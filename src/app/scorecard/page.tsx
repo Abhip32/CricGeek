@@ -1,8 +1,8 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { cricketApi } from '@/services/api';
+import { useScorecard, useSquads, useCommentary } from '@/hooks/useCricketQueries';
 import { ScorecardResponse, Match } from '@/types/match';
 import MiniScoreCard from '@/components/scorecard/MiniScoreCard';
 import TabNavigation from '@/components/scorecard/TabNavigation';
@@ -20,6 +20,7 @@ function ScorecardContent() {
   const matchUrl = searchParams.get('url') || undefined;
 
   const [matchProp, setMatchProp] = useState<Match | null>(null);
+  const [activeTab, setActiveTab] = useState('scorecard');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -34,60 +35,59 @@ function ScorecardContent() {
     }
   }, []);
 
-  const [scoreData, setScoreData] = useState<ScorecardResponse | null>(null);
-  const [squadsData, setSquadsData] = useState<any>(null);
-  const [commentaryData, setCommentaryData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState('scorecard');
-  const [error, setError] = useState<string | null>(null);
+  const isLive = useMemo(() => {
+    const rawStatus = matchProp?.status || '';
+    return rawStatus.toUpperCase().includes('LIVE');
+  }, [matchProp]);
 
-  const fetchData = async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
-    setError(null);
+  // React Query hooks with background auto-polling for live matches
+  const {
+    data: scoreData,
+    isLoading: isScoreLoading,
+    isFetching: isScoreFetching,
+    error: scoreError,
+    refetch: refetchScore
+  } = useScorecard(matchUrl, isLive);
 
-    try {
-      const [scoreRes, squadsRes, commRes] = await Promise.all([
-        cricketApi.getScoreCard(matchUrl),
-        matchUrl ? cricketApi.getSquads(matchUrl) : Promise.resolve(null),
-        matchUrl ? cricketApi.getCommentary(matchUrl) : Promise.resolve(null)
-      ]);
+  const {
+    data: squadsData,
+    isLoading: isSquadsLoading,
+    isFetching: isSquadsFetching,
+    refetch: refetchSquads
+  } = useSquads(matchUrl);
 
-      if (scoreRes && scoreRes.data) {
-        setScoreData(scoreRes);
-      } else {
-        setError('Scorecard data could not be retrieved.');
-      }
-      setSquadsData(squadsRes);
-      setCommentaryData(commRes);
-    } catch (err: any) {
-      console.error('Failed to load scorecard:', err);
-      setError('Unable to load scorecard. Please check the match link and try again.');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
+  const {
+    data: commentaryData,
+    isLoading: isCommLoading,
+    isFetching: isCommFetching,
+    refetch: refetchComm
+  } = useCommentary(matchUrl, isLive);
+
+  const loading = isScoreLoading;
+  const refreshing = isScoreFetching || isSquadsFetching || isCommFetching;
+
+  const handleRefresh = async () => {
+    await Promise.all([refetchScore(), refetchSquads(), refetchComm()]);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [matchUrl]);
 
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'scorecard':
-        return <ScorecardTab scoreData={scoreData} loading={loading} />;
+        return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'details':
-        return <DetailsTab scoreData={scoreData} loading={loading} />;
+        return <DetailsTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'squads':
-        return <SquadsTab squadsData={squadsData} loading={loading} />;
+        return <SquadsTab squadsData={squadsData} loading={isSquadsLoading} />;
       case 'commentary':
-        return <CommentaryTab commentaryData={commentaryData} loading={loading} />;
+        return <CommentaryTab commentaryData={commentaryData} loading={isCommLoading} />;
       default:
-        return <ScorecardTab scoreData={scoreData} loading={loading} />;
+        return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
     }
   };
+
+  const errorMessage = scoreError
+    ? 'Unable to load scorecard. Please check the match link and try again.'
+    : null;
 
   return (
     <div className="min-h-screen bg-slate-50 py-6 sm:py-8">
@@ -103,7 +103,7 @@ function ScorecardContent() {
           </Link>
 
           <button
-            onClick={() => fetchData(true)}
+            onClick={handleRefresh}
             disabled={loading || refreshing}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
           >
@@ -115,13 +115,13 @@ function ScorecardContent() {
         {/* Loading State Skeleton */}
         {loading && !scoreData && !matchProp ? (
           <ScorecardSkeleton />
-        ) : error && !scoreData && !matchProp ? (
+        ) : errorMessage && !scoreData && !matchProp ? (
           <EmptyState
             type="scorecard"
             title="Scorecard Unavailable"
-            message={error}
+            message={errorMessage}
             actionLabel="Try Again"
-            onAction={() => fetchData()}
+            onAction={handleRefresh}
           />
         ) : (
           <div className="space-y-6">
