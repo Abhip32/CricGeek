@@ -29,12 +29,12 @@ export function useRecentMatches() {
 }
 
 /**
- * Hook for upcoming tournament and series fixtures
+ * Hook for upcoming tournament and series fixtures with optional filters
  */
-export function useUpcomingMatches(date?: string) {
+export function useUpcomingMatches(date?: string, category?: string, format?: string) {
   return useQuery<UpcomingMatch[]>({
-    queryKey: ['matches', 'upcoming', date || 'all'],
-    queryFn: () => cricketApi.getUpcomingMatches(date),
+    queryKey: ['matches', 'upcoming', date || 'all', category || 'all', format || 'all'],
+    queryFn: () => cricketApi.getUpcomingMatches(date, category, format),
     staleTime: 1000 * 60 * 5, // 5 mins
   });
 }

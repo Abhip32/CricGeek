@@ -45,15 +45,23 @@ export interface SeriesGroup {
 }
 
 export interface UpcomingMatch {
+  id?: string;
   date: string;
+  startDate?: string | null;
   teams: string;
   teamDetails?: Array<{
     name: string;
     flag: string | null;
+    abbreviation?: string;
   }>;
   venueInfo: string;
+  groundCity?: string;
   seriesName: string;
   startTime: string;
+  category?: 'all' | 'international' | 't20leagues' | 'domestic' | 'women' | string;
+  format?: 'TEST' | 'ODI' | 'T20' | string;
+  stage?: string;
+  status?: string;
   link: string;
   matchInfo?: string;
   raw?: any;

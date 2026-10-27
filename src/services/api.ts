@@ -108,13 +108,21 @@ export const cricketApi = {
   },
 
   /**
-   * Fetches upcoming fixtures
+   * Fetches upcoming fixtures with optional date, category, and format filters
    */
-  getUpcomingMatches: async (date?: string): Promise<UpcomingMatch[]> => {
+  getUpcomingMatches: async (
+    date?: string,
+    category?: string,
+    format?: string
+  ): Promise<UpcomingMatch[]> => {
     try {
-      const url = date 
-        ? `${API_BASE_URL}/getUpcoming?date=${encodeURIComponent(date)}`
-        : `${API_BASE_URL}/getUpcoming`;
+      const params = new URLSearchParams();
+      if (date && date !== 'all') params.set('date', date);
+      if (category && category !== 'all') params.set('category', category);
+      if (format && format !== 'all') params.set('format', format);
+
+      const qs = params.toString();
+      const url = qs ? `${API_BASE_URL}/getUpcoming?${qs}` : `${API_BASE_URL}/getUpcoming`;
       const response = await fetch(url, { next: { revalidate: 300 } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
@@ -128,8 +136,12 @@ export const cricketApi = {
   /**
    * Alias for getUpcomingMatches for schedule page
    */
-  getSchedule: async (date?: string): Promise<UpcomingMatch[]> => {
-    return cricketApi.getUpcomingMatches(date);
+  getSchedule: async (
+    date?: string,
+    category?: string,
+    format?: string
+  ): Promise<UpcomingMatch[]> => {
+    return cricketApi.getUpcomingMatches(date, category, format);
   },
 
   /**

@@ -2,13 +2,16 @@
 
 import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { useLiveMatches, useRecentMatches, useUpcomingMatches } from '@/hooks/useCricketQueries';
 import MatchCard from '@/components/matches/MatchCard';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import SkeletonCard from '@/components/home/SkeletonCard';
 import EmptyState from '@/components/common/EmptyState';
 import Hero from '@/components/home/hero';
-import { Search, Flame, Clock, Calendar, RefreshCw, X, ChevronDown } from 'lucide-react';
+import { Search, Flame, Clock, Calendar, RefreshCw, X, ChevronDown, MapPin, ChevronRight } from 'lucide-react';
+import { getCleanScorecardPath } from '@/components/home/MatchCarouselCard';
+import { Match } from '@/types/match';
 
 function MatchesContent() {
   const searchParams = useSearchParams();
@@ -73,7 +76,8 @@ function MatchesContent() {
   const filteredMatches = useMemo(() => {
     return currentMatches.filter((m) => {
       const q = searchQuery.toLowerCase();
-      const matchesSearch = !q ||
+      const matchesSearch =
+        !q ||
         m.teamA.toLowerCase().includes(q) ||
         m.teamB.toLowerCase().includes(q) ||
         m.series.toLowerCase().includes(q) ||
@@ -89,6 +93,17 @@ function MatchesContent() {
       return matchesSearch && matchesFormat;
     });
   }, [currentMatches, searchQuery, selectedFormat]);
+
+  // Group matches by Series (ESPN Cricinfo Layout)
+  const groupedMatches = useMemo(() => {
+    const groups: Record<string, Match[]> = {};
+    filteredMatches.forEach((m) => {
+      const s = m.series || 'Cricket Matches';
+      if (!groups[s]) groups[s] = [];
+      groups[s].push(m);
+    });
+    return groups;
+  }, [filteredMatches]);
 
   const filteredUpcoming = useMemo(() => {
     return upcomingMatches.filter((u) => {
@@ -107,24 +122,13 @@ function MatchesContent() {
       <Hero
         image="/images/matchInfoHeader.jpg"
         heading="Cricket Match Center"
-        subtitle="Live scores, completed fixture results, and upcoming tournament schedules."
+        subtitle="Live match scores, completed fixture results, and upcoming tournament schedules in real time."
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
-        {/* Refresh & Controls Bar */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleManualRefresh}
-            disabled={isRefreshing}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-red-600' : ''}`} />
-            <span>{isRefreshing ? 'Updating...' : 'Refresh'}</span>
-          </button>
-        </div>
 
-        {/* Tab Navigation: Live / Recent / Upcoming */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+        {/* ESPN Cricinfo Navigation Tabs & Refresh */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
-          {/* Mobile Dropdown (shown when constrained on mobile screens) */}
+          {/* Mobile Dropdown */}
           <div className="sm:hidden w-full relative">
             <select
               value={activeTab}
@@ -139,10 +143,10 @@ function MatchesContent() {
             <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
-          {/* Desktop & Tablet Tabs */}
+          {/* Desktop & Tablet Navigation */}
           <div className="hidden sm:flex sm:items-center gap-2">
             {[
-              { id: 'live', fullLabel: 'Live Now', count: liveMatches.length, icon: Flame },
+              { id: 'live', fullLabel: 'Live Matches', count: liveMatches.length, icon: Flame },
               { id: 'recent', fullLabel: 'Recent Results', count: recentMatches.length, icon: Clock },
               { id: 'upcoming', fullLabel: 'Upcoming Fixtures', count: upcomingMatches.length, icon: Calendar },
             ].map((tab) => {
@@ -155,14 +159,16 @@ function MatchesContent() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
                     isActive
                       ? 'bg-red-600 text-white shadow-xs'
-                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   <span>{tab.fullLabel}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${
-                    isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'
-                  }`}>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${
+                      isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
                     {tab.count}
                   </span>
                 </button>
@@ -170,24 +176,35 @@ function MatchesContent() {
             })}
           </div>
 
-          {/* Search Box */}
-          <div className="relative w-full sm:w-64">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search teams or series..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-2xs"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
+          {/* Search Box & Refresh Button */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search teams or series..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-8 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-2xs"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50 flex-shrink-0"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-red-600' : ''}`} />
+              <span className="hidden sm:inline">{isRefreshing ? 'Updating...' : 'Refresh'}</span>
+            </button>
           </div>
         </div>
 
@@ -211,61 +228,83 @@ function MatchesContent() {
             />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredUpcoming.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="w-full bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-3"
-                >
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
-                    <span className="font-bold text-slate-500 uppercase tracking-wider truncate">
-                      {item.seriesName || 'Series'}
-                    </span>
-                    <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                      {item.startTime || 'TBD'}
-                    </span>
-                  </div>
+              {filteredUpcoming.map((item, idx) => {
+                const scorecardHref = getCleanScorecardPath(item.link);
+                const team1 = item.teamDetails?.[0];
+                const team2 = item.teamDetails?.[1];
 
-                  <div className="space-y-2 py-1">
-                    {item.teamDetails && item.teamDetails.length >= 2 ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2.5">
-                          <ImageWithFallback
-                            src={item.teamDetails[0].flag}
-                            alt={item.teamDetails[0].name}
-                            width={26}
-                            height={26}
-                            fallbackText={item.teamDetails[0].name}
-                          />
-                          <span className="text-sm font-bold text-slate-900 truncate">
-                            {item.teamDetails[0].name}
-                          </span>
+                return (
+                  <div
+                    key={idx}
+                    className="w-full bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs hover:border-red-500/60 hover:shadow-md transition-all flex flex-col justify-between space-y-3.5 group"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
+                      <span className="font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0" title={item.seriesName}>
+                        {item.seriesName || 'Series'}
+                      </span>
+                      <span className="font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 flex-shrink-0">
+                        {item.startTime || 'Fixture'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 py-1">
+                      {team1 && team2 ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
+                              <ImageWithFallback
+                                src={team1.flag}
+                                alt={team1.name}
+                                width={28}
+                                height={20}
+                                fallbackText={team1.name}
+                              />
+                            </div>
+                            <span className="text-sm font-bold text-slate-900 truncate">
+                              {team1.name}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
+                              <ImageWithFallback
+                                src={team2.flag}
+                                alt={team2.name}
+                                width={28}
+                                height={20}
+                                fallbackText={team2.name}
+                              />
+                            </div>
+                            <span className="text-sm font-bold text-slate-900 truncate">
+                              {team2.name}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2.5">
-                          <ImageWithFallback
-                            src={item.teamDetails[1].flag}
-                            alt={item.teamDetails[1].name}
-                            width={26}
-                            height={26}
-                            fallbackText={item.teamDetails[1].name}
-                          />
-                          <span className="text-sm font-bold text-slate-900 truncate">
-                            {item.teamDetails[1].name}
-                          </span>
-                        </div>
+                      ) : (
+                        <h3 className="text-sm font-bold text-slate-900">{item.teams}</h3>
+                      )}
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                      <div className="flex items-center gap-1 min-w-0 flex-1">
+                        <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-slate-400" />
+                        <span className="truncate" title={item.venueInfo}>
+                          {item.venueInfo || 'Venue TBA'}
+                        </span>
                       </div>
-                    ) : (
-                      <h3 className="text-sm font-bold text-slate-900">{item.teams}</h3>
-                    )}
-                  </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span className="truncate max-w-[200px]" title={item.venueInfo}>
-                      {item.venueInfo || 'Venue TBA'}
-                    </span>
-                    <span className="font-semibold text-slate-700">{item.date}</span>
+                      {item.link && (
+                        <Link
+                          href={scorecardHref}
+                          className="inline-flex items-center gap-0.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors group-hover:translate-x-0.5 flex-shrink-0 ml-2"
+                        >
+                          <span>Scorecard</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )
         ) : filteredMatches.length === 0 ? (
@@ -284,9 +323,29 @@ function MatchesContent() {
             }}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMatches.map((match) => (
-              <MatchCard key={match.id} match={match} />
+          <div className="space-y-8">
+            {Object.entries(groupedMatches).map(([seriesTitle, matches]) => (
+              <div key={seriesTitle} className="space-y-3.5">
+                {/* ESPN Series Header */}
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-red-600 rounded-full" />
+                    <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                      {seriesTitle}
+                    </h2>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                    {matches.length} {matches.length === 1 ? 'match' : 'matches'}
+                  </span>
+                </div>
+
+                {/* Match Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {matches.map((match) => (
+                    <MatchCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
