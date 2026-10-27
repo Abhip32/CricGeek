@@ -88,8 +88,17 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
         return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'details':
         return <DetailsTab scoreData={scoreData} loading={isScoreLoading} />;
-      case 'squads':
-        return <SquadsTab squadsData={squadsData} loading={isSquadsLoading} />;
+      case 'squads': {
+        const rawSquads = (scoreData as any)?.data?.squads;
+        const squadTeams = rawSquads ? Object.keys(rawSquads) : [];
+        const resolvedSquads = squadTeams.length >= 2
+          ? {
+              team1: { name: squadTeams[0], players: rawSquads[squadTeams[0]] },
+              team2: { name: squadTeams[1], players: rawSquads[squadTeams[1]] }
+            }
+          : squadsData;
+        return <SquadsTab squadsData={resolvedSquads} loading={isScoreLoading} />;
+      }
       case 'commentary':
         return <CommentaryTab commentaryData={commentaryData} loading={isCommLoading} />;
       default:
