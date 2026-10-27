@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useLiveMatches, useRecentMatches, useUpcomingMatches } from '@/hooks/useCricketQueries';
 import MatchCard from '@/components/matches/MatchCard';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
 import SkeletonCard from '@/components/home/SkeletonCard';
 import EmptyState from '@/components/common/EmptyState';
 import Hero from '@/components/home/hero';
@@ -125,30 +126,30 @@ function MatchesContent() {
         subtitle="Live match scores, completed fixture results, and upcoming tournament schedules in real time."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
-        {/* ESPN Cricinfo Navigation Tabs & Refresh */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
-          {/* Mobile Dropdown */}
-          <div className="sm:hidden w-full relative">
-            <select
-              value={activeTab}
-              onChange={(e) => setActiveTab(e.target.value as 'live' | 'recent' | 'upcoming')}
-              aria-label="Select match filter"
-              className="w-full appearance-none px-3.5 py-2.5 pr-9 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
-            >
-              <option value="live">Live Matches ({liveMatches.length})</option>
-              <option value="recent">Recent Results ({recentMatches.length})</option>
-              <option value="upcoming">Upcoming Fixtures ({upcomingMatches.length})</option>
-            </select>
-            <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        {/* Platform Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            { label: 'Matches', href: '/matches' },
+            {
+              label:
+                activeTab === 'live'
+                  ? 'Live Matches'
+                  : activeTab === 'recent'
+                  ? 'Recent Results'
+                  : 'Upcoming Fixtures'
+            }
+          ]}
+        />
 
-          {/* Desktop & Tablet Navigation */}
-          <div className="hidden sm:flex sm:items-center gap-2">
+        {/* ESPN Cricinfo Navigation Tabs & Refresh */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
+          {/* Responsive Segmented Tabs (Mobile & Desktop - No Clunky Dropdown) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 md:pb-0 w-full md:w-auto">
             {[
-              { id: 'live', fullLabel: 'Live Matches', count: liveMatches.length, icon: Flame },
-              { id: 'recent', fullLabel: 'Recent Results', count: recentMatches.length, icon: Clock },
-              { id: 'upcoming', fullLabel: 'Upcoming Fixtures', count: upcomingMatches.length, icon: Calendar },
+              { id: 'live', label: 'Live Matches', count: liveMatches.length, icon: Flame },
+              { id: 'recent', label: 'Recent Results', count: recentMatches.length, icon: Clock },
+              { id: 'upcoming', label: 'Upcoming Fixtures', count: upcomingMatches.length, icon: Calendar },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -156,16 +157,16 @@ function MatchesContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex-shrink-0 ${
                     isActive
                       ? 'bg-red-600 text-white shadow-xs'
                       : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span>{tab.fullLabel}</span>
+                  <span>{tab.label}</span>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${
+                    className={`px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold flex-shrink-0 ${
                       isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'
                     }`}
                   >
@@ -251,29 +252,27 @@ function MatchesContent() {
                       {team1 && team2 ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
-                              <ImageWithFallback
-                                src={team1.flag}
-                                alt={team1.name}
-                                width={28}
-                                height={20}
-                                fallbackText={team1.name}
-                              />
-                            </div>
+                            <ImageWithFallback
+                              src={team1.flag}
+                              alt={team1.name}
+                              width={26}
+                              height={18}
+                              className="w-6.5 h-4.5 object-contain flex-shrink-0"
+                              fallbackText={team1.name}
+                            />
                             <span className="text-sm font-bold text-slate-900 truncate">
                               {team1.name}
                             </span>
                           </div>
                           <div className="flex items-center gap-2.5">
-                            <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
-                              <ImageWithFallback
-                                src={team2.flag}
-                                alt={team2.name}
-                                width={28}
-                                height={20}
-                                fallbackText={team2.name}
-                              />
-                            </div>
+                            <ImageWithFallback
+                              src={team2.flag}
+                              alt={team2.name}
+                              width={26}
+                              height={18}
+                              className="w-6.5 h-4.5 object-contain flex-shrink-0"
+                              fallbackText={team2.name}
+                            />
                             <span className="text-sm font-bold text-slate-900 truncate">
                               {team2.name}
                             </span>

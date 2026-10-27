@@ -19,6 +19,7 @@ interface InningProps {
   title?: string;
   battingTable?: ScorecardTable & { extras?: any; total?: any; didNotBat?: string[]; fallOfWickets?: string[] };
   bowlingTable?: ScorecardTable;
+  squads?: Record<string, any[]> | null;
   defaultOpen?: boolean;
 }
 
@@ -27,6 +28,7 @@ export const InningSection: React.FC<InningProps> = ({
   title, 
   battingTable, 
   bowlingTable,
+  squads,
   defaultOpen = true
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -83,7 +85,7 @@ export const InningSection: React.FC<InningProps> = ({
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Batting
             </h3>
-            <BattingTable table={battingTable} battingData={inning?.batting} />
+            <BattingTable table={battingTable} battingData={inning?.batting} squads={squads} />
           </div>
 
           {/* Extras and Total Chips */}
@@ -149,7 +151,7 @@ export const InningSection: React.FC<InningProps> = ({
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Bowling
             </h3>
-            <BowlingTable table={bowlingTable} bowlingData={inning?.bowling} />
+            <BowlingTable table={bowlingTable} bowlingData={inning?.bowling} squads={squads} />
           </div>
         </div>
       )}

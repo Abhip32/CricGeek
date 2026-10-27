@@ -134,14 +134,29 @@ export const cricketApi = {
   },
 
   /**
-   * Alias for getUpcomingMatches for schedule page
+   * Fetches official tournament schedule & fixtures feed with category/date filters
    */
   getSchedule: async (
     date?: string,
     category?: string,
     format?: string
   ): Promise<UpcomingMatch[]> => {
-    return cricketApi.getUpcomingMatches(date, category, format);
+    try {
+      const params = new URLSearchParams();
+      if (date && date !== 'all') params.set('date', date);
+      if (category && category !== 'all') params.set('category', category);
+      if (format && format !== 'all') params.set('format', format);
+
+      const qs = params.toString();
+      const url = qs ? `${API_BASE_URL}/getSchedule?${qs}` : `${API_BASE_URL}/getSchedule`;
+      const response = await fetch(url, { next: { revalidate: 600 } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.warn('getSchedule failed:', error);
+      return [];
+    }
   },
 
   /**

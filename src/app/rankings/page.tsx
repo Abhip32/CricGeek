@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTeamRankings, usePlayerRankings } from '@/hooks/useCricketQueries';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
 import EmptyState from '@/components/common/EmptyState';
 import RankingsSkeleton from '@/components/rankings/RankingsSkeleton';
 import Hero from '@/components/home/hero';
@@ -101,9 +102,12 @@ export default function RankingsPage() {
     if (!Array.isArray(rawList)) return [];
     return rawList.map((item: any, idx: number) => {
       const rank = item.pos || item.rank || idx + 1;
-      const name = item.teamName || item.team || item.playerName || item.name || item.player || '—';
+      const name =
+        category === 'players'
+          ? item.playerName || item.name || item.player || '—'
+          : item.teamName || item.name || item.team || '—';
       const flag = item.playerImage || item.image || item.teamLogo || item.flag || null;
-      const country = item.country || item.team || '';
+      const country = item.country || (category === 'players' ? item.team : '') || '';
       const matches = item.matches && item.matches !== '$undefined' ? item.matches : '—';
       const points = item.points && item.points !== '$undefined' ? item.points : '—';
       const rating = item.rating && item.rating !== '$undefined' ? item.rating : '—';
@@ -119,7 +123,7 @@ export default function RankingsPage() {
         raw: item,
       };
     });
-  }, [rawList]);
+  }, [rawList, category]);
 
   const filteredList = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -140,7 +144,20 @@ export default function RankingsPage() {
         subtitle="Official ICC standings for national teams and top-ranked players across all international formats with verified Cricbuzz statistics."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        {/* Platform Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            { label: 'ICC Rankings', href: '/rankings' },
+            {
+              label:
+                category === 'teams'
+                  ? `${selectedFormat.toUpperCase()} Teams`
+                  : `${selectedFormat.toUpperCase()} ${playerRole.charAt(0).toUpperCase() + playerRole.slice(1)}`
+            }
+          ]}
+        />
+
         {/* Category Switcher & Refresh */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div className="flex items-center gap-2">
@@ -250,15 +267,26 @@ export default function RankingsPage() {
                   <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center text-xs font-black text-slate-700">
                     2
                   </div>
-                  <div className={`${category === 'players' ? 'w-14 h-14 rounded-full' : 'w-12 h-8 rounded'} overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs`}>
+                  {category === 'players' ? (
+                    <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs">
+                      <ImageWithFallback
+                        src={top3[1].flag}
+                        alt={top3[1].name}
+                        width={56}
+                        height={56}
+                        fallbackText={top3[1].name}
+                      />
+                    </div>
+                  ) : (
                     <ImageWithFallback
                       src={top3[1].flag}
                       alt={top3[1].name}
-                      width={category === 'players' ? 56 : 48}
-                      height={category === 'players' ? 56 : 32}
+                      width={52}
+                      height={34}
+                      className="w-13 h-8.5 object-contain"
                       fallbackText={top3[1].name}
                     />
-                  </div>
+                  )}
                   <div>
                     <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
                       {top3[1].name}
@@ -280,15 +308,26 @@ export default function RankingsPage() {
                   <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-sm font-black text-amber-700 mt-1">
                     1
                   </div>
-                  <div className={`${category === 'players' ? 'w-16 h-16 rounded-full' : 'w-14 h-9 rounded'} overflow-hidden border-2 border-amber-300 bg-amber-50 flex items-center justify-center shadow-xs`}>
+                  {category === 'players' ? (
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-300 bg-amber-50 flex items-center justify-center shadow-xs">
+                      <ImageWithFallback
+                        src={top3[0].flag}
+                        alt={top3[0].name}
+                        width={64}
+                        height={64}
+                        fallbackText={top3[0].name}
+                      />
+                    </div>
+                  ) : (
                     <ImageWithFallback
                       src={top3[0].flag}
                       alt={top3[0].name}
-                      width={category === 'players' ? 64 : 56}
-                      height={category === 'players' ? 64 : 36}
+                      width={60}
+                      height={40}
+                      className="w-15 h-10 object-contain"
                       fallbackText={top3[0].name}
                     />
-                  </div>
+                  )}
                   <div>
                     <h3 className="font-extrabold text-slate-900 text-base truncate max-w-full">
                       {top3[0].name}
@@ -307,15 +346,26 @@ export default function RankingsPage() {
                   <div className="w-7 h-7 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-xs font-black text-amber-800">
                     3
                   </div>
-                  <div className={`${category === 'players' ? 'w-14 h-14 rounded-full' : 'w-12 h-8 rounded'} overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs`}>
+                  {category === 'players' ? (
+                    <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs">
+                      <ImageWithFallback
+                        src={top3[2].flag}
+                        alt={top3[2].name}
+                        width={56}
+                        height={56}
+                        fallbackText={top3[2].name}
+                      />
+                    </div>
+                  ) : (
                     <ImageWithFallback
                       src={top3[2].flag}
                       alt={top3[2].name}
-                      width={category === 'players' ? 56 : 48}
-                      height={category === 'players' ? 56 : 32}
+                      width={52}
+                      height={34}
+                      className="w-13 h-8.5 object-contain"
                       fallbackText={top3[2].name}
                     />
-                  </div>
+                  )}
                   <div>
                     <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
                       {top3[2].name}
@@ -366,15 +416,26 @@ export default function RankingsPage() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
-                            <div className={`${category === 'players' ? 'w-9 h-9 rounded-full' : 'w-7 h-5 rounded'} overflow-hidden border border-slate-200 bg-slate-50 flex-shrink-0 flex items-center justify-center`}>
+                            {category === 'players' ? (
+                              <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex-shrink-0 flex items-center justify-center">
+                                <ImageWithFallback
+                                  src={item.flag}
+                                  alt={item.name}
+                                  width={36}
+                                  height={36}
+                                  fallbackText={item.name}
+                                />
+                              </div>
+                            ) : (
                               <ImageWithFallback
                                 src={item.flag}
                                 alt={item.name}
-                                width={category === 'players' ? 36 : 28}
-                                height={category === 'players' ? 36 : 20}
+                                width={26}
+                                height={18}
+                                className="w-6.5 h-4.5 object-contain flex-shrink-0"
                                 fallbackText={item.name}
                               />
-                            </div>
+                            )}
                             <span className="font-bold text-slate-900">
                               {item.name}
                             </span>

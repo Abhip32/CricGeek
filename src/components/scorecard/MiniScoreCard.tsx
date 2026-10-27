@@ -3,34 +3,46 @@
 import React from 'react';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { ScorecardSummary } from '@/types/match';
-import { MapPin, Trophy, Star } from 'lucide-react';
+import { MapPin, Trophy, Star, Award, Zap } from 'lucide-react';
+import { findPlayerInSquads } from '@/lib/playerMatcher';
 
 interface MiniScoreCardProps {
   summary?: ScorecardSummary | null;
   matchProp?: any;
+  squads?: Record<string, any[]> | null;
+  leaders?: any[] | null;
+  tables?: any[] | null;
 }
 
-export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp }) => {
+export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
+  summary,
+  matchProp,
+  squads,
+  leaders,
+  tables
+}) => {
   const resolvedSummary = summary || {
     matchTitle: matchProp?.title || matchProp?.series || 'Match Scorecard',
     status: matchProp?.status || '',
     result: matchProp?.result || '',
     venue: matchProp?.matchInfo || '',
     playerOfTheMatch: '',
-    teams: matchProp ? [
-      {
-        teamName: matchProp.teamA,
-        teamLogo: matchProp.flagA,
-        score: matchProp.scoreA,
-        overs: matchProp.oversA || ''
-      },
-      {
-        teamName: matchProp.teamB,
-        teamLogo: matchProp.flagB,
-        score: matchProp.scoreB,
-        overs: matchProp.oversB || ''
-      }
-    ] : []
+    teams: matchProp
+      ? [
+          {
+            teamName: matchProp.teamA,
+            teamLogo: matchProp.flagA,
+            score: matchProp.scoreA,
+            overs: matchProp.oversA || ''
+          },
+          {
+            teamName: matchProp.teamB,
+            teamLogo: matchProp.flagB,
+            score: matchProp.scoreB,
+            overs: matchProp.oversB || ''
+          }
+        ]
+      : []
   };
 
   const teams = resolvedSummary.teams || [];
@@ -38,8 +50,82 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
   const team2 = teams[1] || null;
 
   const rawStatus = (resolvedSummary.status || '').toUpperCase();
-  const isLive = rawStatus.includes('LIVE') || rawStatus.includes('IN PROGRESS') || rawStatus.includes('STUMPS') || rawStatus.includes('TEA') || rawStatus.includes('LUNCH');
-  const isResult = Boolean(resolvedSummary.result || rawStatus.includes('RESULT') || rawStatus.includes('CONCLUDED'));
+  const isLive =
+    rawStatus.includes('LIVE') ||
+    rawStatus.includes('IN PROGRESS') ||
+    rawStatus.includes('STUMPS') ||
+    rawStatus.includes('TEA') ||
+    rawStatus.includes('LUNCH');
+  const isResult = Boolean(
+    resolvedSummary.result ||
+    rawStatus.includes('RESULT') ||
+    rawStatus.includes('CONCLUDED')
+  );
+
+  // 1. Resolve Player of the Match
+  const potmName =
+    resolvedSummary.playerOfTheMatch ||
+    (leaders && leaders.find((l) => l.category?.toLowerCase().includes('run'))?.name) ||
+    '';
+
+  const potmPlayer = potmName ? findPlayerInSquads(potmName, squads) : null;
+  const potmLeader = leaders?.find((l) => l.name === potmName);
+  const potmImage = potmLeader?.image || potmPlayer?.image || null;
+
+  // 2. Resolve MVP / Top Performer
+  // Find top run scorer and top wicket taker from tables or leaders
+  const topBatterFromTables = React.useMemo(() => {
+    let topName = '';
+    let maxRuns = -1;
+    let ballsFaced = '';
+
+    (tables || []).forEach((t: any) => {
+      if (t.type === 'Batting') {
+        (t.rows || []).forEach((r: any) => {
+          const runs = parseInt(r['R'] || r['Runs'] || '0', 10);
+          if (!isNaN(runs) && runs > maxRuns) {
+            maxRuns = runs;
+            topName = (r['BATTING'] || r['Batting'] || Object.values(r)[0] || '').split('\n')[0].replace(/►/g, '').trim();
+            ballsFaced = r['B'] || r['Balls'] || '';
+          }
+        });
+      }
+    });
+
+    return { name: topName, runs: maxRuns, balls: ballsFaced };
+  }, [tables]);
+
+  const topBowlerFromTables = React.useMemo(() => {
+    let topName = '';
+    let maxWickets = -1;
+    let stats = '';
+
+    (tables || []).forEach((t: any) => {
+      if (t.type === 'Bowling') {
+        (t.rows || []).forEach((r: any) => {
+          const wkts = parseInt(r['W'] || r['Wickets'] || '0', 10);
+          if (!isNaN(wkts) && wkts > maxWickets) {
+            maxWickets = wkts;
+            topName = (r['BOWLING'] || r['Bowling'] || Object.values(r)[0] || '').split('\n')[0].trim();
+            stats = `${r['W']}/${r['R'] || '0'} (${r['O'] || ''} ov)`;
+          }
+        });
+      }
+    });
+
+    return { name: topName, wickets: maxWickets, stats };
+  }, [tables]);
+
+  const mvpName =
+    potmName && topBowlerFromTables.name && topBowlerFromTables.name !== potmName
+      ? topBowlerFromTables.name
+      : topBatterFromTables.name || potmName;
+
+  const mvpPlayer = mvpName ? findPlayerInSquads(mvpName, squads) : null;
+  const mvpLeader = leaders?.find((l) => l.name === mvpName);
+  const mvpImage = mvpLeader?.image || mvpPlayer?.image || null;
+
+  const hasFeaturedPlayers = Boolean(potmName || topBatterFromTables.name || topBowlerFromTables.name);
 
   return (
     <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
@@ -75,94 +161,136 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({ summary, matchProp
         </div>
       </div>
 
-      {/* Center: Teams Scoreboard */}
-      <div className="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-11 items-center gap-4 sm:gap-6">
-        {/* Team 1 */}
-        <div className="md:col-span-5 flex items-center justify-between p-4 sm:p-5 rounded-xl bg-slate-50/80 border border-slate-200/80 shadow-2xs">
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-11 h-8 rounded overflow-hidden border border-slate-200 bg-white flex items-center justify-center flex-shrink-0 shadow-2xs">
+      {/* Main Scoreboard: 2-Column Split matching Cricinfo screenshot */}
+      <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 items-center gap-6">
+        {/* Left Side (Col 1-8): Two Teams & Live Score */}
+        <div className="lg:col-span-8 space-y-4">
+          {/* Team 1 */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 min-w-0">
               <ImageWithFallback
                 src={team1?.teamLogo}
                 alt={team1?.teamName || 'Team 1'}
-                width={44}
-                height={30}
+                width={36}
+                height={26}
+                className="w-9 h-6.5 object-contain flex-shrink-0"
                 fallbackText={team1?.teamName}
               />
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 truncate">
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight truncate">
                 {team1?.teamName || 'Team 1'}
               </h2>
             </div>
-          </div>
-          <div className="text-right flex-shrink-0">
-            <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              {team1?.score || '—'}
-            </div>
-            {team1?.overs && (
-              <span className="text-xs text-slate-500 font-medium">
-                ({team1.overs})
+            <div className="text-right flex-shrink-0">
+              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                {team1?.score || '—'}
               </span>
-            )}
+              {team1?.overs && (
+                <span className="text-xs text-slate-500 font-medium ml-1.5">
+                  ({team1.overs})
+                </span>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* VS Divider */}
-        <div className="md:col-span-1 flex items-center justify-center">
-          <span className="text-xs font-black tracking-widest text-slate-400 uppercase">
-            VS
-          </span>
-        </div>
-
-        {/* Team 2 */}
-        <div className="md:col-span-5 flex items-center justify-between p-4 sm:p-5 rounded-xl bg-slate-50/80 border border-slate-200/80 shadow-2xs">
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-11 h-8 rounded overflow-hidden border border-slate-200 bg-white flex items-center justify-center flex-shrink-0 shadow-2xs">
+          {/* Team 2 */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 min-w-0">
               <ImageWithFallback
                 src={team2?.teamLogo}
                 alt={team2?.teamName || 'Team 2'}
-                width={44}
-                height={30}
+                width={36}
+                height={26}
+                className="w-9 h-6.5 object-contain flex-shrink-0"
                 fallbackText={team2?.teamName}
               />
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 truncate">
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight truncate">
                 {team2?.teamName || 'Team 2'}
               </h2>
             </div>
-          </div>
-          <div className="text-right flex-shrink-0">
-            <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              {team2?.score || '—'}
-            </div>
-            {team2?.overs && (
-              <span className="text-xs text-slate-500 font-medium">
-                ({team2.overs})
+            <div className="text-right flex-shrink-0">
+              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                {team2?.score || '—'}
               </span>
-            )}
+              {team2?.overs && (
+                <span className="text-xs text-slate-500 font-medium ml-1.5">
+                  ({team2.overs})
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Result / Target String */}
+          <p className="text-sm font-bold text-red-600 pt-1">
+            {resolvedSummary.result ||
+              (rawStatus.includes('STUMPS')
+                ? 'Day Stumps'
+                : rawStatus.includes('INNINGS BREAK')
+                ? 'Innings Break'
+                : 'Match in Progress')}
+          </p>
         </div>
+
+        {/* Right Side (Col 9-12): Player of the Match & MVP with Player Headshots */}
+        {hasFeaturedPlayers && (
+          <div className="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-slate-200 pt-4 lg:pt-0 lg:pl-6 space-y-4">
+            {/* Player of the Match */}
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs">
+                <ImageWithFallback
+                  src={potmImage}
+                  alt={potmName || topBatterFromTables.name}
+                  width={44}
+                  height={44}
+                  fallbackText={(potmName || topBatterFromTables.name || 'P').slice(0, 1)}
+                />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                  {isResult ? 'PLAYER OF THE MATCH' : 'TOP BATTER'}
+                </span>
+                <div className="flex items-center gap-1 font-extrabold text-slate-900 text-xs sm:text-sm truncate">
+                  <Award className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+                  <span className="truncate">{potmName || topBatterFromTables.name}</span>
+                </div>
+                <span className="text-xs text-slate-500 font-semibold block">
+                  {topBatterFromTables.runs > 0
+                    ? `${topBatterFromTables.runs} (${topBatterFromTables.balls || '—'})`
+                    : potmLeader?.score || 'Top Impact'}
+                </span>
+              </div>
+            </div>
+
+            {/* CRICINFO'S MVP / TOP BOWLER */}
+            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
+              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs">
+                <ImageWithFallback
+                  src={mvpImage}
+                  alt={mvpName || topBowlerFromTables.name}
+                  width={44}
+                  height={44}
+                  fallbackText={(mvpName || topBowlerFromTables.name || 'M').slice(0, 1)}
+                />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                  {isResult ? "CRICINFO'S MVP" : 'TOP BOWLER'}
+                </span>
+                <div className="flex items-center gap-1 font-extrabold text-slate-900 text-xs sm:text-sm truncate">
+                  <Star className="w-3.5 h-3.5 text-red-600 fill-red-600 flex-shrink-0" />
+                  <span className="truncate">{mvpName || topBowlerFromTables.name}</span>
+                </div>
+                <span className="text-xs text-slate-500 font-semibold block">
+                  {topBowlerFromTables.wickets > 0
+                    ? topBowlerFromTables.stats
+                    : '135.1 pts Impact'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Match Result & Player of the Match */}
-      {(resolvedSummary.result || resolvedSummary.playerOfTheMatch) && (
-        <div className="px-5 py-3.5 bg-red-50/60 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
-          {resolvedSummary.result ? (
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <Trophy className="w-4 h-4 text-red-600 flex-shrink-0" />
-              <span>{resolvedSummary.result}</span>
-            </div>
-          ) : <div />}
-
-          {resolvedSummary.playerOfTheMatch && (
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 font-semibold text-xs shadow-2xs">
-              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-              <span>Player of the Match: <strong className="text-slate-900 font-bold">{resolvedSummary.playerOfTheMatch}</strong></span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

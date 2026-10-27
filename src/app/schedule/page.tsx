@@ -2,9 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useUpcomingMatches } from '@/hooks/useCricketQueries';
+import { useSchedule } from '@/hooks/useCricketQueries';
 import { UpcomingMatch } from '@/types/match';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
 import EmptyState from '@/components/common/EmptyState';
 import ScheduleSkeleton from '@/components/schedule/ScheduleSkeleton';
 import Hero from '@/components/home/hero';
@@ -33,7 +34,7 @@ export default function SchedulePage() {
     isLoading: loading,
     isFetching: refreshing,
     refetch
-  } = useUpcomingMatches(undefined, activeCategory, selectedFormat !== 'all' ? selectedFormat : undefined);
+  } = useSchedule(undefined, activeCategory, selectedFormat !== 'all' ? selectedFormat : undefined);
 
   // Client search filtering
   const filteredSchedule = useMemo(() => {
@@ -70,7 +71,15 @@ export default function SchedulePage() {
         subtitle="Official international, domestic, T20 league, and women's tournament schedules and match fixtures."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        {/* Platform Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            { label: 'Schedule & Fixtures', href: '/schedule' },
+            { label: CATEGORIES.find(c => c.id === activeCategory)?.label || 'All Matches' }
+          ]}
+        />
+
         {/* ESPN Cricinfo Category Tabs (Red & White) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
@@ -209,15 +218,14 @@ export default function SchedulePage() {
                             <div className="space-y-2">
                               {/* Team 1 */}
                               <div className="flex items-center gap-2.5">
-                                <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
-                                  <ImageWithFallback
-                                    src={team1.flag}
-                                    alt={team1.name}
-                                    width={28}
-                                    height={20}
-                                    fallbackText={team1.name}
-                                  />
-                                </div>
+                                <ImageWithFallback
+                                  src={team1.flag}
+                                  alt={team1.name}
+                                  width={26}
+                                  height={18}
+                                  className="w-6.5 h-4.5 object-contain flex-shrink-0"
+                                  fallbackText={team1.name}
+                                />
                                 <span className="text-sm font-bold text-slate-900 truncate">
                                   {team1.name}
                                 </span>
@@ -225,15 +233,14 @@ export default function SchedulePage() {
 
                               {/* Team 2 */}
                               <div className="flex items-center gap-2.5">
-                                <div className="w-7 h-5 rounded overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center flex-shrink-0">
-                                  <ImageWithFallback
-                                    src={team2.flag}
-                                    alt={team2.name}
-                                    width={28}
-                                    height={20}
-                                    fallbackText={team2.name}
-                                  />
-                                </div>
+                                <ImageWithFallback
+                                  src={team2.flag}
+                                  alt={team2.name}
+                                  width={26}
+                                  height={18}
+                                  className="w-6.5 h-4.5 object-contain flex-shrink-0"
+                                  fallbackText={team2.name}
+                                />
                                 <span className="text-sm font-bold text-slate-900 truncate">
                                   {team2.name}
                                 </span>

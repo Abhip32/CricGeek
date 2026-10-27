@@ -10,6 +10,8 @@ import ScorecardTab from '@/components/scorecard/ScorecardTab';
 import DetailsTab from '@/components/scorecard/DetailsTab';
 import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
+import MvpTab from '@/components/scorecard/MvpTab';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
 import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
 import EmptyState from '@/components/common/EmptyState';
 import { RefreshCw, ArrowLeft } from 'lucide-react';
@@ -74,6 +76,15 @@ function ScorecardContent() {
     switch (activeTab) {
       case 'scorecard':
         return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
+      case 'commentary': {
+        const resolvedComm =
+          commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0
+            ? commentaryData
+            : (scoreData as any)?.data?.commentary;
+        return <CommentaryTab commentaryData={resolvedComm} loading={isCommLoading} />;
+      }
+      case 'mvp':
+        return <MvpTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'details':
         return <DetailsTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'squads': {
@@ -87,8 +98,6 @@ function ScorecardContent() {
           : squadsData;
         return <SquadsTab squadsData={resolvedSquads} loading={isScoreLoading} />;
       }
-      case 'commentary':
-        return <CommentaryTab commentaryData={commentaryData} loading={isCommLoading} />;
       default:
         return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
     }
@@ -98,9 +107,29 @@ function ScorecardContent() {
     ? 'Unable to load scorecard. Please check the match link and try again.'
     : null;
 
+  const seriesTitle =
+    (scoreData?.data?.summary as any)?.series ||
+    scoreData?.data?.summary?.matchTitle ||
+    matchProp?.series ||
+    'Series';
+  const matchTitle = scoreData?.data?.summary?.teams
+    ? `${scoreData.data.summary.teams[0]?.teamName || ''} vs ${scoreData.data.summary.teams[1]?.teamName || ''}`
+    : matchProp
+    ? `${matchProp.teamA} vs ${matchProp.teamB}`
+    : 'Match';
+
   return (
     <div className="min-h-screen bg-slate-50 py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {/* Platform Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            { label: 'Matches', href: '/matches' },
+            { label: seriesTitle },
+            { label: `${matchTitle} Scorecard` }
+          ]}
+        />
+
         {/* Navigation & Controls Bar */}
         <div className="flex items-center justify-between">
           <Link
@@ -138,14 +167,17 @@ function ScorecardContent() {
             <MiniScoreCard 
               summary={scoreData?.data?.summary} 
               matchProp={matchProp}
+              squads={(scoreData as any)?.data?.squads}
+              leaders={(scoreData as any)?.data?.leaders}
+              tables={(scoreData as any)?.data?.tables}
             />
 
             {/* Tab Navigation */}
             <TabNavigation
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              hasSquads={Boolean(squadsData && (squadsData.team1 || squadsData.team2 || squadsData.squads))}
-              hasCommentary={Boolean(commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0)}
+              hasSquads={true}
+              hasCommentary={true}
             />
 
             {/* Tab Content */}

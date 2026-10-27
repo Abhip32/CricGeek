@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { ScorecardTable } from '@/types/match';
+import ImageWithFallback from '../common/ImageWithFallback';
+import { findPlayerInSquads } from '@/lib/playerMatcher';
 
 interface BowlingRow {
   name?: string;
@@ -17,9 +19,10 @@ interface BowlingRow {
 interface BowlingTableProps {
   table?: ScorecardTable;
   bowlingData?: BowlingRow[];
+  squads?: Record<string, any[]> | null;
 }
 
-export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }) => {
+export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, squads }) => {
   const rows = React.useMemo(() => {
     if (bowlingData && Array.isArray(bowlingData)) {
       return bowlingData.map((r) => ({
@@ -73,8 +76,8 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }
     <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
-            <th className="py-2.5 px-4">Bowler</th>
+          <tr className="bg-slate-100/80 text-slate-700 text-xs font-black uppercase tracking-wider border-b border-slate-200">
+            <th className="py-2.5 px-4">BOWLING</th>
             <th className="py-2.5 px-3 text-right">O</th>
             <th className="py-2.5 px-3 text-right">M</th>
             <th className="py-2.5 px-3 text-right">R</th>
@@ -88,36 +91,57 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData }
           {rows.map((bowler, idx) => {
             const wicketsNum = parseInt(String(bowler.wickets), 10);
             const hasWickets = !isNaN(wicketsNum) && wicketsNum > 0;
+            const matchedPlayer = findPlayerInSquads(bowler.name, squads);
 
             return (
-              <tr 
-                key={idx}
-                className="hover:bg-red-50/30 transition-colors"
-              >
+              <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
                 <td className="py-2.5 px-4 font-bold text-slate-900">
-                  {bowler.name}
+                  <div className="flex items-center gap-2.5">
+                    {/* Circular player headshot or monogram */}
+                    <div className="w-7 h-7 rounded-full overflow-hidden border border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-2xs">
+                      {matchedPlayer?.image ? (
+                        <ImageWithFallback
+                          src={matchedPlayer.image}
+                          alt={bowler.name}
+                          width={28}
+                          height={28}
+                          fallbackText={bowler.name.slice(0, 1)}
+                        />
+                      ) : (
+                        <span className="text-[10px] font-black text-slate-600">
+                          {bowler.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+
+                    <span className="truncate">{bowler.name}</span>
+                  </div>
                 </td>
                 <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
                   {bowler.overs}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
                   {bowler.maidens}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
+                <td className="py-2.5 px-3 text-right text-slate-600 font-medium">
                   {bowler.runs}
                 </td>
                 <td className="py-2.5 px-3 text-right">
-                  <span className={`font-bold ${hasWickets ? 'text-red-600 font-extrabold text-base' : 'text-slate-500'}`}>
+                  <span
+                    className={`font-black tracking-tight ${
+                      hasWickets ? 'text-red-600 font-extrabold text-base' : 'text-slate-900 font-bold'
+                    }`}
+                  >
                     {bowler.wickets}
                   </span>
                 </td>
-                <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs">
+                <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs font-semibold">
                   {bowler.economy}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium hidden sm:table-cell">
+                <td className="py-2.5 px-3 text-right text-slate-500 font-medium text-xs hidden sm:table-cell">
                   {bowler.wd}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium hidden sm:table-cell">
+                <td className="py-2.5 px-3 text-right text-slate-500 font-medium text-xs hidden sm:table-cell">
                   {bowler.nb}
                 </td>
               </tr>

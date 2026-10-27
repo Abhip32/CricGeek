@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { InningSection } from './InningSection';
 import { ScorecardTable } from '@/types/match';
 import ScorecardTableSkeleton from './ScorecardTableSkeleton';
@@ -13,16 +13,20 @@ interface ScorecardTabProps {
 }
 
 export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }) => {
+  const [selectedInningIdx, setSelectedInningIdx] = useState<number | 'all'>('all');
+
   if (loading) {
     return <ScorecardTableSkeleton />;
   }
+
+  const squads = scoreData?.data?.squads || null;
 
   // Legacy format support
   if (scoreData?.innings && Array.isArray(scoreData.innings) && scoreData.innings.length > 0) {
     return (
       <div className="space-y-6">
         {scoreData.innings.map((inning: any, index: number) => (
-          <InningSection key={index} inning={inning} />
+          <InningSection key={index} inning={inning} squads={squads} />
         ))}
       </div>
     );
@@ -89,16 +93,63 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
     });
   }
 
+  const displayedPairs =
+    selectedInningIdx === 'all'
+      ? inningsPairs
+      : [inningsPairs[selectedInningIdx]].filter(Boolean);
+
   return (
-    <div className="space-y-6">
-      {inningsPairs.map((pair, idx) => (
-        <InningSection
-          key={idx}
-          title={pair.title}
-          battingTable={pair.battingTable}
-          bowlingTable={pair.bowlingTable}
-        />
-      ))}
+    <div className="space-y-5">
+      {/* ESPN Innings Switcher Pills (from screenshot) */}
+      {inningsPairs.length > 1 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            onClick={() => setSelectedInningIdx('all')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+              selectedInningIdx === 'all'
+                ? 'bg-red-600 text-white shadow-xs'
+                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
+            }`}
+          >
+            All Innings
+          </button>
+
+          {inningsPairs.map((pair, idx) => {
+            const cleanTitle = pair.title
+              .replace(/\s+Batting/i, '')
+              .replace(/\s+Innings/i, '')
+              .trim();
+            const isActive = selectedInningIdx === idx;
+
+            return (
+              <button
+                key={idx}
+                onClick={() => setSelectedInningIdx(idx)}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                  isActive
+                    ? 'bg-red-600 text-white shadow-xs'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
+                }`}
+              >
+                {cleanTitle} Innings
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Innings Sections */}
+      <div className="space-y-6">
+        {displayedPairs.map((pair, idx) => (
+          <InningSection
+            key={idx}
+            title={pair.title}
+            battingTable={pair.battingTable}
+            bowlingTable={pair.bowlingTable}
+            squads={squads}
+          />
+        ))}
+      </div>
     </div>
   );
 };

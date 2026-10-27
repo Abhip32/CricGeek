@@ -40,34 +40,33 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 
   if (isInvalid) {
     return (
-      <div
+      <span
         style={{ width, height }}
-        className={`flex-shrink-0 rounded-md bg-slate-100 border border-slate-200/80 flex items-center justify-center font-bold text-slate-700 tracking-wider shadow-2xs ${className}`}
+        className={`inline-flex flex-shrink-0 items-center justify-center font-bold text-slate-600 rounded bg-slate-100 ${className}`}
         title={alt}
       >
         <span style={{ fontSize: Math.max(9, Math.floor(Math.min(width, height) * 0.45)) }}>
           {initials}
         </span>
-      </div>
+      </span>
     );
   }
 
   return (
-    <div
-      style={{ width, height }}
-      className={`relative flex-shrink-0 overflow-hidden rounded-md border border-slate-200/80 bg-white shadow-2xs ${className}`}
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      style={{
+        width: width ? `${width}px` : undefined,
+        height: height ? `${height}px` : undefined,
+      }}
+      className={`object-contain inline-block flex-shrink-0 ${className}`}
+      onError={() => setError(true)}
+      unoptimized
       title={alt}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className="w-full h-full object-cover"
-        onError={() => setError(true)}
-        unoptimized
-      />
-    </div>
+    />
   );
 };
 

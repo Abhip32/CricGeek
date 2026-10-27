@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ScorecardSummary } from '@/types/match';
-import { Info, MapPin, Trophy, ShieldCheck, Flag, Users, Clock, Calendar, Star } from 'lucide-react';
+import { Info, MapPin, Trophy, ShieldCheck, Flag, Users, Clock, Calendar, Star, CheckCircle2 } from 'lucide-react';
 
 interface DetailsTabProps {
   scoreData: any;
@@ -19,6 +19,7 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, loading }) =>
   const summary: ScorecardSummary = scoreData?.data?.summary || scoreData?.summary || {};
   const scrapedDetails = scoreData?.data?.details || scoreData?.details || {};
   const legacyDetails = scoreData?.matchInfo?.details || {};
+  const notes = scoreData?.data?.notes || scoreData?.notes || [];
 
   const detailsList: Array<{ label: string; value: string; icon?: any }> = [];
 
@@ -77,42 +78,66 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, loading }) =>
     }
   });
 
-  if (detailsList.length === 0) {
-    return (
-      <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-xl">
-        No match info details available for this match.
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-      <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center gap-2.5">
-        <Info className="w-4 h-4 text-red-600" />
-        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-          Match Information
-        </h3>
+    <div className="space-y-6">
+      {/* Match Details Card */}
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+        <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center gap-2.5">
+          <Info className="w-4 h-4 text-red-600" />
+          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+            Match Information
+          </h3>
+        </div>
+
+        {detailsList.length === 0 ? (
+          <div className="p-8 text-center text-slate-500">
+            No match info details available for this match.
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {detailsList.map((item, idx) => {
+              const Icon = item.icon || Info;
+              return (
+                <div
+                  key={idx}
+                  className="p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 hover:bg-slate-50/50 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 text-slate-600">
+                    <Icon className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span className="text-xs font-semibold">{item.label}</span>
+                  </div>
+                  <div className="text-xs sm:text-sm font-bold text-slate-900 sm:text-right max-w-xl">
+                    {item.value}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      <div className="divide-y divide-slate-100">
-        {detailsList.map((item, idx) => {
-          const Icon = item.icon || Info;
-          return (
-            <div
-              key={idx}
-              className="p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 hover:bg-slate-50/50 transition-colors"
-            >
-              <div className="flex items-center gap-2.5 text-slate-600">
-                <Icon className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span className="text-xs font-semibold">{item.label}</span>
-              </div>
-              <div className="text-xs sm:text-sm font-bold text-slate-900 sm:text-right max-w-xl">
-                {item.value}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {/* Match Notes & Milestones (DRS reviews, Lunch/Tea/Stumps, Records) */}
+      {Array.isArray(notes) && notes.length > 0 && (
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+          <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center gap-2.5">
+            <CheckCircle2 className="w-4 h-4 text-red-600" />
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+              Match Notes & Milestones
+            </h3>
+          </div>
+          <div className="p-4 sm:p-5 space-y-2.5">
+            {notes.map((note: any, idx: number) => {
+              const text = typeof note === 'string' ? note : note.text || note.note || JSON.stringify(note);
+              return (
+                <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 flex-shrink-0" />
+                  <span>{text}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

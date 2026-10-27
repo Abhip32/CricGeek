@@ -63,16 +63,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
       <div className="space-y-3 py-1">
         {/* Team 1 */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-6 rounded overflow-hidden flex-shrink-0 border border-slate-200 bg-slate-50 flex items-center justify-center">
-              <ImageWithFallback
-                src={match.flagA}
-                alt={match.teamA}
-                width={32}
-                height={22}
-                fallbackText={match.teamA}
-              />
-            </div>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <ImageWithFallback
+              src={match.flagA}
+              alt={match.teamA}
+              width={26}
+              height={18}
+              className="w-6.5 h-4.5 object-contain flex-shrink-0"
+              fallbackText={match.teamA}
+            />
             <span className="text-sm sm:text-base font-bold text-slate-900 truncate" title={match.teamA}>
               {match.teamA}
             </span>
@@ -91,16 +90,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
 
         {/* Team 2 */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-6 rounded overflow-hidden flex-shrink-0 border border-slate-200 bg-slate-50 flex items-center justify-center">
-              <ImageWithFallback
-                src={match.flagB}
-                alt={match.teamB}
-                width={32}
-                height={22}
-                fallbackText={match.teamB}
-              />
-            </div>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <ImageWithFallback
+              src={match.flagB}
+              alt={match.teamB}
+              width={26}
+              height={18}
+              className="w-6.5 h-4.5 object-contain flex-shrink-0"
+              fallbackText={match.teamB}
+            />
             <span className="text-sm sm:text-base font-bold text-slate-900 truncate" title={match.teamB}>
               {match.teamB}
             </span>
