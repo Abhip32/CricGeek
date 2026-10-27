@@ -31,8 +31,20 @@ function normalizeSeriesMatches(seriesData: any[]): Match[] {
         const flagB = team2.flag || m.flagB || '';
 
         const statusRaw = m.status || '';
-        const isLive = statusRaw.toUpperCase().includes('LIVE') || 
-                      (!statusRaw.toUpperCase().includes('RESULT') && !!m.result === false);
+        const statusUpper = statusRaw.toUpperCase();
+        const isLive =
+          statusUpper.includes('LIVE') ||
+          statusUpper.includes('STUMPS') ||
+          statusUpper.includes('TEA') ||
+          statusUpper.includes('LUNCH') ||
+          statusUpper.includes('INNINGS BREAK') ||
+          statusUpper.includes('RUNNING') ||
+          statusUpper.includes('DELAYED') ||
+          (!statusUpper.includes('RESULT') &&
+            !statusUpper.includes('FINAL') &&
+            !statusUpper.includes('WON') &&
+            !statusUpper.includes('CONCLUDED') &&
+            !m.result);
 
         flattened.push({
           id: `${sIdx}-${mIdx}-${teamA}-${teamB}`.replace(/\s+/g, '-').toLowerCase(),
@@ -134,7 +146,7 @@ export const cricketApi = {
         id: item.id || idx,
         title: item.title || item.news_title || item.headline || '',
         description: item.description || item.news_content || '',
-        dateTime: item.dateTime || 'Recent',
+        dateTime: item.dateTime || item.date || item.pubDate || 'Recent',
         author: item.author || 'Cricket Desk',
         image: item.image || item.news_img || '',
         link: item.link || '',

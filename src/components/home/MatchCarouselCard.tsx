@@ -13,8 +13,9 @@ interface MatchCarouselCardProps {
 
 export function getCleanScorecardPath(link?: string): string {
   if (!link) return '/matches';
-  const clean = link
-    .replace(/^https?:\/\/(www\.)?espncricinfo\.com\//, '')
+  let clean = link
+    .replace(/^https?:\/\/[^\/]+\//, '')
+    .replace(/^cricket\//, '')
     .replace(/\/(full-scorecard|live-cricket-score|match-preview)(\?.*)?$/, '')
     .replace(/^\/+/, '');
   return `/scorecard/${clean}`;
