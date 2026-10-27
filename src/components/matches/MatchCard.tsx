@@ -52,33 +52,33 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
   }, [match, headerTitle]);
 
   return (
-    <div className="w-full bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs hover:border-red-500/60 hover:shadow-md transition-all flex flex-col justify-between space-y-3.5 group">
-      {/* Top Header - Consistent Across All Match Cards */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs gap-2 min-w-0">
+    <div className="w-full bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs flex flex-col justify-between space-y-3.5 relative overflow-hidden group hover:border-red-500/60 hover:shadow-md transition-all">
+      {/* Top Header */}
+      <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 text-xs gap-2 min-w-0">
         <span
-          className="font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0"
+          className="font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0 text-[11px]"
           title={headerTitle}
         >
           {headerTitle}
         </span>
         {isLive ? (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-red-600 text-white flex-shrink-0 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shadow-2xs flex-shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             LIVE
           </span>
         ) : isResult ? (
-          <span className="font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200 text-[11px] flex-shrink-0">
+          <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full text-[10px] flex-shrink-0">
             RESULT
           </span>
         ) : (
-          <span className="font-semibold text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200 text-[11px] flex-shrink-0">
+          <span className="font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full text-[10px] flex-shrink-0">
             {match.status || 'FIXTURE'}
           </span>
         )}
       </div>
 
-      {/* Teams & Real-Time Scores */}
-      <div className="space-y-2.5 py-1">
+      {/* Teams & Scores */}
+      <div className="space-y-3 py-1">
         {/* Team 1 */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -95,7 +95,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
             </span>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight tabular-nums">
               {match.scoreA || '—'}
             </span>
             {match.oversA && (
@@ -122,7 +122,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
             </span>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+            <span className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight tabular-nums">
               {match.scoreB || '—'}
             </span>
             {match.oversB && (
@@ -134,37 +134,22 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
         </div>
       </div>
 
-      {/* Footer - Consistent with Upcoming Card */}
-      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
-        <div className="flex items-center gap-1.5 min-w-0 flex-1">
-          {footerText ? (
-            <p
-              className={`font-semibold truncate ${
-                isLive ? 'text-red-600' : 'text-slate-700'
-              }`}
-              title={footerText}
-            >
-              {footerText}
-            </p>
-          ) : match.matchInfo ? (
-            <span className="text-slate-500 truncate" title={match.matchInfo}>
-              {match.matchInfo}
-            </span>
-          ) : (
-            <span className="text-slate-400">Match in progress</span>
-          )}
-        </div>
-
-        {!isUpcoming && (
-          <Link
-            href={scorecardHref}
-            onClick={handleClick}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition-all flex-shrink-0"
-          >
-            <span>Scorecard</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </Link>
-        )}
+      {/* Footer Info & Scorecard Action */}
+      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs gap-2 min-w-0">
+        <span
+          className="text-xs font-semibold text-slate-600 truncate flex-1 min-w-0"
+          title={footerText}
+        >
+          {footerText}
+        </span>
+        <Link
+          href={scorecardHref}
+          onClick={handleClick}
+          className="inline-flex items-center gap-0.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0 group-hover:translate-x-0.5"
+        >
+          <span>Scorecard</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </div>
   );

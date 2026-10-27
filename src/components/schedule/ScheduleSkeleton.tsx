@@ -5,7 +5,6 @@ import React from 'react';
 export const ScheduleSkeleton: React.FC = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
-      {/* Date Group 1 Skeleton */}
       <div className="space-y-4">
         {/* Date Header Banner */}
         <div className="flex items-center gap-2.5 border-b border-slate-200 pb-2">
@@ -45,10 +44,7 @@ export const ScheduleSkeleton: React.FC = () => {
                   <div className="w-3.5 h-3.5 rounded shimmer-block" />
                   <div className="h-3.5 w-32 rounded shimmer-block" />
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3.5 h-3.5 rounded shimmer-block" />
-                  <div className="h-3.5 w-14 rounded shimmer-block" />
-                </div>
+                <div className="h-3.5 w-14 rounded shimmer-block" />
               </div>
             </div>
           ))}

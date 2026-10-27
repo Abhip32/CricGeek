@@ -101,9 +101,9 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, loading }) => 
               </div>
 
               {(player.battingStyle || player.bowlingStyle) && (
-                <div className="text-right text-xs text-slate-500 hidden sm:block">
-                  <div className="font-medium">{player.battingStyle}</div>
-                  <div className="text-[11px] text-slate-400">{player.bowlingStyle}</div>
+                <div className="text-right text-[11px] text-slate-400 hidden sm:block max-w-[150px] truncate">
+                  {player.battingStyle && <div>{player.battingStyle}</div>}
+                  {player.bowlingStyle && <div>{player.bowlingStyle}</div>}
                 </div>
               )}
             </div>

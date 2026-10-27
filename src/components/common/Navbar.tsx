@@ -18,9 +18,9 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-200 shadow-sm transition-all">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-200 shadow-xs transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo - original logo.png */}
+        {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/images/logo.png"
@@ -32,8 +32,8 @@ export const Navbar = () => {
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Desktop Navigation - Complete Rounded Pill Variant */}
+        <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-full border border-slate-200/90">
           {navLinks.map((link) => {
             const basePath = link.href.split('?')[0];
             const isActive = pathname === basePath || (basePath !== '/' && pathname.startsWith(basePath));
@@ -41,26 +41,23 @@ export const Navbar = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-150 rounded-lg ${
+                className={`relative px-4 py-1.5 text-xs sm:text-sm font-bold transition-all duration-200 rounded-full ${
                   isActive
-                    ? 'text-red-600 bg-red-50'
-                    : 'text-slate-700 hover:text-red-600 hover:bg-slate-50'
+                    ? 'bg-red-600 text-white shadow-xs'
+                    : 'text-slate-700 hover:text-red-600 hover:bg-white/80'
                 }`}
               >
                 {link.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-red-600 rounded-full" />
-                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Right Action: Live Cricket shortcut */}
+        {/* Right Action: Live Matches button */}
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/matches?tab=live"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-xs"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
@@ -91,23 +88,24 @@ export const Navbar = () => {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                className={`block px-4 py-2.5 rounded-full text-sm font-bold transition-all ${
                   isActive
-                    ? 'text-red-600 bg-red-50 font-bold'
-                    : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'
+                    ? 'bg-red-600 text-white shadow-xs'
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-red-600'
                 }`}
               >
                 {link.label}
               </Link>
             );
           })}
+
           <div className="pt-2">
             <Link
               href="/matches?tab=live"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white shadow-xs"
             >
-              <Radio className="w-4 h-4" />
+              <Radio className="w-4 h-4 animate-pulse" />
               <span>Live Matches</span>
             </Link>
           </div>

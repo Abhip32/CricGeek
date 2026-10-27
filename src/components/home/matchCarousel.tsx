@@ -5,7 +5,7 @@ import { useLiveMatches, useRecentMatches } from '@/hooks/useCricketQueries';
 import MatchCarouselCard from './MatchCarouselCard';
 import SkeletonCard from './SkeletonCard';
 import EmptyState from '../common/EmptyState';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 
 export const MatchCarousel = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -27,31 +27,38 @@ export const MatchCarousel = () => {
   };
 
   return (
-    <section className="bg-slate-50 py-8 border-b border-slate-200">
+    <section className="py-6 border-b border-slate-200 relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
         {/* Section Header */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isLiveActive ? 'bg-red-600 animate-pulse' : 'bg-slate-400'}`} />
-            <h2 className="text-sm sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">
-              {isLiveActive ? 'Live Matches' : 'Recent Matches'}
-            </h2>
-            <span className="text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 flex-shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
+              <Flame className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-3.5 bg-red-600 rounded-full" />
+                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap">
+                  {isLiveActive ? 'Live Match Center' : 'Recent Matches & Results'}
+                </h2>
+              </div>
+            </div>
+            <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex-shrink-0">
               {matches.length}
             </span>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={() => handleScroll('left')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-colors shadow-2xs"
               aria-label="Previous"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => handleScroll('right')}
-              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors shadow-2xs"
+              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-colors shadow-2xs"
               aria-label="Next"
             >
               <ChevronRight className="w-4 h-4" />
@@ -78,7 +85,7 @@ export const MatchCarousel = () => {
         ) : (
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none scroll-smooth"
+            className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none scroll-smooth"
           >
             {matches.map((match) => (
               <MatchCarouselCard key={match.id} match={match} />

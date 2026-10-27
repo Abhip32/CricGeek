@@ -65,14 +65,14 @@ export const ScorecardTableSkeleton: React.FC = () => {
           </div>
 
           <div className="divide-y divide-slate-100">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(5)].map((_, i) => (
               <div key={i} className="px-4 py-3 flex items-center justify-between">
                 <div className="h-4 w-32 rounded shimmer-block" />
                 <div className="flex items-center gap-5 sm:gap-7">
                   <div className="h-4 w-7 rounded shimmer-block" />
                   <div className="h-4 w-7 rounded shimmer-block-subtle" />
                   <div className="h-4 w-7 rounded shimmer-block-subtle" />
-                  <div className="h-4 w-7 rounded shimmer-block" />
+                  <div className="h-4 w-7 rounded shimmer-block-subtle" />
                   <div className="h-4 w-9 rounded shimmer-block-subtle" />
                 </div>
               </div>

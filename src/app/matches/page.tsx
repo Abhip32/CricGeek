@@ -6,11 +6,10 @@ import Link from 'next/link';
 import { useLiveMatches, useRecentMatches, useUpcomingMatches } from '@/hooks/useCricketQueries';
 import MatchCard from '@/components/matches/MatchCard';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
-import Breadcrumbs from '@/components/common/Breadcrumbs';
 import SkeletonCard from '@/components/home/SkeletonCard';
 import EmptyState from '@/components/common/EmptyState';
 import Hero from '@/components/home/hero';
-import { Search, Flame, Clock, Calendar, RefreshCw, X, ChevronDown, MapPin, ChevronRight } from 'lucide-react';
+import { Search, Flame, Clock, Calendar, RefreshCw, X, MapPin } from 'lucide-react';
 import { getCleanScorecardPath } from '@/components/home/MatchCarouselCard';
 import { Match } from '@/types/match';
 
@@ -119,7 +118,7 @@ function MatchesContent() {
   }, [upcomingMatches, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 pb-16">
       <Hero
         image="/images/matchInfoHeader.jpg"
         heading="Cricket Match Center"
@@ -127,9 +126,9 @@ function MatchesContent() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-        {/* ESPN Cricinfo Navigation Tabs & Refresh */}
+        {/* Navigation Tabs & Refresh */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
-          {/* Responsive Segmented Tabs (Mobile & Desktop - No Clunky Dropdown) */}
+          {/* Responsive Segmented Tabs */}
           <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 md:pb-0 w-full md:w-auto">
             {[
               { id: 'live', label: 'Live Matches', count: liveMatches.length, icon: Flame },
@@ -303,7 +302,7 @@ function MatchesContent() {
           <div className="space-y-8">
             {Object.entries(groupedMatches).map(([seriesTitle, matches]) => (
               <div key={seriesTitle} className="space-y-3.5">
-                {/* ESPN Series Header */}
+                {/* Series Header */}
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-1.5 h-4 bg-red-600 rounded-full" />

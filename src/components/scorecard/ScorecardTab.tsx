@@ -100,7 +100,7 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
 
   return (
     <div className="space-y-5">
-      {/* ESPN Innings Switcher Pills (from screenshot) */}
+      {/* Innings Switcher Pills */}
       {inningsPairs.length > 1 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           <button

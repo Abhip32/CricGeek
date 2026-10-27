@@ -116,7 +116,7 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, loading }) =>
         )}
       </div>
 
-      {/* Match Notes & Milestones (DRS reviews, Lunch/Tea/Stumps, Records) */}
+      {/* Match Notes & Milestones */}
       {Array.isArray(notes) && notes.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
           <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center gap-2.5">

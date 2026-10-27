@@ -42,7 +42,7 @@ export default function PhotosPage() {
   const activePhotos = galleryData?.photos || [];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 pb-16">
       <Hero
         image="/images/newsHeader.jpg"
         heading="Cricket Photo Galleries"
@@ -166,25 +166,25 @@ export default function PhotosPage() {
         )}
       </div>
 
-      {/* Lightbox / Gallery Modal */}
+      {/* Lightbox / Gallery Modal - Clean Light Athletic Design */}
       {selectedGalleryId && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-4xl bg-slate-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-4 border-b border-white/10 flex items-center justify-between text-white">
+            <div className="p-4 sm:px-6 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
               <div className="min-w-0 flex-1 pr-4">
-                <h3 className="font-extrabold text-sm sm:text-base text-white truncate">
+                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
                   {galleryData?.title || 'Cricket Gallery'}
                 </h3>
                 {activePhotos.length > 0 && (
-                  <p className="text-xs text-slate-400 font-medium">
+                  <p className="text-xs text-slate-500 font-semibold mt-0.5">
                     Photo {selectedPhotoIndex + 1} of {activePhotos.length}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => setSelectedGalleryId(null)}
-                className="p-1.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-colors"
                 title="Close"
               >
                 <X className="w-5 h-5" />
@@ -192,10 +192,10 @@ export default function PhotosPage() {
             </div>
 
             {/* Modal Body: Active Photo */}
-            <div className="relative flex-1 min-h-[350px] sm:min-h-[480px] bg-black flex items-center justify-center p-2">
+            <div className="relative flex-1 min-h-[350px] sm:min-h-[480px] bg-slate-100 flex items-center justify-center p-3">
               {isSingleLoading ? (
-                <div className="text-white text-xs font-bold animate-pulse flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4 animate-spin text-red-500" />
+                <div className="text-slate-700 text-xs font-bold animate-pulse flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4 animate-spin text-red-600" />
                   <span>Loading full resolution photos...</span>
                 </div>
               ) : activePhotos.length > 0 ? (
@@ -214,7 +214,7 @@ export default function PhotosPage() {
                   {selectedPhotoIndex > 0 && (
                     <button
                       onClick={() => setSelectedPhotoIndex(prev => prev - 1)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 text-white hover:bg-red-600 transition-colors border border-white/20"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/95 text-slate-800 hover:bg-red-600 hover:text-white transition-all border border-slate-200 shadow-md"
                       title="Previous Photo"
                     >
                       <ChevronLeft className="w-5 h-5" />
@@ -223,7 +223,7 @@ export default function PhotosPage() {
                   {selectedPhotoIndex < activePhotos.length - 1 && (
                     <button
                       onClick={() => setSelectedPhotoIndex(prev => prev + 1)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 text-white hover:bg-red-600 transition-colors border border-white/20"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/95 text-slate-800 hover:bg-red-600 hover:text-white transition-all border border-slate-200 shadow-md"
                       title="Next Photo"
                     >
                       <ChevronRight className="w-5 h-5" />
@@ -231,13 +231,13 @@ export default function PhotosPage() {
                   )}
                 </>
               ) : (
-                <div className="text-slate-400 text-xs">No photos in this album.</div>
+                <div className="text-slate-500 text-xs">No photos in this album.</div>
               )}
             </div>
 
             {/* Modal Footer Caption */}
             {activePhotos[selectedPhotoIndex]?.caption && (
-              <div className="p-3.5 bg-slate-900 border-t border-white/10 text-xs text-slate-300 font-medium leading-relaxed">
+              <div className="p-4 bg-white border-t border-slate-200 text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
                 {activePhotos[selectedPhotoIndex].caption}
               </div>
             )}

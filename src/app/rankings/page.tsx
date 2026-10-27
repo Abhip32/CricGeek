@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTeamRankings, usePlayerRankings } from '@/hooks/useCricketQueries';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
-import Breadcrumbs from '@/components/common/Breadcrumbs';
 import EmptyState from '@/components/common/EmptyState';
 import RankingsSkeleton from '@/components/rankings/RankingsSkeleton';
 import Hero from '@/components/home/hero';
@@ -113,7 +112,7 @@ export default function RankingsPage() {
       const rating = item.rating && item.rating !== '$undefined' ? item.rating : '—';
 
       return {
-        rank,
+        rank: Number(rank) || idx + 1,
         name,
         flag,
         country,
@@ -134,14 +133,15 @@ export default function RankingsPage() {
     });
   }, [normalizedList, searchQuery]);
 
-  const top3 = filteredList.slice(0, 3);
+  const formatTitle = selectedFormat === 't20' ? 'T20I' : selectedFormat.toUpperCase();
+  const roleTitle = playerRole === 'allRounder' ? 'All-Rounder' : playerRole.charAt(0).toUpperCase() + playerRole.slice(1);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 pb-16">
       <Hero
         image="/images/rankingsHeader.jpg"
         heading="Official ICC Cricket Rankings"
-        subtitle="Official ICC standings for national teams and top-ranked players across all international formats with verified Cricbuzz statistics."
+        subtitle="Live official ICC standings for national teams and top-ranked players across all international formats with verified statistics."
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
@@ -153,7 +153,7 @@ export default function RankingsPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
                 category === 'teams'
                   ? 'bg-red-600 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
               }`}
             >
               <Shield className="w-4 h-4" />
@@ -164,7 +164,7 @@ export default function RankingsPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
                 category === 'players'
                   ? 'bg-red-600 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -182,7 +182,7 @@ export default function RankingsPage() {
           </button>
         </div>
 
-        {/* Filter Controls: Format (Test, ODI, T20) & Role (if players) */}
+        {/* Filter Controls: Format (Test, ODI, T20) & Role (if players) & Search */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
             {/* Format Pills */}
@@ -233,7 +233,7 @@ export default function RankingsPage() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Content - Championship Leaderboard Table (NO Top 3 Podium Cards) */}
         {loading ? (
           <RankingsSkeleton />
         ) : filteredList.length === 0 ? (
@@ -245,171 +245,98 @@ export default function RankingsPage() {
             onAction={() => setSearchQuery('')}
           />
         ) : (
-          <div className="space-y-6">
-            {/* Top 3 Podium Cards with Cricbuzz Player Headshots */}
-            {!searchQuery && top3.length === 3 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* 2nd Place */}
-                <div className="order-2 md:order-1 bg-white border border-slate-200 rounded-xl p-5 shadow-2xs flex flex-col items-center text-center space-y-2.5">
-                  <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center text-xs font-black text-slate-700">
-                    2
-                  </div>
-                  {category === 'players' ? (
-                    <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs">
-                      <ImageWithFallback
-                        src={top3[1].flag}
-                        alt={top3[1].name}
-                        width={56}
-                        height={56}
-                        fallbackText={top3[1].name}
-                      />
-                    </div>
-                  ) : (
-                    <ImageWithFallback
-                      src={top3[1].flag}
-                      alt={top3[1].name}
-                      width={52}
-                      height={34}
-                      className="w-13 h-8.5 object-contain"
-                      fallbackText={top3[1].name}
-                    />
-                  )}
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
-                      {top3[1].name}
-                    </h3>
-                    {category === 'players' && top3[1].country && (
-                      <span className="text-[11px] font-semibold text-slate-500 block">{top3[1].country}</span>
-                    )}
-                  </div>
-                  <div className="text-xs text-slate-500 font-semibold pt-1">
-                    Rating: <span className="text-slate-900 font-bold">{top3[1].rating}</span>
-                  </div>
-                </div>
-
-                {/* 1st Place (Champion) */}
-                <div className="order-1 md:order-2 bg-white border-2 border-amber-300 rounded-xl p-5 shadow-sm flex flex-col items-center text-center space-y-2.5 relative">
-                  <div className="absolute -top-3 px-3 py-0.5 rounded-full bg-amber-400 text-amber-950 font-black text-[10px] uppercase tracking-wider shadow-xs">
-                    Rank 1 Champion
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-sm font-black text-amber-700 mt-1">
-                    1
-                  </div>
-                  {category === 'players' ? (
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-300 bg-amber-50 flex items-center justify-center shadow-xs">
-                      <ImageWithFallback
-                        src={top3[0].flag}
-                        alt={top3[0].name}
-                        width={64}
-                        height={64}
-                        fallbackText={top3[0].name}
-                      />
-                    </div>
-                  ) : (
-                    <ImageWithFallback
-                      src={top3[0].flag}
-                      alt={top3[0].name}
-                      width={60}
-                      height={40}
-                      className="w-15 h-10 object-contain"
-                      fallbackText={top3[0].name}
-                    />
-                  )}
-                  <div>
-                    <h3 className="font-extrabold text-slate-900 text-base truncate max-w-full">
-                      {top3[0].name}
-                    </h3>
-                    {category === 'players' && top3[0].country && (
-                      <span className="text-xs font-semibold text-slate-500 block">{top3[0].country}</span>
-                    )}
-                  </div>
-                  <div className="text-xs text-slate-600 font-semibold pt-1">
-                    Rating: <span className="text-red-600 font-extrabold text-base">{top3[0].rating}</span>
-                  </div>
-                </div>
-
-                {/* 3rd Place */}
-                <div className="order-3 bg-white border border-slate-200 rounded-xl p-5 shadow-2xs flex flex-col items-center text-center space-y-2.5">
-                  <div className="w-7 h-7 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-xs font-black text-amber-800">
-                    3
-                  </div>
-                  {category === 'players' ? (
-                    <div className="w-14 h-14 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shadow-xs">
-                      <ImageWithFallback
-                        src={top3[2].flag}
-                        alt={top3[2].name}
-                        width={56}
-                        height={56}
-                        fallbackText={top3[2].name}
-                      />
-                    </div>
-                  ) : (
-                    <ImageWithFallback
-                      src={top3[2].flag}
-                      alt={top3[2].name}
-                      width={52}
-                      height={34}
-                      className="w-13 h-8.5 object-contain"
-                      fallbackText={top3[2].name}
-                    />
-                  )}
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm truncate max-w-full">
-                      {top3[2].name}
-                    </h3>
-                    {category === 'players' && top3[2].country && (
-                      <span className="text-[11px] font-semibold text-slate-500 block">{top3[2].country}</span>
-                    )}
-                  </div>
-                  <div className="text-xs text-slate-500 font-semibold pt-1">
-                    Rating: <span className="text-slate-900 font-bold">{top3[2].rating}</span>
-                  </div>
-                </div>
+          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+            {/* Table Header Strip */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-200 bg-slate-50/70">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-4 bg-red-600 rounded-full" />
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight">
+                  {category === 'teams'
+                    ? `${formatTitle} Men's Team Standings`
+                    : `${formatTitle} Men's ${roleTitle} Rankings`}
+                </h3>
               </div>
-            )}
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                {filteredList.length} Ranked
+              </span>
+            </div>
 
-            {/* Leaderboard Table */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
-                      <th className="py-3 px-4 w-16 text-center">Rank</th>
-                      <th className="py-3 px-4">
-                        {category === 'teams' ? 'Team' : 'Player'}
-                      </th>
-                      {category === 'teams' ? (
-                        <>
-                          <th className="py-3 px-4 text-center">Matches</th>
-                          <th className="py-3 px-4 text-center">Points</th>
-                          <th className="py-3 px-4 text-right">Rating</th>
-                        </>
-                      ) : (
-                        <>
-                          <th className="py-3 px-4">Country</th>
-                          <th className="py-3 px-4 text-right">Rating</th>
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredList.map((item, idx) => (
+            {/* Championship Leaderboard Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="bg-slate-100/80 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+                    <th className="py-3 px-3 sm:px-4 w-16 text-center">Rank</th>
+                    <th className="py-3 px-3 sm:px-4">
+                      {category === 'teams' ? 'Team' : 'Player'}
+                    </th>
+                    {category === 'teams' ? (
+                      <>
+                        <th className="py-3 px-3 sm:px-4 text-center">Matches</th>
+                        <th className="py-3 px-3 sm:px-4 text-center">Points</th>
+                        <th className="py-3 px-3 sm:px-4 text-right">Rating</th>
+                      </>
+                    ) : (
+                      <>
+                        <th className="py-3 px-3 sm:px-4">Country</th>
+                        <th className="py-3 px-3 sm:px-4 text-right">Rating</th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredList.map((item, idx) => {
+                    const isRank1 = item.rank === 1;
+                    const isRank2 = item.rank === 2;
+                    const isRank3 = item.rank === 3;
+
+                    return (
                       <tr
                         key={idx}
-                        className="hover:bg-red-50/40 transition-colors"
+                        className={`transition-colors ${
+                          isRank1
+                            ? 'bg-amber-50/30 hover:bg-amber-50/60'
+                            : 'hover:bg-slate-50'
+                        }`}
                       >
-                        <td className="py-3 px-4 text-center font-bold text-slate-800">
-                          {item.rank}
+                        {/* Rank Column with Podium Badges */}
+                        <td className="py-3.5 px-3 sm:px-4 text-center">
+                          {isRank1 ? (
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-amber-950 font-black text-xs shadow-xs ring-2 ring-amber-200">
+                              1
+                            </span>
+                          ) : isRank2 ? (
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-800 font-black text-xs shadow-xs ring-2 ring-slate-200">
+                              2
+                            </span>
+                          ) : isRank3 ? (
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 text-white font-black text-xs shadow-xs ring-2 ring-amber-500/30">
+                              3
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center justify-center w-7 h-7 font-bold text-slate-500 text-xs tabular-nums">
+                              {item.rank}
+                            </span>
+                          )}
                         </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-3">
+
+                        {/* Player / Team Column */}
+                        <td className="py-3.5 px-3 sm:px-4">
+                          <div className="flex items-center gap-3 min-w-0">
                             {category === 'players' ? (
-                              <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 bg-slate-50 flex-shrink-0 flex items-center justify-center">
+                              <div
+                                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center border shadow-xs ${
+                                  isRank1
+                                    ? 'border-amber-400 ring-2 ring-amber-200/80 bg-amber-50'
+                                    : 'border-slate-200 bg-slate-50'
+                                }`}
+                              >
                                 <ImageWithFallback
                                   src={item.flag}
                                   alt={item.name}
-                                  width={36}
-                                  height={36}
+                                  width={40}
+                                  height={40}
+                                  className="w-full h-full object-cover"
                                   fallbackText={item.name}
                                 />
                               </div>
@@ -417,44 +344,71 @@ export default function RankingsPage() {
                               <ImageWithFallback
                                 src={item.flag}
                                 alt={item.name}
-                                width={26}
-                                height={18}
-                                className="w-6.5 h-4.5 object-contain flex-shrink-0"
+                                width={28}
+                                height={20}
+                                className="w-7 h-5 object-contain flex-shrink-0"
                                 fallbackText={item.name}
                               />
                             )}
-                            <span className="font-bold text-slate-900">
-                              {item.name}
-                            </span>
+
+                            <div className="min-w-0 flex-1">
+                              <span
+                                className={`font-bold truncate text-sm sm:text-base block ${
+                                  isRank1 ? 'text-slate-900 font-extrabold' : 'text-slate-900'
+                                }`}
+                                title={item.name}
+                              >
+                                {item.name}
+                              </span>
+                              {category === 'players' && item.country && (
+                                <span className="text-[11px] font-semibold text-slate-500 block truncate sm:hidden">
+                                  {item.country}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </td>
+
+                        {/* Dynamic Columns based on category */}
                         {category === 'teams' ? (
                           <>
-                            <td className="py-3 px-4 text-center text-slate-600 font-medium">
+                            <td className="py-3.5 px-3 sm:px-4 text-center text-slate-600 font-semibold text-xs sm:text-sm">
                               {item.matches}
                             </td>
-                            <td className="py-3 px-4 text-center text-slate-600 font-medium">
+                            <td className="py-3.5 px-3 sm:px-4 text-center text-slate-600 font-semibold text-xs sm:text-sm">
                               {item.points}
                             </td>
-                            <td className="py-3 px-4 text-right font-extrabold text-slate-900">
-                              {item.rating}
+                            <td className="py-3.5 px-3 sm:px-4 text-right">
+                              <span
+                                className={`text-sm sm:text-base tabular-nums ${
+                                  isRank1 ? 'text-red-600 font-black' : 'text-slate-900 font-extrabold'
+                                }`}
+                              >
+                                {item.rating}
+                              </span>
                             </td>
                           </>
                         ) : (
                           <>
-                            <td className="py-3 px-4 text-slate-600 font-medium">
+                            <td className="py-3.5 px-3 sm:px-4 text-slate-600 font-semibold text-xs sm:text-sm">
                               {item.country || '—'}
                             </td>
-                            <td className="py-3 px-4 text-right font-extrabold text-slate-900">
-                              {item.rating}
+                            <td className="py-3.5 px-3 sm:px-4 text-right">
+                              <span
+                                className={`text-sm sm:text-base tabular-nums ${
+                                  isRank1 ? 'text-red-600 font-black' : 'text-slate-900 font-extrabold'
+                                }`}
+                              >
+                                {item.rating}
+                              </span>
                             </td>
                           </>
                         )}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

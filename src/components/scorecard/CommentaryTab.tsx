@@ -198,45 +198,32 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
                 item.wicket ? 'bg-red-50/20' : ''
               }`}
             >
-              {/* Over Ball Pill */}
-              <div className="flex flex-col items-center flex-shrink-0 w-12">
-                <span className="text-xs font-mono font-bold text-slate-400">
+              {/* Over & Outcome Badge Column */}
+              <div className="flex flex-col items-center gap-1 flex-shrink-0 w-11 sm:w-12">
+                <span className="font-mono text-xs font-black text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                   {item.over || `${idx + 1}`}
                 </span>
-                <div
-                  className={`w-7 h-7 mt-1 rounded-full flex items-center justify-center text-xs ${badge.style}`}
-                  title={`Outcome: ${badge.label}`}
+                <span
+                  className={`w-6.5 h-6.5 rounded-full flex items-center justify-center text-xs font-black ${badge.style}`}
                 >
                   {badge.label}
-                </div>
+                </span>
               </div>
 
-              {/* Ball Details */}
+              {/* Commentary Narrative */}
               <div className="min-w-0 flex-1 space-y-1">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
                   {matchUp && (
-                    <span className="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight">
+                    <h4 className="text-xs sm:text-sm font-extrabold text-slate-900">
                       {matchUp}
-                    </span>
+                    </h4>
                   )}
                   {getOutcomePill(item)}
                 </div>
 
-                {item.preText && (
-                  <p className="text-xs font-semibold text-slate-500 italic">
-                    {item.preText}
-                  </p>
-                )}
-
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-                  {narrative || rawText}
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                  {narrative}
                 </p>
-
-                {item.postText && (
-                  <p className="text-xs font-semibold text-slate-500 italic pt-0.5">
-                    {item.postText}
-                  </p>
-                )}
               </div>
             </div>
           );

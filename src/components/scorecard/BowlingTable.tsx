@@ -129,7 +129,9 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, 
                 <td className="py-2.5 px-3 text-right">
                   <span
                     className={`font-black tracking-tight ${
-                      hasWickets ? 'text-red-600 font-extrabold text-base' : 'text-slate-900 font-bold'
+                      hasWickets
+                        ? 'text-red-600 font-extrabold text-base'
+                        : 'text-slate-900 font-bold'
                     }`}
                   >
                     {bowler.wickets}
@@ -138,10 +140,10 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, 
                 <td className="py-2.5 px-4 text-right text-slate-600 font-mono text-xs font-semibold">
                   {bowler.economy}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium text-xs hidden sm:table-cell">
+                <td className="py-2.5 px-3 text-right text-slate-500 text-xs hidden sm:table-cell">
                   {bowler.wd}
                 </td>
-                <td className="py-2.5 px-3 text-right text-slate-500 font-medium text-xs hidden sm:table-cell">
+                <td className="py-2.5 px-3 text-right text-slate-500 text-xs hidden sm:table-cell">
                   {bowler.nb}
                 </td>
               </tr>

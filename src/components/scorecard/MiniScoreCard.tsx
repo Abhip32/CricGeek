@@ -80,7 +80,6 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
   const potmImage = potmLeader?.image || potmPlayer?.image || null;
 
   // 2. Resolve MVP / Top Performer
-  // Find top run scorer and top wicket taker from tables or leaders
   const topBatterFromTables = React.useMemo(() => {
     let topName = '';
     let maxRuns = -1;
@@ -190,7 +189,7 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
         </div>
       </div>
 
-      {/* Main Scoreboard: 2-Column Split matching Cricinfo screenshot */}
+      {/* Main Scoreboard: 2-Column Split */}
       <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 items-center gap-6">
         {/* Left Side (Col 1-8): Two Teams & Live Score */}
         <div className="lg:col-span-8 space-y-4">
