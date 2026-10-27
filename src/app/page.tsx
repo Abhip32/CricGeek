@@ -1,6 +1,7 @@
 import Hero from '@/components/home/hero';
 import MatchCarousel from '@/components/home/matchCarousel';
 import News from '@/components/home/News';
+import PhotosSection from '@/components/home/PhotosSection';
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Hero isHome image="/images/homebanner.jpeg" />
       <MatchCarousel />
       <News />
+      <PhotosSection />
     </div>
   );
 }

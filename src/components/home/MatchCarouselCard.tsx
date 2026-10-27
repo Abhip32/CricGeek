@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Match } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
@@ -35,8 +35,13 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
 
   const isLive = Boolean(match.isLive || match.status?.toUpperCase().includes('LIVE'));
   const isResult = Boolean(match.result || match.status?.toUpperCase().includes('RESULT') || match.status?.toUpperCase().includes('CONCLUDED'));
+  const isUpcoming = !isLive && !isResult && Boolean(match.status?.toUpperCase().includes('UPCOMING') || match.status?.toUpperCase().includes('SCHEDULED'));
 
-  const footerText = React.useMemo(() => {
+  const headerTitle = useMemo(() => {
+    return match.series || match.matchInfo || `${match.teamA} vs ${match.teamB}`;
+  }, [match]);
+
+  const footerText = useMemo(() => {
     if (match.result && !match.result.trim().toUpperCase().includes('LIVE')) {
       return match.result;
     }
@@ -44,7 +49,7 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
       return `Target ${match.target}`;
     }
     if (isLive) {
-      return ''; // Top banner already displays LIVE badge; never duplicate "Live" at the bottom
+      return '';
     }
     if (match.status && !match.status.toUpperCase().includes('SCHEDULED') && !match.status.toUpperCase().includes('LIVE')) {
       return match.status;
@@ -53,48 +58,42 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
   }, [match, isLive]);
 
   return (
-    <div className="w-[320px] sm:w-[350px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-2xs hover:border-red-500/60 hover:shadow-md transition-all flex flex-col justify-between group">
-      {/* ESPN Top Header: Status & Match Context */}
-      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 min-w-0">
-        <div className="flex items-center gap-1.5 min-w-0 flex-1">
-          {isLive ? (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-600 text-white flex-shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              LIVE
-            </span>
-          ) : isResult ? (
-            <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider flex-shrink-0">
-              RESULT
-            </span>
-          ) : (
-            <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider flex-shrink-0">
-              UPCOMING
-            </span>
-          )}
-
-          <span className="text-slate-300 font-bold">•</span>
-
-          <span className="text-[11px] font-semibold text-slate-600 truncate" title={match.matchInfo || match.series}>
-            {match.matchInfo || match.series}
-          </span>
-        </div>
-
-        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-[90px]" title={match.series}>
-          {match.series}
+    <div className="w-[320px] sm:w-[350px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-2xs hover:border-red-500/60 hover:shadow-md transition-all flex flex-col justify-between space-y-3 group">
+      {/* Top Header - Consistent with MatchCard & Upcoming Fixtures */}
+      <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs gap-2 min-w-0">
+        <span
+          className="font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0"
+          title={headerTitle}
+        >
+          {headerTitle}
         </span>
+        {isLive ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white flex-shrink-0 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            LIVE
+          </span>
+        ) : isResult ? (
+          <span className="font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 text-[10px] flex-shrink-0">
+            RESULT
+          </span>
+        ) : (
+          <span className="font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 text-[10px] flex-shrink-0">
+            {match.status || 'FIXTURE'}
+          </span>
+        )}
       </div>
 
-      {/* ESPN Teams & Real-Time Scores */}
-      <div className="py-3 space-y-2.5">
+      {/* Teams & Scores */}
+      <div className="py-1 space-y-2.5">
         {/* Team 1 */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <ImageWithFallback
               src={match.flagA}
               alt={match.teamA}
-              width={24}
-              height={17}
-              className="w-6 h-4.5 object-contain flex-shrink-0"
+              width={26}
+              height={18}
+              className="w-6.5 h-4.5 object-contain flex-shrink-0"
               fallbackText={match.teamA}
             />
             <span className="text-xs sm:text-sm font-bold text-slate-900 truncate" title={match.teamA}>
@@ -106,7 +105,7 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
               {match.scoreA || '—'}
             </span>
             {match.oversA && (
-              <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium ml-1.5">
+              <span className="text-[10px] text-slate-500 font-medium ml-1">
                 ({match.oversA})
               </span>
             )}
@@ -119,9 +118,9 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
             <ImageWithFallback
               src={match.flagB}
               alt={match.teamB}
-              width={24}
-              height={17}
-              className="w-6 h-4.5 object-contain flex-shrink-0"
+              width={26}
+              height={18}
+              className="w-6.5 h-4.5 object-contain flex-shrink-0"
               fallbackText={match.teamB}
             />
             <span className="text-xs sm:text-sm font-bold text-slate-900 truncate" title={match.teamB}>
@@ -133,7 +132,7 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
               {match.scoreB || '—'}
             </span>
             {match.oversB && (
-              <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium ml-1.5">
+              <span className="text-[10px] text-slate-500 font-medium ml-1">
                 ({match.oversB})
               </span>
             )}
@@ -141,25 +140,37 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
         </div>
       </div>
 
-      {/* ESPN Bottom Result Line & Quick Scorecard Link */}
-      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-        <p
-          className={`font-semibold truncate max-w-[210px] sm:max-w-[230px] ${
-            isLive ? 'text-red-600' : 'text-slate-700'
-          }`}
-          title={footerText}
-        >
-          {footerText}
-        </p>
+      {/* Footer - Consistent Scorecard Action */}
+      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
+        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+          {footerText ? (
+            <p
+              className={`font-semibold truncate ${
+                isLive ? 'text-red-600' : 'text-slate-700'
+              }`}
+              title={footerText}
+            >
+              {footerText}
+            </p>
+          ) : match.matchInfo ? (
+            <span className="text-slate-500 truncate text-[11px]" title={match.matchInfo}>
+              {match.matchInfo}
+            </span>
+          ) : (
+            <span className="text-slate-400 text-[11px]">Match center</span>
+          )}
+        </div>
 
-        <Link
-          href={scorecardHref}
-          onClick={handleClick}
-          className="inline-flex items-center gap-0.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0 ml-1 group-hover:translate-x-0.5"
-        >
-          <span>Scorecard</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </Link>
+        {!isUpcoming && (
+          <Link
+            href={scorecardHref}
+            onClick={handleClick}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition-all flex-shrink-0"
+          >
+            <span>Scorecard</span>
+            <ChevronRight className="w-3 h-3" />
+          </Link>
+        )}
       </div>
     </div>
   );
