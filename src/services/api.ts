@@ -231,6 +231,23 @@ export const cricketApi = {
   },
 
   /**
+   * Fetches high-definition cricket photo galleries directly from Cricbuzz
+   */
+  getPhotos: async (galleryId?: string) => {
+    try {
+      const url = galleryId
+        ? `${API_BASE_URL}/getPhotos?id=${encodeURIComponent(galleryId)}`
+        : `${API_BASE_URL}/getPhotos`;
+      const response = await fetch(url, { next: { revalidate: 1800 } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('getPhotos failed:', error);
+      return [];
+    }
+  },
+
+  /**
    * Backward compatibility alias helpers
    */
   getBattingRankings: async () => cricketApi.getPlayerRankings(),

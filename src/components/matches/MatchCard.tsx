@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Match } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
@@ -27,10 +27,31 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
   const isLive = Boolean(match.isLive || match.status?.toUpperCase().includes('LIVE'));
   const isResult = Boolean(match.result || match.status?.toUpperCase().includes('RESULT') || match.status?.toUpperCase().includes('CONCLUDED'));
 
+  const headerTitle = useMemo(() => {
+    if (match.matchInfo) return match.matchInfo;
+    return `${match.teamA} vs ${match.teamB}`;
+  }, [match]);
+
+  const footerText = useMemo(() => {
+    const res = (match.result || '').trim();
+    if (
+      res &&
+      !res.toUpperCase().includes('LIVE') &&
+      res.toLowerCase() !== 'final' &&
+      res.toLowerCase() !== 'result'
+    ) {
+      return res;
+    }
+    if (match.target) {
+      return `Target ${match.target}`;
+    }
+    return '';
+  }, [match]);
+
   return (
     <div className="w-full bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs hover:border-red-500/70 hover:shadow-md transition-all flex flex-col justify-between space-y-3.5 group">
-      {/* Top ESPN Banner */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-2 min-w-0">
+      {/* Top ESPN Banner - Full Width Never Truncated */}
+      <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {isLive ? (
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-600 text-white flex-shrink-0">
@@ -38,7 +59,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
               LIVE
             </span>
           ) : isResult ? (
-            <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider flex-shrink-0">
+            <span className="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex-shrink-0">
               RESULT
             </span>
           ) : (
@@ -49,14 +70,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
 
           <span className="text-slate-300 font-bold">•</span>
 
-          <span className="text-xs font-semibold text-slate-600 truncate" title={match.matchInfo || match.series}>
-            {match.matchInfo || match.series}
+          <span className="text-xs font-bold text-slate-800 truncate" title={headerTitle}>
+            {headerTitle}
           </span>
         </div>
-
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-[140px]" title={match.series}>
-          {match.series}
-        </span>
       </div>
 
       {/* Teams & Real-Time Scores */}
@@ -122,9 +139,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
           className={`font-semibold truncate flex-1 min-w-0 ${
             isLive ? 'text-red-600' : 'text-slate-700'
           }`}
-          title={match.result || match.target || match.matchInfo}
+          title={footerText}
         >
-          {match.result || (match.target ? `Target ${match.target}` : match.status || 'Match Scheduled')}
+          {footerText}
         </p>
 
         <Link

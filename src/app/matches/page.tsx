@@ -127,21 +127,6 @@ function MatchesContent() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-        {/* Platform Breadcrumbs */}
-        <Breadcrumbs
-          items={[
-            { label: 'Matches', href: '/matches' },
-            {
-              label:
-                activeTab === 'live'
-                  ? 'Live Matches'
-                  : activeTab === 'recent'
-                  ? 'Recent Results'
-                  : 'Upcoming Fixtures'
-            }
-          ]}
-        />
-
         {/* ESPN Cricinfo Navigation Tabs & Refresh */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
           {/* Responsive Segmented Tabs (Mobile & Desktop - No Clunky Dropdown) */}
@@ -228,7 +213,7 @@ function MatchesContent() {
               onRetry={handleManualRefresh}
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
               {filteredUpcoming.map((item, idx) => {
                 const scorecardHref = getCleanScorecardPath(item.link);
                 const team1 = item.teamDetails?.[0];
@@ -283,23 +268,16 @@ function MatchesContent() {
                       )}
                     </div>
 
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                      <div className="flex items-center gap-1 min-w-0 flex-1">
+                    <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-slate-400" />
                         <span className="truncate" title={item.venueInfo}>
                           {item.venueInfo || 'Venue TBA'}
                         </span>
                       </div>
-
-                      {item.link && (
-                        <Link
-                          href={scorecardHref}
-                          className="inline-flex items-center gap-0.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors group-hover:translate-x-0.5 flex-shrink-0 ml-2"
-                        >
-                          <span>Scorecard</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
-                      )}
+                      <span className="text-[11px] font-bold text-slate-400 flex-shrink-0">
+                        {item.date || 'Upcoming'}
+                      </span>
                     </div>
                   </div>
                 );
@@ -339,7 +317,7 @@ function MatchesContent() {
                 </div>
 
                 {/* Match Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                   {matches.map((match) => (
                     <MatchCard key={match.id} match={match} />
                   ))}

@@ -30,111 +30,153 @@ interface PlayerImpact {
 }
 
 export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
-  const squads = scoreData?.data?.squads;
-  const officialLeaders = scoreData?.data?.leaders || [];
-  const tables = scoreData?.data?.tables || [];
+  const squads = scoreData?.data?.squads || scoreData?.squads;
+  const rawLeaders = scoreData?.data?.leaders || scoreData?.leaders || [];
+  const tables = scoreData?.data?.tables || scoreData?.tables || [];
 
-  // Compute rich MVP Impact leaderboard across all innings
+  // Filter only genuine official leaders (ignore placeholders / empty players)
+  const validOfficialLeaders = useMemo(() => {
+    if (!Array.isArray(rawLeaders)) return [];
+    return rawLeaders.filter((l: any) => {
+      const name = l?.name || l?.athlete?.displayName;
+      return name && typeof name === 'string' && name.trim().length > 1 && name.toLowerCase() !== 'player';
+    });
+  }, [rawLeaders]);
+
+  // Robustly extract and compute MVP Impact leaderboard across all scorecard tables
   const leaderboard: PlayerImpact[] = useMemo(() => {
-    if (!tables || tables.length === 0) return [];
+    if (!tables || !Array.isArray(tables) || tables.length === 0) return [];
 
     const map = new Map<string, PlayerImpact>();
 
-    tables.forEach((inning: any) => {
-      const teamName = (inning.title || inning.team || 'Team').replace(/Innings.*$/i, '').trim();
+    tables.forEach((table: any) => {
+      const title = String(table.title || table.team || '').trim();
+      const teamName = title.replace(/\s*(1st|2nd)?\s*Innings.*$/i, '').trim() || 'Team';
+      const isBatting = table.type === 'Batting' || /batting|batter/i.test(table.title || '');
+      const isBowling = table.type === 'Bowling' || /bowling|bowler/i.test(table.title || '');
 
-      // Parse Batting performances
-      (inning.batsmen || []).forEach((b: any) => {
-        const rawName = (b.name || b.batsman || '').trim();
-        if (!rawName) return;
-        const cleanName = rawName.replace(/\s*\(c\)/i, '').replace(/\s*†/g, '').replace(/\s*\(wk\)/i, '').trim();
-        const runs = parseInt(b.runs || b.r, 10) || 0;
-        const balls = parseInt(b.balls || b.b, 10) || 0;
-        const fours = parseInt(b.fours || b['4s'], 10) || 0;
-        const sixes = parseInt(b.sixes || b['6s'], 10) || 0;
-        const sr = b.sr || (balls > 0 ? ((runs / balls) * 100).toFixed(1) : '0.0');
+      const rows: any[] = Array.isArray(table.rows) ? table.rows : Array.isArray(table.batsmen) ? table.batsmen : Array.isArray(table.bowlers) ? table.bowlers : [];
 
-        if (!map.has(cleanName)) {
-          const matched = findPlayerInSquads(cleanName, squads);
-          map.set(cleanName, {
-            name: cleanName,
-            team: teamName,
-            image: matched?.image || null,
-            role: matched?.role || 'Batter',
-            points: 0,
-            runs: 0,
-            balls: 0,
-            fours: 0,
-            sixes: 0,
-            strikeRate: sr,
-            wickets: 0,
-            runsConceded: 0,
-            overs: '0',
-            maidens: 0,
-            economy: '0.0',
-          });
+      rows.forEach((row: any) => {
+        if (!row || typeof row !== 'object') return;
+
+        if (isBatting || (!isBowling && (row['BATTING'] || row['Batting'] || row['Batter'] || row.batsman))) {
+          // Extract Batter Name
+          const rawCell = row['BATTING'] || row['Batting'] || row['Batter'] || row.batsman || row.name || Object.values(row)[0] || '';
+          if (typeof rawCell !== 'string') return;
+          const firstLine = rawCell.split('\n')[0]?.trim() || '';
+          if (!firstLine || /extras|total|did not bat|fall of wickets/i.test(firstLine)) return;
+
+          const cleanName = firstLine
+            .replace(/\s*\(c\)/i, '')
+            .replace(/\s*†/g, '')
+            .replace(/\s*\(wk\)/i, '')
+            .replace(/►/g, '')
+            .trim();
+
+          if (!cleanName || cleanName.length < 2) return;
+
+          const rawR = row['R'] ?? row['r'] ?? row['Runs'] ?? row.runs ?? 0;
+          const rawB = row['B'] ?? row['b'] ?? row['Balls'] ?? row.balls ?? 0;
+          const raw4s = row['4s'] ?? row['4S'] ?? row['Fours'] ?? row['fours'] ?? 0;
+          const raw6s = row['6s'] ?? row['6S'] ?? row['Sixes'] ?? row['sixes'] ?? 0;
+          const rawSR = row['SR'] ?? row['sr'] ?? row['Strike Rate'] ?? row.strikeRate ?? '-';
+
+          const runs = parseInt(String(rawR), 10) || 0;
+          const balls = parseInt(String(rawB), 10) || 0;
+          const fours = parseInt(String(raw4s), 10) || 0;
+          const sixes = parseInt(String(raw6s), 10) || 0;
+          const sr = rawSR !== '-' ? String(rawSR) : balls > 0 ? ((runs / balls) * 100).toFixed(1) : '0.0';
+
+          if (!map.has(cleanName)) {
+            const matched = findPlayerInSquads(cleanName, squads);
+            map.set(cleanName, {
+              name: cleanName,
+              team: teamName,
+              image: matched?.image || null,
+              role: matched?.role || 'Batter',
+              points: 0,
+              runs: 0,
+              balls: 0,
+              fours: 0,
+              sixes: 0,
+              strikeRate: sr,
+              wickets: 0,
+              runsConceded: 0,
+              overs: '0',
+              maidens: 0,
+              economy: '0.0'
+            });
+          }
+
+          const p = map.get(cleanName)!;
+          p.runs += runs;
+          p.balls += balls;
+          p.fours += fours;
+          p.sixes += sixes;
+          p.strikeRate = sr;
+
+          // Points Formula: runs + boundary bonus + milestones
+          let pts = runs + fours * 2.5 + sixes * 5;
+          if (runs >= 100) pts += 40;
+          else if (runs >= 50) pts += 20;
+          if (balls >= 15 && parseFloat(sr) > 140) pts += 15;
+          p.points += pts;
         }
 
-        const p = map.get(cleanName)!;
-        p.runs += runs;
-        p.balls += balls;
-        p.fours += fours;
-        p.sixes += sixes;
-        p.strikeRate = sr;
+        if (isBowling || (!isBatting && (row['BOWLING'] || row['Bowling'] || row['Bowler'] || row.bowler))) {
+          // Extract Bowler Name
+          const rawCell = row['BOWLING'] || row['Bowling'] || row['Bowler'] || row.bowler || row.name || Object.values(row)[0] || '';
+          if (typeof rawCell !== 'string') return;
+          const cleanName = rawCell.split('\n')[0]
+            .replace(/\s*\(c\)/i, '')
+            .replace(/\s*†/g, '')
+            .replace(/►/g, '')
+            .trim();
 
-        // Points formula: runs + boundary bonus + milestones
-        let pts = runs + fours * 2.5 + sixes * 5;
-        if (runs >= 100) pts += 35;
-        else if (runs >= 50) pts += 20;
-        if (balls >= 15 && parseFloat(sr) > 150) pts += 15;
-        p.points += pts;
-      });
+          if (!cleanName || cleanName.length < 2 || /extras|total|fall of wickets/i.test(cleanName)) return;
 
-      // Parse Bowling performances
-      (inning.bowlers || []).forEach((bw: any) => {
-        const rawName = (bw.name || bw.bowler || '').trim();
-        if (!rawName) return;
-        const cleanName = rawName.replace(/\s*\(c\)/i, '').replace(/\s*†/g, '').trim();
-        const overs = bw.overs || bw.o || '0';
-        const maidens = parseInt(bw.maidens || bw.m, 10) || 0;
-        const runsConceded = parseInt(bw.runs || bw.r, 10) || 0;
-        const wickets = parseInt(bw.wickets || bw.w, 10) || 0;
-        const econ = bw.economy || bw.econ || '0.0';
+          const overs = String(row['O'] ?? row['o'] ?? row['Overs'] ?? row.overs ?? '0');
+          const maidens = parseInt(String(row['M'] ?? row['m'] ?? row['Maidens'] ?? row.maidens ?? 0), 10) || 0;
+          const runsConceded = parseInt(String(row['R'] ?? row['r'] ?? row['Runs'] ?? row.runs ?? 0), 10) || 0;
+          const wickets = parseInt(String(row['W'] ?? row['w'] ?? row['Wickets'] ?? row.wickets ?? 0), 10) || 0;
+          const econ = String(row['ECON'] ?? row['econ'] ?? row['Economy'] ?? row.economy ?? '0.0');
 
-        if (!map.has(cleanName)) {
-          const matched = findPlayerInSquads(cleanName, squads);
-          map.set(cleanName, {
-            name: cleanName,
-            team: teamName,
-            image: matched?.image || null,
-            role: matched?.role || 'Bowler',
-            points: 0,
-            runs: 0,
-            balls: 0,
-            fours: 0,
-            sixes: 0,
-            strikeRate: '0.0',
-            wickets: 0,
-            runsConceded: 0,
-            overs: '0',
-            maidens: 0,
-            economy: '0.0',
-          });
+          if (!map.has(cleanName)) {
+            const matched = findPlayerInSquads(cleanName, squads);
+            map.set(cleanName, {
+              name: cleanName,
+              team: teamName,
+              image: matched?.image || null,
+              role: matched?.role || 'Bowler',
+              points: 0,
+              runs: 0,
+              balls: 0,
+              fours: 0,
+              sixes: 0,
+              strikeRate: '0.0',
+              wickets: 0,
+              runsConceded: 0,
+              overs: '0',
+              maidens: 0,
+              economy: '0.0'
+            });
+          }
+
+          const p = map.get(cleanName)!;
+          p.wickets += wickets;
+          p.maidens += maidens;
+          p.runsConceded += runsConceded;
+          p.overs = overs;
+          p.economy = econ;
+
+          // Bowling Points: 25 pts per wicket + 10 per maiden + milestone bonuses
+          let pts = wickets * 25 + maidens * 10;
+          if (wickets >= 5) pts += 50;
+          else if (wickets >= 3) pts += 25;
+          if (parseFloat(overs) >= 2 && parseFloat(econ) < 6.0) pts += 15;
+          p.points += pts;
         }
-
-        const p = map.get(cleanName)!;
-        p.wickets += wickets;
-        p.maidens += maidens;
-        p.runsConceded += runsConceded;
-        p.overs = overs;
-        p.economy = econ;
-
-        // Bowling Points: wickets * 25 + maidens * 10 + low economy bonus
-        let pts = wickets * 25 + maidens * 10;
-        if (wickets >= 5) pts += 40;
-        else if (wickets >= 3) pts += 20;
-        if (parseFloat(overs) >= 2 && parseFloat(econ) < 6.0) pts += 15;
-        p.points += pts;
       });
     });
 
@@ -153,12 +195,12 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
     );
   }
 
-  if (leaderboard.length === 0 && officialLeaders.length === 0) {
+  if (leaderboard.length === 0 && validOfficialLeaders.length === 0) {
     return (
       <EmptyState
         type="scorecard"
-        title="Impact Data In Progress"
-        message="MVP and Impact player ratings will be computed as soon as active play unfolds."
+        title="Impact Ratings In Progress"
+        message="MVP & Impact ratings are automatically compiled as soon as batting and bowling performances unfold."
       />
     );
   }
@@ -167,8 +209,8 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
 
   return (
     <div className="space-y-6">
-      {/* Official ESPN Match Leaders (If available) */}
-      {officialLeaders.length > 0 && (
+      {/* Official Match Leaders (Only rendered when real player data exists) */}
+      {validOfficialLeaders.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <Award className="w-5 h-5 text-red-600" />
@@ -178,7 +220,7 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {officialLeaders.map((lead: any, idx: number) => {
+            {validOfficialLeaders.map((lead: any, idx: number) => {
               const matched = lead.name ? findPlayerInSquads(lead.name, squads) : null;
               const photo = lead.image || lead.athlete?.headshot?.href || matched?.image;
 
@@ -190,7 +232,7 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
                   <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-red-500 bg-white flex-shrink-0 flex items-center justify-center shadow-xs">
                     <ImageWithFallback
                       src={photo}
-                      alt={lead.name || 'Leader'}
+                      alt={lead.name}
                       width={48}
                       height={48}
                       fallbackText={lead.name}
@@ -201,7 +243,7 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
                       {lead.title || lead.displayName || 'Top Performer'}
                     </span>
                     <h4 className="text-sm font-extrabold text-slate-900 truncate">
-                      {lead.name || lead.athlete?.displayName || 'Player'}
+                      {lead.name}
                     </h4>
                     <p className="text-xs font-semibold text-slate-600 truncate">
                       {lead.stat || lead.displayValue || lead.value || ''}
@@ -242,7 +284,7 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
             </div>
           )}
 
-          {/* Rank 1 (MVP Champion) */}
+          {/* Rank 1 (Match MVP Champion) */}
           {top3[0] && (
             <div className="order-1 md:order-2 bg-white border-2 border-red-500 rounded-xl p-5 shadow-sm flex flex-col items-center text-center space-y-3 relative">
               <div className="absolute -top-3 px-3 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] uppercase tracking-wider shadow-xs flex items-center gap-1">

@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { ScorecardSummary } from '@/types/match';
-import { MapPin, Trophy, Star, Award, Zap } from 'lucide-react';
+import { MapPin, Trophy, Star, Award, Zap, ArrowLeft, RefreshCw } from 'lucide-react';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
 
 interface MiniScoreCardProps {
@@ -12,6 +13,9 @@ interface MiniScoreCardProps {
   squads?: Record<string, any[]> | null;
   leaders?: any[] | null;
   tables?: any[] | null;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+  backHref?: string;
 }
 
 export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
@@ -19,7 +23,10 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
   matchProp,
   squads,
   leaders,
-  tables
+  tables,
+  onRefresh,
+  isRefreshing = false,
+  backHref = '/matches?tab=live'
 }) => {
   const resolvedSummary = summary || {
     matchTitle: matchProp?.title || matchProp?.series || 'Match Scorecard',
@@ -129,21 +136,31 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
 
   return (
     <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
-      {/* Top Banner: Match Context, Venue & Live Pill */}
-      <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
-        <div className="space-y-0.5">
-          <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-            {resolvedSummary.matchTitle || 'Match Center'}
-          </h1>
-          {resolvedSummary.venue && (
-            <p className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
-              <span>{resolvedSummary.venue}</span>
-            </p>
-          )}
+      {/* Top Banner: Match Context, Venue, Back Icon, Live Pill & Refresh Icon */}
+      <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between gap-3 bg-slate-50/70">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <Link
+            href={backHref}
+            className="p-1.5 sm:p-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-colors shadow-2xs flex-shrink-0"
+            title="Back to Matches"
+            aria-label="Back to Matches"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+          <div className="space-y-0.5 min-w-0">
+            <h1 className="text-sm sm:text-base md:text-lg font-black text-slate-900 tracking-tight truncate">
+              {resolvedSummary.matchTitle || 'Match Center'}
+            </h1>
+            {resolvedSummary.venue && (
+              <p className="flex items-center gap-1.5 text-xs text-slate-500 font-medium truncate">
+                <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                <span className="truncate">{resolvedSummary.venue}</span>
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {isLive ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-600 text-white shadow-xs">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -157,6 +174,18 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
             <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
               SCHEDULED
             </span>
+          )}
+
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className="p-1.5 sm:p-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-colors shadow-2xs disabled:opacity-50"
+              title="Refresh Scorecard"
+              aria-label="Refresh Scorecard"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-red-600' : ''}`} />
+            </button>
           )}
         </div>
       </div>

@@ -1,72 +1,83 @@
 # 🏏 CricGeek — Next-Gen Cricket Hub
 
-**CricGeek** is a high-octane, luxury sports web application engineered with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**. It connects to the companion [Cricket-Api](https://github.com/Abhip32/Cricket-Api) to deliver real-time ball-by-ball updates, live match scorecards, upcoming tournament schedules, ICC player and team rankings, and breaking news.
+**CricGeek** is a high-octane, athletic sports web application engineered with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**. It connects directly to the companion **[Cricket-Api](https://github.com/Abhip32/Cricket-Api)** to deliver real-time ball-by-ball updates, live match scorecards, player impact analytics (MVP), Cricbuzz photo galleries, tournament schedules, official ICC rankings, and breaking news.
 
-![CricGeek Home Showcase](screenshots/home.png)
-
----
-
-## 📸 Application Screenshots
-
-### 🏠 Live Match Hub & Completed Results
-| Home Dashboard | Live Match Center | Completed Fixtures & Results |
-|:---:|:---:|:---:|
-| ![Home Dashboard](screenshots/home.png) | ![Live Matches](screenshots/matches.png) | ![Recent Results](screenshots/matches-recent.png) |
-
-### 📊 Comprehensive Scorecards & Detailed Breakdowns
-| Innings Scorecard Breakdown | Ball-by-Ball & Bowling Breakdown | Match Info & Ground Details |
-|:---:|:---:|:---:|
-| ![Interactive Scorecard](screenshots/scorecard.png) | ![Scorecard Breakdown](screenshots/commentary.png) | ![Match Info](screenshots/squads.png) |
-
-### 🏆 Rankings & Tournament Schedules
-| Official ICC Team Rankings | ICC Player Rankings | Tournament Schedules & Fixtures |
-|:---:|:---:|:---:|
-| ![ICC Team Rankings](screenshots/rankings.png) | ![ICC Player Rankings](screenshots/rankings%20variation.png) | ![Tournament Schedule](screenshots/schedule.png) |
+![CricGeek Home Showcase](screenshots/a-home.png)
 
 ---
 
-## ✨ Features & Modern Architecture
+## 📸 Application Showcase & Screenshots
 
-- **⚡ Dark Luxury Sports Aesthetic**: Designed with an immersive stadium night theme (`#070B14`), ambient stadium lights, glassmorphism panels, and smooth Framer Motion micro-interactions.
-- **🔴 Real-Time Live Match Center**: Live match status with sonar ping animations, live scores, overs, run rates, targets, and one-click scorecard transitions.
-- **📊 Interactive Scorecards**: Comprehensive innings breakdowns featuring:
-  - **Batting**: Batter dismissals, runs, balls, 4s, 6s, and strike rates with milestone highlights (50s/100s).
-  - **Bowling**: Overs, maidens, runs conceded, wickets, economy rates, wides, and no-balls.
-  - **Match Info**: Venue, series, toss, and official match status.
-  - **Squads & Commentary**: Playing XI lineups and ball-by-ball commentary streams.
-- **🏆 Official ICC Rankings**:
-  - Teams & Players toggle across **Test**, **ODI**, and **T20I** formats.
-  - Dedicated **Podium View** (🥇, 🥈, 🥉) with custom medal glow styling.
-  - Searchable full leaderboard with ratings, points, and country flags.
-- **📅 Tournament Schedule & Fixtures**:
-  - Fixtures grouped by date with dynamic team flags, start times, and venue info.
-  - Live search filter by team name, tournament series, or venue.
-- **📰 Breaking News Desk**:
-  - Magazine-style 2-column news grid with publication times, authors, and zoom hover effects.
-- **🛡️ Resilient Skeletons & Fallback UIs**:
-  - Shimmer skeleton loaders across all views prevent layout shifts.
-  - Auto-recovering team flag images with country initials fallbacks.
-  - Friendly empty states with instant retry buttons.
+### 🏠 Match Center & Fixtures
+| Home Dashboard | Live Match Center (2-Col Layout) | Completed Fixtures & Results |
+|:---:|:---:|:---:|
+| ![Home Dashboard](screenshots/a-home.png) | ![Live Match Center](screenshots/matches.png) | ![Recent Results](screenshots/matches-recent.png) |
+
+### 📊 Scorecard Tabs & In-Depth Analytics
+| Scorecard: Batting & Bowling Breakdown | Scorecard: MVP & Player Impact Leaderboard | Scorecard: Ball-by-Ball Commentary & Over Timeline |
+|:---:|:---:|:---:|
+| ![Interactive Scorecard](screenshots/scorecard.png) | ![MVP & Player Impact](screenshots/scorecard-mvp.png) | ![Commentary](screenshots/scorecard-commentary.png) |
+
+### 📋 Match Info, Tournament Schedules & Photo Galleries
+| Scorecard: Match Info & Playing XI | Tournament Schedule & Fixtures | Cricbuzz High-Res Photo Galleries |
+|:---:|:---:|:---:|
+| ![Match Info & Squads](screenshots/scorecard-info.png) | ![Tournament Schedule](screenshots/schedule.png) | ![Photo Galleries](screenshots/photos.png) |
+
+### 🏆 Official ICC Rankings
+| Official ICC Team Rankings | ICC Player Rankings (Batting / Bowling / All-Rounder) | Upcoming Fixtures (ESPN Powered) |
+|:---:|:---:|:---:|
+| ![ICC Team Rankings](screenshots/rankings.png) | ![ICC Player Rankings](screenshots/rankings-players.png) | ![Upcoming Matches](screenshots/matches-upcoming.png) |
+
+---
+
+## ✨ Features & Architecture Highlights
+
+### 🔴 1. Athletic Editorial Styling
+- **Theme & Palette**: High-contrast athletic sports design inspired by ThemeWagon athletic layouts and Cricinfo editorial standards — deep stadium black (`#070B14`), pure white, and athletic crimson red (`#DC2626`).
+- **Free-Floating Flags**: National and club flags render freely without artificial box enclosures, borders, or forced aspect-ratio distortion (`object-contain`).
+- **Clean 2-Column Match Grid**: Engineered with a responsive 2-column layout (`grid-cols-1 md:grid-cols-2`) that prevents header truncation while keeping team names and match information prominent and legible.
+- **Zero Redundant Tags**: Removed duplicate "Live" indicators — clean badges on top with crisp match status in the card body.
+
+### 📱 2. Mobile-First Responsive Controls
+- **Segmented Pill Navigation**: Replaced clunky mobile `<select>` dropdowns with responsive, horizontal scrolling segmented pill tabs (`Live Matches`, `Recent Results`, `Upcoming Fixtures`).
+- **Unified Card Controls**: Removed cluttered breadcrumbs and detached top navigation bars. The back navigation (`ArrowLeft`) and instant manual refresh (`RefreshCw`) are cleanly built directly into the header banner of the match summary card (`MiniScoreCard`).
+- **Zero Auto-Polling Overhead**: No background CPU drain or unwanted refetch spikes (`refetchInterval: false`, `refetchOnWindowFocus: false`). Users enjoy instant on-demand manual refreshing whenever desired.
+
+### 📊 3. Complete Scorecard Suite (All Tabs)
+- **Scorecard Tab**: Full batting innings with player dismissal methods, runs, balls, 4s, 6s, and strike rates (with 50s/100s milestones), plus bowling tables with overs, maidens, runs, wickets, and economy rates.
+- **MVP & Player Impact Tab**: Proprietary impact algorithm evaluating runs scored, strike-rate bonuses, wickets taken, economy rewards, and maiden bonuses. Features a top-3 podium (🥇, 🥈, 🥉) and rated player leaderboard.
+- **Commentary Tab**: Redesigned timeline spine with ball outcome pills (`W` in red, `4` in blue, `6` in purple), bowler-to-batter matchup headlines, over summary strips, and instant filter pills (`All Balls`, `Wickets`, `Boundaries`).
+- **Match Info & Squads Tab**: Venue information, series details, toss report, match status, and official playing XI lineups with Captain (`(c)`) and Wicketkeeper (`(wk)`) badges.
+
+### 📸 4. Cricbuzz Photo Galleries (`/photos`)
+- Sourced directly from Cricbuzz photo galleries.
+- High-resolution photography (`750x422`) with album collections, individual gallery views, photo counts, and descriptive photo captions.
+
+### 📅 5. ESPN-Powered Fixtures & Tournament Schedule
+- **Upcoming Matches**: Powered 100% by ESPN Cricinfo official API, ensuring complete match details and hiding premature scorecard links.
+- **Tournament Schedule**: Dedicated tournament schedule endpoint (`/schedule`) categorized by International, Domestic, and T20 Leagues with live search filters.
+
+### 🏆 6. Official ICC Rankings
+- Toggles between Team Rankings and Player Rankings (Batting, Bowling, All-rounders) across **Test**, **ODI**, and **T20I**.
+- Properly renders player names, ratings, nationalities, and headshots with podium styling.
 
 ---
 
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
-- **Node.js** v18+ (tested on Node v22)
+- **Node.js** v18+ (tested on Node v20 & v22)
 - **Cricket-Api** backend running on port `8000`
 
-### 2. Start the Backend API
-In a separate terminal:
+### 2. Start Backend API
 ```bash
 cd Cricket-Api
 npm install
-node index.js
+npm start
 # Backend starts at http://localhost:8000
 ```
 
 ### 3. Start CricGeek Frontend
-In the CricGeek directory:
 ```bash
 cd CricGeek
 npm install
@@ -77,7 +88,7 @@ npm run dev
 ### 4. Production Build
 ```bash
 npm run build
-npm run start
+npm start
 ```
 
 ---
@@ -87,13 +98,46 @@ npm run start
 - **Framework**: Next.js 15 (App Router)
 - **UI Library**: React 19
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom glassmorphism utilities
+- **Styling**: Tailwind CSS with custom glassmorphism and athletic sports utilities
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
 - **Data Source**: [Cricket-Api](https://github.com/Abhip32/Cricket-Api) Express & Puppeteer scraper
 
 ---
 
+## 📁 Project Structure
+
+```
+CricGeek/
+├── screenshots/                  # High-resolution application screenshots
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx            # Global Root Layout with athletic theme
+│   │   ├── page.tsx              # Home Dashboard with carousel & news desk
+│   │   ├── matches/              # Live, Recent, and Upcoming matches
+│   │   ├── scorecard/            # Scorecard tabs (Batting, MVP, Commentary, Squads)
+│   │   ├── rankings/             # Official ICC Team & Player leaderboards
+│   │   ├── schedule/             # Dedicated tournament schedule & calendar
+│   │   └── photos/               # Cricbuzz photo galleries & albums
+│   ├── components/
+│   │   ├── common/               # Navbar, Footer, ImageWithFallback, Skeletons
+│   │   ├── home/                 # MatchCarouselCard, NewsSection
+│   │   ├── matches/              # MatchCard (2-col grid, free flags)
+│   │   ├── scorecard/            # MiniScoreCard, ScorecardTab, MvpTab, CommentaryTab, SquadsTab
+│   │   └── rankings/             # RankingPodium, RankingsTable
+│   ├── hooks/
+│   │   └── useCricketQueries.ts  # TanStack React Query hooks (zero auto-poll)
+│   ├── services/
+│   │   └── api.ts                # API client with data normalizers
+│   └── types/
+│       ├── match.ts              # Match, Series, Scorecard, and Commentary types
+│       └── news.ts               # News article types
+├── public/                       # Static public assets
+└── package.json                  # Dependencies & scripts
+```
+
+---
+
 ## 👨‍💻 Author
 
-Created & Maintained by [Abhip32](https://github.com/Abhip32)
+Created & Maintained by **[Abhip32](https://github.com/Abhip32)**

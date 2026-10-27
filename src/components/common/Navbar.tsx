@@ -15,6 +15,7 @@ export const Navbar = () => {
     { href: '/matches?tab=live', label: 'Matches' },
     { href: '/schedule', label: 'Schedule' },
     { href: '/rankings', label: 'Rankings' },
+    { href: '/photos', label: 'Photos' },
   ];
 
   return (

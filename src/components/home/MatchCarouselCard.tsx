@@ -36,6 +36,22 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
   const isLive = Boolean(match.isLive || match.status?.toUpperCase().includes('LIVE'));
   const isResult = Boolean(match.result || match.status?.toUpperCase().includes('RESULT') || match.status?.toUpperCase().includes('CONCLUDED'));
 
+  const footerText = React.useMemo(() => {
+    if (match.result && !match.result.trim().toUpperCase().includes('LIVE')) {
+      return match.result;
+    }
+    if (match.target) {
+      return `Target ${match.target}`;
+    }
+    if (isLive) {
+      return ''; // Top banner already displays LIVE badge; never duplicate "Live" at the bottom
+    }
+    if (match.status && !match.status.toUpperCase().includes('SCHEDULED') && !match.status.toUpperCase().includes('LIVE')) {
+      return match.status;
+    }
+    return '';
+  }, [match, isLive]);
+
   return (
     <div className="w-[320px] sm:w-[350px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-2xs hover:border-red-500/60 hover:shadow-md transition-all flex flex-col justify-between group">
       {/* ESPN Top Header: Status & Match Context */}
@@ -131,9 +147,9 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
           className={`font-semibold truncate max-w-[210px] sm:max-w-[230px] ${
             isLive ? 'text-red-600' : 'text-slate-700'
           }`}
-          title={match.result || match.target || match.matchInfo}
+          title={footerText}
         >
-          {match.result || (match.target ? `Target ${match.target}` : match.status || 'Match Scheduled')}
+          {footerText}
         </p>
 
         <Link

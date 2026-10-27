@@ -121,35 +121,6 @@ function ScorecardContent() {
   return (
     <div className="min-h-screen bg-slate-50 py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        {/* Platform Breadcrumbs */}
-        <Breadcrumbs
-          items={[
-            { label: 'Matches', href: '/matches' },
-            { label: seriesTitle },
-            { label: `${matchTitle} Scorecard` }
-          ]}
-        />
-
-        {/* Navigation & Controls Bar */}
-        <div className="flex items-center justify-between">
-          <Link
-            href="/matches?tab=live"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all shadow-2xs group"
-          >
-            <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-red-600 transition-transform group-hover:-translate-x-1" />
-            <span>Back to Matches</span>
-          </Link>
-
-          <button
-            onClick={handleRefresh}
-            disabled={loading || refreshing}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
-            <span>{refreshing ? 'Updating...' : 'Refresh Scorecard'}</span>
-          </button>
-        </div>
-
         {/* Loading State Skeleton */}
         {loading && !scoreData && !matchProp ? (
           <ScorecardSkeleton />
@@ -170,6 +141,8 @@ function ScorecardContent() {
               squads={(scoreData as any)?.data?.squads}
               leaders={(scoreData as any)?.data?.leaders}
               tables={(scoreData as any)?.data?.tables}
+              onRefresh={handleRefresh}
+              isRefreshing={refreshing}
             />
 
             {/* Tab Navigation */}

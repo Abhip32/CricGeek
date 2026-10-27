@@ -146,3 +146,17 @@ export function useCommentary(matchUrl?: string, _isLive?: boolean) {
     refetchOnReconnect: false,
   });
 }
+
+/**
+ * Hook for high-definition cricket photo galleries
+ */
+export function usePhotos(galleryId?: string) {
+  return useQuery<any>({
+    queryKey: ['photos', galleryId || 'main'],
+    queryFn: () => cricketApi.getPhotos(galleryId),
+    staleTime: 1000 * 60 * 30, // 30 mins
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
