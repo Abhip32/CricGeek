@@ -12,4 +12,5 @@ export interface NewsItem {
   news_content?: string;
   news_img?: string;
   news_headline?: string;
+  raw?: any;
 }

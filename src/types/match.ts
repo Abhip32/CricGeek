@@ -29,6 +29,7 @@ export interface Match {
     scorecard?: string;
     livescore?: string;
   };
+  raw?: any;
 }
 
 export interface SeriesGroup {
@@ -39,6 +40,7 @@ export interface SeriesGroup {
     matchInfo: string;
     teams: Team[];
     result: string;
+    raw?: any;
   }>;
 }
 
@@ -54,6 +56,7 @@ export interface UpcomingMatch {
   startTime: string;
   link: string;
   matchInfo?: string;
+  raw?: any;
 }
 
 export interface ScorecardTable {
@@ -88,5 +91,9 @@ export interface ScorecardResponse {
     summary: ScorecardSummary;
     details?: Record<string, string>;
     tables: ScorecardTable[];
+    squads?: Record<string, any[]>;
+    leaders?: any[];
+    gameInfo?: any;
+    raw?: any;
   };
 }
