@@ -136,82 +136,32 @@ export const InningSection: React.FC<InningProps> = ({
             </div>
           )}
 
-          {/* Fall of Wickets (Rich cards or pill list) */}
-          {richFow && richFow.length > 0 ? (
-            <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-4 rounded-xl space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
-                  Fall of Wickets
-                </span>
-                <span className="text-[11px] text-slate-400 font-mono">
-                  {richFow.length} wickets
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                {richFow.map((f, i) => (
-                  <div
-                    key={i}
-                    className="bg-white border border-slate-200 p-2.5 rounded-lg flex items-center justify-between gap-2 shadow-2xs hover:border-slate-300 transition-colors"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200">
-                        <ImageWithFallback
-                          src={f.batsman?.headshot}
-                          alt={f.batsman?.name || 'Batsman'}
-                          width={28}
-                          height={28}
-                          className="object-cover w-full h-full"
-                          fallbackText={f.batsman?.name || 'W'}
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-bold text-slate-900 text-xs truncate">
-                          {f.batsman?.name || `Wicket ${f.wicketNumber}`}
-                        </div>
-                        <div className="text-[11px] text-slate-500 font-mono">
-                          {f.runsScored !== undefined && (
-                            <span>{f.runsScored} ({f.ballsFaced || 0}b)</span>
-                          )}
-                          {f.fowType && (
-                            <span className="text-slate-400 text-[10px] ml-1 truncate block">
-                              {f.fowType}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right flex-shrink-0">
-                      <div className="font-mono font-extrabold text-red-600 text-xs">
-                        {f.runs}/{f.wicketNumber}
-                      </div>
-                      <div className="text-[10px] text-slate-400 font-mono">
-                        {f.wicketOver} ov
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : fallOfWickets.length > 0 ? (
-            <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg space-y-1.5">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+          {/* Fall of Wickets (Clean ESPNcricinfo editorial inline format) */}
+          {((richFow && richFow.length > 0) || (fallOfWickets && fallOfWickets.length > 0)) && (
+            <div className="bg-slate-50 border border-slate-200 p-3 sm:p-3.5 rounded-lg text-xs space-y-1">
+              <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px] block">
                 Fall of Wickets
               </span>
-              <div className="flex flex-wrap gap-2 text-xs text-slate-700">
-                {fallOfWickets.map((fow, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 rounded bg-white border border-slate-200 font-mono text-[11px] text-slate-800 shadow-2xs"
-                  >
-                    {fow}
-                  </span>
-                ))}
+              <div className="text-slate-700 text-xs leading-relaxed flex flex-wrap gap-x-1.5 gap-y-1">
+                {richFow && richFow.length > 0
+                  ? richFow.map((f, i) => (
+                      <span key={i} className="inline-flex items-center">
+                        <strong className="text-slate-900 font-mono font-bold">{f.runs}-{f.wicketNumber}</strong>
+                        <span className="text-slate-600 ml-1">
+                          ({f.batsman?.name || `Wkt ${f.wicketNumber}`}, {f.wicketOver} ov)
+                        </span>
+                        {i < richFow.length - 1 && <span className="text-slate-300 ml-1.5">,</span>}
+                      </span>
+                    ))
+                  : fallOfWickets.map((fow, i) => (
+                      <span key={i} className="inline-flex items-center">
+                        <span className="font-mono text-slate-800">{fow}</span>
+                        {i < fallOfWickets.length - 1 && <span className="text-slate-300 ml-1.5">,</span>}
+                      </span>
+                    ))}
               </div>
             </div>
-          ) : null}
+          )}
 
           {/* Innings Partnerships Section */}
           {partnerships && partnerships.length > 0 && (

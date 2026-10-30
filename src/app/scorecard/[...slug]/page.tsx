@@ -11,7 +11,6 @@ import DetailsTab from '@/components/scorecard/DetailsTab';
 import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
 import ChartsTab from '@/components/scorecard/ChartsTab';
-import MatchNewsTab from '@/components/scorecard/MatchNewsTab';
 import MvpTab from '@/components/scorecard/MvpTab';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
@@ -99,8 +98,6 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
       }
       case 'charts':
         return <ChartsTab matchUrl={matchUrl} scoreData={scoreData} />;
-      case 'news':
-        return <MatchNewsTab scoreData={scoreData} matchUrl={matchUrl} />;
       case 'mvp':
         return <MvpTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'details':

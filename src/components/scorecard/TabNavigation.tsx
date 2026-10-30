@@ -18,16 +18,14 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
   hasSquads = true,
   hasCommentary = true,
   hasCharts = true,
-  hasNews = true
 }) => {
   const tabs = [
     { id: 'scorecard', label: 'Scorecard', icon: Award, show: true },
     { id: 'commentary', label: 'Commentary', icon: MessageSquare, show: hasCommentary },
     { id: 'charts', label: 'Overs & Charts', icon: BarChart2, show: hasCharts },
-    { id: 'news', label: 'News & Reports', icon: Newspaper, show: hasNews },
-    { id: 'mvp', label: 'MVP & Impact', icon: Trophy, show: true },
-    { id: 'squads', label: 'Squads', icon: Users, show: hasSquads },
     { id: 'details', label: 'Match Info', icon: FileText, show: true },
+    { id: 'squads', label: 'Squads', icon: Users, show: hasSquads },
+    { id: 'mvp', label: 'MVP & Impact', icon: Trophy, show: true },
   ].filter((t) => t.show);
 
   return (

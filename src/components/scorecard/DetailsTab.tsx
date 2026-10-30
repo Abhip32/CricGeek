@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScorecardSummary } from '@/types/match';
 import { useMatchPreview } from '@/hooks/useCricketQueries';
+import ImageWithFallback from '../common/ImageWithFallback';
 import {
   Info,
   MapPin,
@@ -16,7 +17,8 @@ import {
   CheckCircle2,
   CloudSun,
   Layers,
-  Compass
+  Compass,
+  Newspaper
 } from 'lucide-react';
 
 interface DetailsTabProps {
@@ -106,6 +108,33 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, matchUrl, loa
       });
     }
   }
+
+  // Match Coverage articles from scorecard payload
+  const coverageArticles: Array<{ headline: string; description: string; image?: string; link?: string; byline?: string; date?: string }> = useMemo(() => {
+    const list: any[] = [];
+    const newsData = scoreData?.data?.news;
+    if (Array.isArray(newsData)) {
+      list.push(...newsData);
+    } else if (newsData && typeof newsData === 'object' && newsData.headline) {
+      list.push(newsData);
+    }
+
+    const singleArticle = scoreData?.data?.article;
+    if (singleArticle && typeof singleArticle === 'object' && singleArticle.headline) {
+      if (!list.some(a => a.headline === singleArticle.headline)) {
+        list.push(singleArticle);
+      }
+    }
+
+    return list.slice(0, 4).map(a => ({
+      headline: a.headline || a.title || 'Match Report',
+      description: a.description || '',
+      image: a.images?.[0]?.url || a.image || null,
+      link: a.links?.web?.href || a.link || '#',
+      byline: a.byline || a.author || 'ESPNcricinfo staff',
+      date: a.published || a.date || ''
+    }));
+  }, [scoreData]);
 
   return (
     <div className="space-y-6">
@@ -265,6 +294,63 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, matchUrl, loa
                 <strong className="text-slate-900 text-sm block mt-0.5 font-mono">{venueCapacity}</strong>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Match Coverage Reports */}
+      {coverageArticles.length > 0 && (
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+          <div className="p-4 sm:p-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Newspaper className="w-4 h-4 text-red-600" />
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">
+                Match Coverage & Reports
+              </h3>
+            </div>
+            <span className="text-[11px] text-slate-400 font-medium">ESPNcricinfo desk</span>
+          </div>
+
+          <div className="divide-y divide-slate-100">
+            {coverageArticles.map((article, idx) => (
+              <a
+                key={idx}
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-3.5 sm:p-4 flex items-center gap-3.5 sm:gap-4 hover:bg-slate-50/70 transition-colors"
+              >
+                <div className="w-20 sm:w-24 h-14 sm:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200">
+                  <ImageWithFallback
+                    src={article.image}
+                    alt={article.headline}
+                    width={96}
+                    height={64}
+                    className="object-cover w-full h-full group-hover:scale-103 transition-transform duration-200"
+                    fallbackText="NEWS"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">
+                    {article.headline}
+                  </h4>
+                  {article.description && (
+                    <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                      {article.description}
+                    </p>
+                  )}
+                  <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1.5">
+                    <span>{article.byline}</span>
+                    {article.date && (
+                      <>
+                        <span>•</span>
+                        <span>{article.date}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       )}
