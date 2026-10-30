@@ -270,10 +270,10 @@ function MatchesContent() {
                 ? 'There are no active live matches right now. Check out completed results or upcoming fixtures.'
                 : 'No match records match your current filters.'
             }
-            actionLabel={activeTab === 'live' ? 'View Recent Matches' : 'Reset Search'}
+            actionLabel={activeTab === 'live' ? 'View Recent Matches' : 'Refresh Feed'}
             onAction={() => {
               if (activeTab === 'live') setActiveTab('recent');
-              else setSearchQuery('');
+              else handleManualRefresh();
             }}
           />
         ) : (
