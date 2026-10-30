@@ -39,7 +39,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg font-heading font-black text-xs uppercase tracking-wider transition-all whitespace-nowrap flex-shrink-0 cursor-pointer ${
                 isActive
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'

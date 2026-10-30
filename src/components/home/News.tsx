@@ -11,24 +11,19 @@ export const News = () => {
   const { data: news = [], isLoading, isFetching, refetch } = useTopNews(8);
 
   return (
-    <section className="py-8 border-b border-slate-200 relative overflow-hidden bg-slate-50">
+    <section className="py-8 border-b border-slate-200 relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Section Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
-              <Newspaper className="w-4 h-4" />
-            </div>
+        <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="w-1.5 h-5 bg-red-600 rounded-full" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-3.5 bg-red-600 rounded-full" />
-                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                  Top Cricket Headlines
-                </h2>
-              </div>
+              <h2 className="text-base sm:text-lg font-heading font-black text-slate-900 uppercase tracking-wider">
+                Top Cricket Headlines
+              </h2>
             </div>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600">
+          <span className="text-[10px] font-heading font-black uppercase tracking-wider px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-700">
             {isFetching && !isLoading ? 'Updating...' : 'Live Wire Desk'}
           </span>
         </div>

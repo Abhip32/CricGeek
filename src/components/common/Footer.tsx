@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const Footer = () => {
   return (
-    <footer className="w-full bg-white border-t border-slate-200 mt-auto">
+    <footer className="w-full bg-white border-t-4 border-red-600 mt-auto">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Info */}
@@ -19,41 +19,42 @@ export const Footer = () => {
               />
             </Link>
             <p className="text-xs text-slate-600 max-w-md leading-relaxed">
-              CricGeek is a high-performance cricket platform providing real-time match scores, ball-by-ball scorecards, tournament fixtures, and official ICC team and player rankings.
+              CricGeek is a high-performance cricket portal providing real-time ball-by-ball scorecards, tournament standings, official ICC team and player rankings, and verified editorial coverage.
             </p>
-            <div className="flex items-center gap-2 text-xs text-red-600 font-bold pt-1">
+            <div className="flex items-center gap-2 text-xs text-red-600 font-heading font-black tracking-wider uppercase pt-1">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
               </span>
-              <span>Live Engine Connected</span>
+              <span>LIVE ENGINE CONNECTED</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              Quick Links
+            <h4 className="text-xs font-heading font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+              <span className="w-1 h-3 bg-red-600 rounded-full" />
+              Navigation
             </h4>
-            <ul className="space-y-2 text-xs text-slate-600">
+            <ul className="space-y-2 text-xs font-medium text-slate-600">
               <li>
                 <Link href="/" className="hover:text-red-600 transition-colors">
-                  Home
+                  Home Arena
                 </Link>
               </li>
               <li>
                 <Link href="/matches?tab=live" className="hover:text-red-600 transition-colors">
-                  All Matches
+                  Live Match Center
                 </Link>
               </li>
               <li>
                 <Link href="/schedule" className="hover:text-red-600 transition-colors">
-                  Match Schedule
+                  Match Schedule & Fixtures
                 </Link>
               </li>
               <li>
                 <Link href="/rankings" className="hover:text-red-600 transition-colors">
-                  ICC Rankings
+                  ICC World Rankings
                 </Link>
               </li>
             </ul>
@@ -61,10 +62,11 @@ export const Footer = () => {
 
           {/* Formats & Tournaments */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              Tournaments
+            <h4 className="text-xs font-heading font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+              <span className="w-1 h-3 bg-red-600 rounded-full" />
+              Competitions
             </h4>
-            <ul className="space-y-2 text-xs text-slate-600">
+            <ul className="space-y-2 text-xs font-medium text-slate-600">
               <li>
                 <Link href="/matches?format=t20" className="hover:text-red-600 transition-colors">
                   T20 Internationals & Leagues
@@ -77,12 +79,12 @@ export const Footer = () => {
               </li>
               <li>
                 <Link href="/matches?format=test" className="hover:text-red-600 transition-colors">
-                  Test Championships
+                  ICC World Test Championship
                 </Link>
               </li>
               <li>
-                <Link href="/rankings" className="hover:text-red-600 transition-colors">
-                  Player & Team Leaderboards
+                <Link href="/matches?tab=standings" className="hover:text-red-600 transition-colors">
+                  Tournament Points Table
                 </Link>
               </li>
             </ul>

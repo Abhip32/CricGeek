@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { ScorecardSummary } from '@/types/match';
-import { MapPin, Trophy, Star, Award, Zap, ArrowLeft, RefreshCw } from 'lucide-react';
+import { MapPin, Trophy, Star, Award, Zap, ArrowLeft, RefreshCw, ChevronRight } from 'lucide-react';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
+import PlayerProfileModal from './PlayerProfileModal';
 
 interface MiniScoreCardProps {
   summary?: ScorecardSummary | null;
@@ -28,6 +29,8 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
   isRefreshing = false,
   backHref = '/matches?tab=live'
 }) => {
+  const [selectedPlayer, setSelectedPlayer] = useState<{ id?: string | null; name: string } | null>(null);
+
   const resolvedSummary = summary || {
     matchTitle: matchProp?.title || matchProp?.series || 'Match Scorecard',
     status: matchProp?.status || '',
@@ -147,7 +150,7 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="space-y-0.5 min-w-0">
-            <h1 className="text-sm sm:text-base md:text-lg font-black text-slate-900 tracking-tight truncate">
+            <h1 className="text-sm sm:text-base md:text-lg font-heading font-black text-slate-900 uppercase tracking-tight truncate">
               {resolvedSummary.matchTitle || 'Match Center'}
             </h1>
             {resolvedSummary.venue && (
@@ -161,16 +164,16 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
 
         <div className="flex items-center gap-2 flex-shrink-0">
           {isLive ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-600 text-white shadow-xs">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-black uppercase tracking-wider bg-red-600 text-white shadow-xs">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               LIVE
             </span>
           ) : isResult ? (
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+            <span className="px-3 py-1 rounded-full text-xs font-heading font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
               RESULT
             </span>
           ) : (
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+            <span className="px-3 py-1 rounded-full text-xs font-heading font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
               SCHEDULED
             </span>
           )}
@@ -204,16 +207,16 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
                 className="w-9 h-6.5 object-contain flex-shrink-0"
                 fallbackText={team1?.teamName}
               />
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight truncate">
+              <h2 className="text-lg sm:text-xl font-heading font-black text-slate-900 uppercase tracking-tight truncate">
                 {team1?.teamName || 'Team 1'}
               </h2>
             </div>
             <div className="text-right flex-shrink-0">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <span className="text-xl sm:text-2xl font-mono font-black text-slate-900 tracking-tight tabular-nums">
                 {team1?.score || '—'}
               </span>
               {team1?.overs && (
-                <span className="text-xs text-slate-500 font-medium ml-1.5">
+                <span className="text-xs text-slate-500 font-mono font-medium ml-1.5">
                   ({team1.overs})
                 </span>
               )}
@@ -231,16 +234,16 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
                 className="w-9 h-6.5 object-contain flex-shrink-0"
                 fallbackText={team2?.teamName}
               />
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight truncate">
+              <h2 className="text-lg sm:text-xl font-heading font-black text-slate-900 uppercase tracking-tight truncate">
                 {team2?.teamName || 'Team 2'}
               </h2>
             </div>
             <div className="text-right flex-shrink-0">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <span className="text-xl sm:text-2xl font-mono font-black text-slate-900 tracking-tight tabular-nums">
                 {team2?.score || '—'}
               </span>
               {team2?.overs && (
-                <span className="text-xs text-slate-500 font-medium ml-1.5">
+                <span className="text-xs text-slate-500 font-mono font-medium ml-1.5">
                   ({team2.overs})
                 </span>
               )}
@@ -248,7 +251,7 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
           </div>
 
           {/* Result / Target String */}
-          <p className="text-sm font-bold text-red-600 pt-1">
+          <p className="text-sm font-heading font-bold text-red-600 pt-1">
             {resolvedSummary.result ||
               (rawStatus.includes('STUMPS')
                 ? 'Day Stumps'
@@ -262,63 +265,98 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
         {hasFeaturedPlayers && (
           <div className="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-slate-200 pt-4 lg:pt-0 lg:pl-6 space-y-4">
             {/* Player of the Match */}
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs">
-                <ImageWithFallback
-                  src={potmImage}
-                  alt={potmName || topBatterFromTables.name}
-                  width={44}
-                  height={44}
-                  fallbackText={(potmName || topBatterFromTables.name || 'P').slice(0, 1)}
-                />
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-                  {isResult ? 'PLAYER OF THE MATCH' : 'TOP BATTER'}
-                </span>
-                <div className="flex items-center gap-1 font-extrabold text-slate-900 text-xs sm:text-sm truncate">
-                  <Award className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
-                  <span className="truncate">{potmName || topBatterFromTables.name}</span>
+            {(potmName || topBatterFromTables.name) && (
+              <button
+                type="button"
+                onClick={() =>
+                  setSelectedPlayer({
+                    id: potmPlayer?.id || null,
+                    name: potmName || topBatterFromTables.name
+                  })
+                }
+                className="w-full text-left flex items-center gap-3 p-2 rounded-xl hover:bg-red-50/60 transition-all group cursor-pointer focus:outline-none"
+              >
+                <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 group-hover:border-red-400 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs transition-colors">
+                  <ImageWithFallback
+                    src={potmImage}
+                    alt={potmName || topBatterFromTables.name}
+                    width={44}
+                    height={44}
+                    fallbackText={(potmName || topBatterFromTables.name || 'P').slice(0, 1)}
+                  />
                 </div>
-                <span className="text-xs text-slate-500 font-semibold block">
-                  {topBatterFromTables.runs > 0
-                    ? `${topBatterFromTables.runs} (${topBatterFromTables.balls || '—'})`
-                    : potmLeader?.score || 'Top Impact'}
-                </span>
-              </div>
-            </div>
+
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 group-hover:text-red-500 transition-colors block">
+                    {isResult ? 'PLAYER OF THE MATCH' : 'TOP BATTER'}
+                  </span>
+                  <div className="flex items-center gap-1 font-extrabold text-slate-900 group-hover:text-red-600 transition-colors text-xs sm:text-sm truncate">
+                    <Award className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+                    <span className="truncate">{potmName || topBatterFromTables.name}</span>
+                  </div>
+                  <span className="text-xs text-slate-500 font-semibold block">
+                    {topBatterFromTables.runs > 0
+                      ? `${topBatterFromTables.runs} (${topBatterFromTables.balls || '—'})`
+                      : potmLeader?.score || 'Top Impact'}
+                  </span>
+                </div>
+
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+              </button>
+            )}
 
             {/* CRICINFO'S MVP / TOP BOWLER */}
-            <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
-              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs">
-                <ImageWithFallback
-                  src={mvpImage}
-                  alt={mvpName || topBowlerFromTables.name}
-                  width={44}
-                  height={44}
-                  fallbackText={(mvpName || topBowlerFromTables.name || 'M').slice(0, 1)}
-                />
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-                  {isResult ? "CRICINFO'S MVP" : 'TOP BOWLER'}
-                </span>
-                <div className="flex items-center gap-1 font-extrabold text-slate-900 text-xs sm:text-sm truncate">
-                  <Star className="w-3.5 h-3.5 text-red-600 fill-red-600 flex-shrink-0" />
-                  <span className="truncate">{mvpName || topBowlerFromTables.name}</span>
+            {(mvpName || topBowlerFromTables.name) && (
+              <button
+                type="button"
+                onClick={() =>
+                  setSelectedPlayer({
+                    id: mvpPlayer?.id || null,
+                    name: mvpName || topBowlerFromTables.name
+                  })
+                }
+                className="w-full text-left flex items-center gap-3 p-2 rounded-xl hover:bg-red-50/60 transition-all group cursor-pointer focus:outline-none pt-3 border-t border-slate-100"
+              >
+                <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-slate-200 group-hover:border-red-400 bg-slate-100 flex-shrink-0 flex items-center justify-center shadow-xs transition-colors">
+                  <ImageWithFallback
+                    src={mvpImage}
+                    alt={mvpName || topBowlerFromTables.name}
+                    width={44}
+                    height={44}
+                    fallbackText={(mvpName || topBowlerFromTables.name || 'M').slice(0, 1)}
+                  />
                 </div>
-                <span className="text-xs text-slate-500 font-semibold block">
-                  {topBowlerFromTables.wickets > 0
-                    ? topBowlerFromTables.stats
-                    : '135.1 pts Impact'}
-                </span>
-              </div>
-            </div>
+
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 group-hover:text-red-500 transition-colors block">
+                    {isResult ? "CRICINFO'S MVP" : 'TOP BOWLER'}
+                  </span>
+                  <div className="flex items-center gap-1 font-extrabold text-slate-900 group-hover:text-red-600 transition-colors text-xs sm:text-sm truncate">
+                    <Star className="w-3.5 h-3.5 text-red-600 fill-red-600 flex-shrink-0" />
+                    <span className="truncate">{mvpName || topBowlerFromTables.name}</span>
+                  </div>
+                  <span className="text-xs text-slate-500 font-semibold block">
+                    {topBowlerFromTables.wickets > 0
+                      ? topBowlerFromTables.stats
+                      : '135.1 pts Impact'}
+                  </span>
+                </div>
+
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+              </button>
+            )}
           </div>
         )}
       </div>
+
+      {/* Deep Cricketer Profile Dossier Modal */}
+      {selectedPlayer && (
+        <PlayerProfileModal
+          playerId={selectedPlayer.id}
+          playerName={selectedPlayer.name}
+          onClose={() => setSelectedPlayer(null)}
+        />
+      )}
     </div>
   );
 };

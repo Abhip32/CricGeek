@@ -32,32 +32,46 @@
 
 ## ✨ Features & Architecture Highlights
 
-### 🔴 1. Athletic Editorial Styling
-- **Theme & Palette**: High-contrast athletic sports design inspired by ThemeWagon athletic layouts and Cricinfo editorial standards — deep stadium black (`#070B14`), pure white, and athletic crimson red (`#DC2626`).
-- **Free-Floating Flags**: National and club flags render freely without artificial box enclosures, borders, or forced aspect-ratio distortion (`object-contain`).
-- **Clean 2-Column Match Grid**: Engineered with a responsive 2-column layout (`grid-cols-1 md:grid-cols-2`) that prevents header truncation while keeping team names and match information prominent and legible.
-- **Zero Redundant Tags**: Removed duplicate "Live" indicators — clean badges on top with crisp match status in the card body.
+### 🔴 1. The Alchemists Athletic Red & White Theme
+- **Theme & Palette**: High-contrast athletic sports portal design inspired by Dan Fisher's *The Alchemists* — vibrant sports crimson (`#DC2626`), pure white cards (`#FFFFFF`), subtle slate borders (`#E2E8F0`), and dark charcoal typography.
+- **Montserrat Sports Typography**: Headings, navigation bars, widget titles, and team badges render in bold uppercase **Montserrat** (`font-heading font-black uppercase tracking-wider`).
+- **Tabular Statistics Alignment**: Monospace tabular numerals (`font-mono tabular-nums`) across all batting, bowling, commentary, and points tables.
+- **Clean 2-Column Match Grid**: Engineered with an athletic 2-column layout (`grid-cols-1 md:grid-cols-2`) that prevents header truncation while keeping team names and match scores prominent and legible.
 
-### 📱 2. Mobile-First Responsive Controls
-- **Segmented Pill Navigation**: Replaced clunky mobile `<select>` dropdowns with responsive, horizontal scrolling segmented pill tabs (`Live Matches`, `Recent Results`, `Upcoming Fixtures`).
-- **Unified Card Controls**: Removed cluttered breadcrumbs and detached top navigation bars. The back navigation (`ArrowLeft`) and instant manual refresh (`RefreshCw`) are cleanly built directly into the header banner of the match summary card (`MiniScoreCard`).
+### 👤 2. Deep Player Profile Dossier Modal
+- **Universal Player Inspection**: Click any cricketer across Batting tables, Bowling tables, Playing XI squads, Bench reserves, or Player of the Match / MVP chips to instantly open their deep dossier modal.
+- **Rich Athlete Dossier**: Features verified player headshots, team affiliation crests, playing role, batting style, bowling style, age, date of birth, and direct link to official career records.
+- **Auto-Resolution Engine**: Connects to `/player/:id` when numeric athlete ID is present, and gracefully resolves through `/player/search` by player name when needed.
+
+### 🤝 3. Algorithmic Innings Partnerships Hydration
+- **Real Batsman Names & Contributions**: Eliminates raw API placeholders ("Batter 1 / Batter 2 0 runs") by algorithmically cross-referencing batting order positions and Fall of Wickets dismissal logs.
+- **Compact Dual-Bar Stand Rows**: Sleek proportional wicket stands displaying exact runs scored and balls faced for both partners at every wicket.
+
+### 🏆 4. Tournament Standings & Points Tables (`/matches?tab=standings`)
+- **Multi-League Switcher**: Browse points tables across all active tournaments and domestic series (WBBL, Sheffield Shield, The Ford Trophy, CWC Challenge League, etc.).
+- **Playoff Qualification Indicators**: Clear visual indicators denoting Top 2 Semi-Final / Qualifier 1 spots and Top 4 Eliminator spots.
+- **Full Metric Breakdown**: Displays `POS`, `TEAM`, `P` (Played), `W` (Won), `L` (Lost), `NR` (No Result / Tied), `NRR` (Net Run Rate), and `PTS` (highlighted points badge).
+
+### 📱 5. Mobile-First Responsive Controls
+- **Segmented Pill Navigation**: Replaced clunky mobile `<select>` dropdowns with responsive, horizontal scrolling segmented pill tabs (`Live Matches`, `Recent Results`, `Upcoming Fixtures`, `Points Table`).
+- **Unified Card Controls**: Removed cluttered breadcrumbs. The back navigation (`ArrowLeft`) and instant manual refresh (`RefreshCw`) are cleanly built directly into the header banner of the match summary card (`MiniScoreCard`).
 - **Zero Auto-Polling Overhead**: No background CPU drain or unwanted refetch spikes (`refetchInterval: false`, `refetchOnWindowFocus: false`). Users enjoy instant on-demand manual refreshing whenever desired.
 
-### 📊 3. Complete Scorecard Suite (All Tabs)
+### 📊 6. Complete Scorecard Suite (All Tabs)
 - **Scorecard Tab**: Full batting innings with player dismissal methods, runs, balls, 4s, 6s, and strike rates (with 50s/100s milestones), plus bowling tables with overs, maidens, runs, wickets, and economy rates.
 - **MVP & Player Impact Tab**: Proprietary impact algorithm evaluating runs scored, strike-rate bonuses, wickets taken, economy rewards, and maiden bonuses. Features a top-3 podium (🥇, 🥈, 🥉) and rated player leaderboard.
 - **Commentary Tab**: Redesigned timeline spine with ball outcome pills (`W` in red, `4` in blue, `6` in purple), bowler-to-batter matchup headlines, over summary strips, and instant filter pills (`All Balls`, `Wickets`, `Boundaries`).
 - **Match Info & Squads Tab**: Venue information, series details, toss report, match status, and official playing XI lineups with Captain (`(c)`) and Wicketkeeper (`(wk)`) badges.
 
-### 📸 4. Cricbuzz Photo Galleries (`/photos`)
+### 📸 7. Cricbuzz Photo Galleries (`/photos`)
 - Sourced directly from Cricbuzz photo galleries.
 - High-resolution photography (`750x422`) with album collections, individual gallery views, photo counts, and descriptive photo captions.
 
-### 📅 5. ESPN-Powered Fixtures & Tournament Schedule
-- **Upcoming Matches**: Powered 100% by ESPN Cricinfo official API, ensuring complete match details and hiding premature scorecard links.
+### 📅 8. Fixtures & Tournament Schedule
+- **Upcoming Matches**: Powered by official fixtures API, ensuring complete match details and hiding premature scorecard links.
 - **Tournament Schedule**: Dedicated tournament schedule endpoint (`/schedule`) categorized by International, Domestic, and T20 Leagues with live search filters.
 
-### 🏆 6. Official ICC Rankings
+### 🏆 9. Official ICC Rankings
 - Toggles between Team Rankings and Player Rankings (Batting, Bowling, All-rounders) across **Test**, **ODI**, and **T20I**.
 - Properly renders player names, ratings, nationalities, and headshots with podium styling.
 

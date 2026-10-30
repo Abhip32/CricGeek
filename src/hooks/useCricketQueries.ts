@@ -253,6 +253,36 @@ export function useStandings(leagueId?: string) {
 }
 
 /**
+ * Hook for tournament participating teams
+ */
+export function useSeriesTeams(leagueId?: string) {
+  return useQuery<any>({
+    queryKey: ['series_teams', leagueId || ''],
+    queryFn: () => (leagueId ? cricketApi.getSeriesTeams(leagueId) : Promise.resolve(null)),
+    enabled: Boolean(leagueId),
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+/**
+ * Hook for universal search (players, teams, matches, articles)
+ */
+export function useUniversalSearch(query: string, type?: string, limit: number = 10) {
+  return useQuery<any>({
+    queryKey: ['universal_search', query, type || 'all', limit],
+    queryFn: () => (query.trim().length >= 2 ? cricketApi.universalSearch(query, type, limit) : Promise.resolve(null)),
+    enabled: Boolean(query && query.trim().length >= 2),
+    staleTime: 1000 * 60 * 10,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+/**
  * Hook for active tournament/series list
  */
 export function useSeriesList() {

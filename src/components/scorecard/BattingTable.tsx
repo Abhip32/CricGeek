@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ScorecardTable } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
+import PlayerProfileModal from './PlayerProfileModal';
 
 interface BattingRow {
   name?: string;
@@ -22,6 +23,8 @@ interface BattingTableProps {
 }
 
 export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData, squads }) => {
+  const [activePlayer, setActivePlayer] = useState<{ id?: string | null; name: string } | null>(null);
+
   const rows = React.useMemo(() => {
     if (battingData && Array.isArray(battingData)) {
       return battingData.map((r) => ({
@@ -141,9 +144,14 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData, 
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-bold text-slate-900 leading-tight">
+                        <button
+                          type="button"
+                          onClick={() => setActivePlayer({ id: matchedPlayer?.id || null, name: batter.name })}
+                          className="font-bold text-slate-900 leading-tight hover:text-red-600 transition-colors text-left cursor-pointer"
+                          title="View Player Profile"
+                        >
                           {batter.name}
-                        </span>
+                        </button>
                         {matchedPlayer?.captain && (
                           <span className="text-[9px] font-black px-1 rounded bg-amber-100 text-amber-900 border border-amber-300">
                             C
@@ -197,6 +205,14 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData, 
           })}
         </tbody>
       </table>
+
+      {/* Athlete Profile Modal */}
+      <PlayerProfileModal
+        isOpen={Boolean(activePlayer)}
+        playerId={activePlayer?.id}
+        playerName={activePlayer?.name}
+        onClose={() => setActivePlayer(null)}
+      />
     </div>
   );
 };

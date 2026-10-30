@@ -150,7 +150,7 @@ export default function RankingsPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setCategory('teams'); setSearchQuery(''); }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer ${
                 category === 'teams'
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
@@ -161,7 +161,7 @@ export default function RankingsPage() {
             </button>
             <button
               onClick={() => { setCategory('players'); setSearchQuery(''); }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer ${
                 category === 'players'
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'

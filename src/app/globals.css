@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
+  --background: #f1f5f9;
   --foreground: #0f172a;
   --primary-red: #dc2626;
   --primary-red-hover: #b91c1c;
@@ -20,88 +20,98 @@ body {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Professional card utility */
-.cric-card {
+/* The Alchemists Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-montserrat), var(--font-inter), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-sports {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* The Alchemists Sports Card / Widget */
+.alc-card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease-in-out;
+  overflow: hidden;
 }
 
-.cric-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+.alc-card:hover {
+  border-color: #f87171;
+  box-shadow: 0 8px 16px -4px rgba(220, 38, 38, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Subtle sports table styling */
-.cric-table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
+/* The Alchemists Widget Header Bar */
+.alc-widget-header {
+  padding: 0.875rem 1.25rem;
+  background-color: #ffffff;
+  border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.cric-table th {
-  background-color: #f1f5f9;
-  color: #475569;
-  font-size: 0.75rem;
-  font-weight: 600;
+.alc-widget-title {
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.alc-widget-title::before {
+  content: '';
+  display: inline-block;
+  width: 0.375rem;
+  height: 1.125rem;
+  background-color: #dc2626;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+/* The Alchemists Table Styling */
+.alc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.alc-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.cric-table td {
+.alc-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #f1f5f9;
   color: #1e293b;
-  font-size: 0.875rem;
 }
 
-.cric-table tr:hover td {
+.alc-table tr:hover td {
   background-color: #fef2f2;
-}
-
-/* Enhanced Shimmer Animation */
-@keyframes shimmerWave {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.shimmer-block {
-  background: linear-gradient(
-    90deg,
-    #e2e8f0 0%,
-    #f8fafc 40%,
-    #cbd5e1 50%,
-    #f8fafc 60%,
-    #e2e8f0 100%
-  );
-  background-size: 250% 100%;
-  animation: shimmerWave 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.shimmer-block-subtle {
-  background: linear-gradient(
-    90deg,
-    #f1f5f9 0%,
-    #ffffff 45%,
-    #e2e8f0 55%,
-    #ffffff 65%,
-    #f1f5f9 100%
-  );
-  background-size: 250% 100%;
-  animation: shimmerWave 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Custom scrollbars */
@@ -120,5 +130,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #ef4444;
 }

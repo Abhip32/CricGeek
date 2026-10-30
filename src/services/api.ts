@@ -9,6 +9,7 @@ import {
   ManhattanInnings,
   WormTrajectory,
   TournamentStanding,
+  TournamentTeamsResponse,
   CricketerProfile
 } from '@/types/match';
 import { NewsItem } from '@/types/news';
@@ -407,6 +408,22 @@ export const cricketApi = {
       return await response.json();
     } catch (error) {
       console.warn('getStandings failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches tournament participating teams
+   */
+  getSeriesTeams: async (leagueId: string): Promise<TournamentTeamsResponse | null> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getSeriesTeams?leagueId=${encodeURIComponent(leagueId)}`, {
+        next: { revalidate: 600 }
+      });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getSeriesTeams failed:', error);
       return null;
     }
   },

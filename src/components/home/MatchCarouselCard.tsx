@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Match } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Radio } from 'lucide-react';
 
 interface MatchCarouselCardProps {
   match: Match;
@@ -49,7 +49,7 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
       return `Target ${match.target}`;
     }
     if (isLive) {
-      return '';
+      return 'Match in progress';
     }
     if (match.status && !match.status.toUpperCase().includes('SCHEDULED') && !match.status.toUpperCase().includes('LIVE')) {
       return match.status;
@@ -58,54 +58,57 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
   }, [match, isLive]);
 
   return (
-    <div className="w-[300px] sm:w-[340px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between space-y-3 relative overflow-hidden group hover:border-red-500/60 hover:shadow-md transition-all">
-      {/* Top Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs gap-2 min-w-0">
+    <div className="w-[300px] sm:w-[340px] flex-shrink-0 bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between space-y-3 relative overflow-hidden group hover:border-red-500 hover:border-l-4 hover:border-l-red-600 hover:shadow-md transition-all duration-150">
+      {/* Top Header Bar */}
+      <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 text-xs gap-2 min-w-0">
         <span
-          className="font-bold text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0 text-[11px]"
+          className="font-heading font-black text-slate-500 uppercase tracking-wider truncate flex-1 min-w-0 text-[10px]"
           title={headerTitle}
         >
           {headerTitle}
         </span>
         {isLive ? (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shadow-2xs flex-shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-heading font-black uppercase tracking-wider bg-red-600 text-white shadow-xs flex-shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             LIVE
           </span>
         ) : isResult ? (
-          <span className="font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full text-[10px] flex-shrink-0">
+          <span className="font-heading font-black text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wider flex-shrink-0">
             RESULT
           </span>
         ) : (
-          <span className="font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full text-[10px] flex-shrink-0">
-            {match.status || 'FIXTURE'}
+          <span className="font-heading font-black text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wider flex-shrink-0">
+            {match.status || 'SCHEDULED'}
           </span>
         )}
       </div>
 
-      {/* Teams & Scores */}
-      <div className="py-1 space-y-2.5">
+      {/* Teams & Scores (The Alchemists Face-Off) */}
+      <div className="space-y-2.5 py-1">
         {/* Team 1 */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <ImageWithFallback
-              src={match.flagA}
-              alt={match.teamA}
-              width={26}
-              height={18}
-              className="w-6.5 h-4.5 object-contain flex-shrink-0"
-              fallbackText={match.teamA}
-            />
-            <span className="text-xs sm:text-sm font-bold text-slate-900 truncate" title={match.teamA}>
+            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-200 flex items-center justify-center">
+              <ImageWithFallback
+                src={match.flagA}
+                alt={match.teamA}
+                width={24}
+                height={24}
+                className="object-contain"
+                fallbackText={match.teamA}
+              />
+            </div>
+            <span className="text-xs sm:text-sm font-heading font-black text-slate-900 uppercase tracking-tight truncate" title={match.teamA}>
               {match.teamA}
             </span>
           </div>
-          <div className="text-right flex-shrink-0">
-            <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight tabular-nums">
+
+          <div className="text-right flex items-center gap-1.5 flex-shrink-0">
+            <span className="px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200 font-mono font-black text-xs sm:text-sm text-slate-900 tabular-nums">
               {match.scoreA || '—'}
             </span>
             {match.oversA && (
-              <span className="text-[11px] text-slate-500 font-medium ml-1">
+              <span className="text-[10px] text-slate-400 font-mono">
                 ({match.oversA})
               </span>
             )}
@@ -115,24 +118,27 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
         {/* Team 2 */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <ImageWithFallback
-              src={match.flagB}
-              alt={match.teamB}
-              width={26}
-              height={18}
-              className="w-6.5 h-4.5 object-contain flex-shrink-0"
-              fallbackText={match.teamB}
-            />
-            <span className="text-xs sm:text-sm font-bold text-slate-900 truncate" title={match.teamB}>
+            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-200 flex items-center justify-center">
+              <ImageWithFallback
+                src={match.flagB}
+                alt={match.teamB}
+                width={24}
+                height={24}
+                className="object-contain"
+                fallbackText={match.teamB}
+              />
+            </div>
+            <span className="text-xs sm:text-sm font-heading font-black text-slate-900 uppercase tracking-tight truncate" title={match.teamB}>
               {match.teamB}
             </span>
           </div>
-          <div className="text-right flex-shrink-0">
-            <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight tabular-nums">
+
+          <div className="text-right flex items-center gap-1.5 flex-shrink-0">
+            <span className="px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200 font-mono font-black text-xs sm:text-sm text-slate-900 tabular-nums">
               {match.scoreB || '—'}
             </span>
             {match.oversB && (
-              <span className="text-[11px] text-slate-500 font-medium ml-1">
+              <span className="text-[10px] text-slate-400 font-mono">
                 ({match.oversB})
               </span>
             )}
@@ -140,18 +146,16 @@ export const MatchCarouselCard: React.FC<MatchCarouselCardProps> = ({ match }) =
         </div>
       </div>
 
-      {/* Footer Info & Scorecard Action */}
-      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs gap-2 min-w-0">
-        <span
-          className="text-[11px] font-semibold text-slate-500 truncate flex-1 min-w-0"
-          title={footerText}
-        >
+      {/* Footer & Scorecard Link */}
+      <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+        <p className="text-xs font-heading font-bold text-red-600 truncate flex-1 min-w-0" title={footerText}>
           {footerText}
-        </span>
+        </p>
+
         <Link
           href={scorecardHref}
           onClick={handleClick}
-          className="inline-flex items-center gap-0.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0 group-hover:translate-x-0.5"
+          className="inline-flex items-center gap-1 text-[11px] font-heading font-black uppercase tracking-wider text-slate-700 hover:text-red-600 group-hover:translate-x-0.5 transition-all flex-shrink-0"
         >
           <span>Scorecard</span>
           <ChevronRight className="w-3.5 h-3.5" />

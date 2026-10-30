@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ImageWithFallback from '../common/ImageWithFallback';
 import EmptyState from '../common/EmptyState';
 import { Users, Shield, Award, Sparkles } from 'lucide-react';
+import PlayerProfileModal from './PlayerProfileModal';
 
 interface SquadPlayer {
   id?: string | null;
@@ -41,6 +42,7 @@ interface SquadsTabProps {
 
 export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], loading }) => {
   const [selectedTeamIdx, setSelectedTeamIdx] = useState<number>(0);
+  const [selectedPlayer, setSelectedPlayer] = useState<{ id?: string | null; name: string } | null>(null);
 
   if (loading) {
     return (
@@ -128,12 +130,14 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
     const roleText = player.position || player.role || '';
 
     return (
-      <div
+      <button
         key={player.name}
-        className="p-3.5 flex items-center justify-between hover:bg-slate-50/70 transition-colors"
+        type="button"
+        onClick={() => setSelectedPlayer({ id: player.id, name: player.name })}
+        className="w-full text-left p-3.5 flex items-center justify-between hover:bg-red-50/60 transition-colors group cursor-pointer focus:outline-none"
       >
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-slate-200 bg-slate-100">
+          <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-slate-200 bg-slate-100 group-hover:border-red-300 transition-colors">
             <ImageWithFallback
               src={imgSrc}
               alt={player.name}
@@ -145,7 +149,7 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
           </div>
 
           <div className="min-w-0">
-            <div className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5 truncate">
+            <div className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors flex items-center gap-1.5 truncate">
               <span>{player.name}</span>
               {isCap && (
                 <span className="text-[10px] font-black px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300 shadow-2xs">
@@ -172,13 +176,18 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
           </div>
         </div>
 
-        {(player.battingStyle || player.bowlingStyle) && (
-          <div className="text-right text-[11px] text-slate-400 hidden sm:block max-w-[150px] truncate">
-            {player.battingStyle && <div className="truncate">{player.battingStyle}</div>}
-            {player.bowlingStyle && <div className="truncate">{player.bowlingStyle}</div>}
-          </div>
-        )}
-      </div>
+        <div className="flex items-center gap-2">
+          {(player.battingStyle || player.bowlingStyle) && (
+            <div className="text-right text-[11px] text-slate-400 hidden sm:block max-w-[150px] truncate">
+              {player.battingStyle && <div className="truncate">{player.battingStyle}</div>}
+              {player.bowlingStyle && <div className="truncate">{player.bowlingStyle}</div>}
+            </div>
+          )}
+          <span className="text-[10px] font-bold text-slate-400 group-hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-wider hidden sm:inline">
+            Bio →
+          </span>
+        </div>
+      </button>
     );
   };
 
@@ -266,6 +275,15 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
           {teamGroups[selectedTeamIdx] && renderTeamSquadCard(teamGroups[selectedTeamIdx])}
         </div>
       </div>
+
+      {/* Deep Cricketer Profile Dossier Modal */}
+      {selectedPlayer && (
+        <PlayerProfileModal
+          playerId={selectedPlayer.id}
+          playerName={selectedPlayer.name}
+          onClose={() => setSelectedPlayer(null)}
+        />
+      )}
     </div>
   );
 };

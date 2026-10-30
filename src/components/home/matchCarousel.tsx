@@ -32,18 +32,13 @@ export const MatchCarousel = () => {
         {/* Section Header */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
+            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600 flex-shrink-0">
               <Flame className="w-4 h-4" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-3.5 bg-red-600 rounded-full" />
-                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap">
-                  {isLiveActive ? 'Live Match Center' : 'Recent Matches & Results'}
-                </h2>
-              </div>
-            </div>
-            <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex-shrink-0">
+            <h2 className="text-base sm:text-lg font-heading font-black text-slate-900 tracking-wide uppercase whitespace-nowrap">
+              {isLiveActive ? 'Live Match Center' : 'Recent Matches & Results'}
+            </h2>
+            <span className="text-[11px] font-mono font-black px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex-shrink-0">
               {matches.length}
             </span>
           </div>

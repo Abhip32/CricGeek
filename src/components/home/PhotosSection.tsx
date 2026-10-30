@@ -59,19 +59,14 @@ export const PhotosSection = () => {
     <section id="photos" className="py-8 border-b border-slate-200 relative overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
-              <Camera className="w-4 h-4" />
-            </div>
+            <span className="w-1.5 h-5 bg-red-600 rounded-full" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-3.5 bg-red-600 rounded-full" />
-                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                  Match Photography & Galleries
-                </h2>
-              </div>
-              <p className="text-xs text-slate-500 font-medium">
+              <h2 className="text-base sm:text-lg font-heading font-black text-slate-900 uppercase tracking-wider">
+                Match Photography & Galleries
+              </h2>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
                 High-definition match photography, iconic moments, and celebrations from Cricbuzz
               </p>
             </div>
@@ -80,7 +75,7 @@ export const PhotosSection = () => {
           <button
             onClick={() => refetchGalleries()}
             disabled={isGalleriesFetching}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50 self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-heading font-black uppercase tracking-wider bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 transition-colors shadow-2xs disabled:opacity-50 self-start sm:self-auto cursor-pointer"
             title="Refresh Galleries"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isGalleriesFetching ? 'animate-spin text-red-600' : ''}`} />

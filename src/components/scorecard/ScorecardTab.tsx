@@ -144,6 +144,8 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
       {/* Innings Sections */}
       <div className="space-y-6">
         {displayedPairs.map((pair, idx) => {
+          const originalIdx = inningsPairs.indexOf(pair);
+          const inningPeriod = originalIdx >= 0 ? originalIdx + 1 : idx + 1;
           const cleanTitle = pair.title
             .replace(/\s+Batting/i, '')
             .replace(/\s+Innings/i, '')
@@ -151,23 +153,23 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
 
           const matchedPartnerships = allPartnerships.find(
             (p: any) =>
-              p.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
-              cleanTitle.toLowerCase().includes(p.team?.toLowerCase() || '') ||
-              p.period === idx + 1
+              p.period === inningPeriod ||
+              (p.team && (p.team.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+               cleanTitle.toLowerCase().includes(p.team.toLowerCase())))
           )?.partnerships || [];
 
           const matchedFow = allFow.find(
             (f: any) =>
-              f.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
-              cleanTitle.toLowerCase().includes(f.team?.toLowerCase() || '') ||
-              f.period === idx + 1
+              f.period === inningPeriod ||
+              (f.team && (f.team.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+               cleanTitle.toLowerCase().includes(f.team.toLowerCase())))
           )?.fallOfWickets || [];
 
           const matchedDrs = allDrs.filter(
             (d: any) =>
-              d.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
-              cleanTitle.toLowerCase().includes(d.team?.toLowerCase() || '') ||
-              d.period === idx + 1
+              d.period === inningPeriod ||
+              (d.team && (d.team.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+               cleanTitle.toLowerCase().includes(d.team.toLowerCase())))
           );
 
           return (

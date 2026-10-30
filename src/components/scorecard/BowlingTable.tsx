@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ScorecardTable } from '@/types/match';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
+import PlayerProfileModal from './PlayerProfileModal';
 
 interface BowlingRow {
   name?: string;
@@ -23,6 +24,8 @@ interface BowlingTableProps {
 }
 
 export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, squads }) => {
+  const [activePlayer, setActivePlayer] = useState<{ id?: string | null; name: string } | null>(null);
+
   const rows = React.useMemo(() => {
     if (bowlingData && Array.isArray(bowlingData)) {
       return bowlingData.map((r) => ({
@@ -114,7 +117,14 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, 
                       )}
                     </div>
 
-                    <span className="truncate">{bowler.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => setActivePlayer({ id: matchedPlayer?.id || null, name: bowler.name })}
+                      className="truncate font-bold text-slate-900 hover:text-red-600 transition-colors text-left cursor-pointer"
+                      title="View Player Profile"
+                    >
+                      {bowler.name}
+                    </button>
                   </div>
                 </td>
                 <td className="py-2.5 px-3 text-right text-slate-700 font-medium">
@@ -151,6 +161,14 @@ export const BowlingTable: React.FC<BowlingTableProps> = ({ table, bowlingData, 
           })}
         </tbody>
       </table>
+
+      {/* Athlete Profile Modal */}
+      <PlayerProfileModal
+        isOpen={Boolean(activePlayer)}
+        playerId={activePlayer?.id}
+        playerName={activePlayer?.name}
+        onClose={() => setActivePlayer(null)}
+      />
     </div>
   );
 };

@@ -225,6 +225,22 @@ export interface TournamentStanding {
   stats: Record<string, any>;
 }
 
+export interface SeriesTeam {
+  id: string | null;
+  name: string;
+  abbreviation: string;
+  location?: string;
+  logo: string | null;
+  raw?: any;
+}
+
+export interface TournamentTeamsResponse {
+  leagueId: string;
+  tournament: string;
+  teamsCount: number;
+  teams: SeriesTeam[];
+}
+
 export interface CricketerProfile {
   id: string;
   name: string;
