@@ -20,6 +20,9 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
   }
 
   const squads = scoreData?.data?.squads || null;
+  const allPartnerships: any[] = scoreData?.data?.partnerships || [];
+  const allFow: any[] = scoreData?.data?.fallOfWickets || [];
+  const allDrs: any[] = scoreData?.data?.drsReviews || [];
 
   // Legacy format support
   if (scoreData?.innings && Array.isArray(scoreData.innings) && scoreData.innings.length > 0) {
@@ -140,15 +143,46 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
 
       {/* Innings Sections */}
       <div className="space-y-6">
-        {displayedPairs.map((pair, idx) => (
-          <InningSection
-            key={idx}
-            title={pair.title}
-            battingTable={pair.battingTable}
-            bowlingTable={pair.bowlingTable}
-            squads={squads}
-          />
-        ))}
+        {displayedPairs.map((pair, idx) => {
+          const cleanTitle = pair.title
+            .replace(/\s+Batting/i, '')
+            .replace(/\s+Innings/i, '')
+            .trim();
+
+          const matchedPartnerships = allPartnerships.find(
+            (p: any) =>
+              p.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+              cleanTitle.toLowerCase().includes(p.team?.toLowerCase() || '') ||
+              p.period === idx + 1
+          )?.partnerships || [];
+
+          const matchedFow = allFow.find(
+            (f: any) =>
+              f.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+              cleanTitle.toLowerCase().includes(f.team?.toLowerCase() || '') ||
+              f.period === idx + 1
+          )?.fallOfWickets || [];
+
+          const matchedDrs = allDrs.filter(
+            (d: any) =>
+              d.team?.toLowerCase().includes(cleanTitle.toLowerCase()) ||
+              cleanTitle.toLowerCase().includes(d.team?.toLowerCase() || '') ||
+              d.period === idx + 1
+          );
+
+          return (
+            <InningSection
+              key={idx}
+              title={pair.title}
+              battingTable={pair.battingTable}
+              bowlingTable={pair.bowlingTable}
+              squads={squads}
+              partnerships={matchedPartnerships}
+              richFow={matchedFow}
+              drsReviews={matchedDrs}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import EmptyState from '../common/EmptyState';
-import { MessageSquare, Flame, Zap, ShieldAlert, Award } from 'lucide-react';
+import { MessageSquare, Flame, Zap, ShieldAlert, Award, Play } from 'lucide-react';
 
 interface CommentaryItem {
   over?: string;
@@ -17,6 +17,9 @@ interface CommentaryItem {
   bowler?: string;
   preText?: string;
   postText?: string;
+  videoClipUrl?: string;
+  videoUrl?: string;
+  video?: any;
 }
 
 interface CommentaryTabProps {
@@ -224,6 +227,21 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
                 <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
                   {narrative}
                 </p>
+
+                {/* Video Replay Button if clip URL is attached */}
+                {(item.videoClipUrl || item.videoUrl || item.video) && (
+                  <div className="pt-1">
+                    <a
+                      href={item.videoClipUrl || item.videoUrl || item.video?.links?.web?.href || item.video?.play?.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-900 text-white hover:bg-red-600 transition-colors shadow-2xs"
+                    >
+                      <Play className="w-3 h-3 fill-current" />
+                      <span>Watch Replay</span>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           );

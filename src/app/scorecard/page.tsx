@@ -10,6 +10,8 @@ import ScorecardTab from '@/components/scorecard/ScorecardTab';
 import DetailsTab from '@/components/scorecard/DetailsTab';
 import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
+import ChartsTab from '@/components/scorecard/ChartsTab';
+import MatchNewsTab from '@/components/scorecard/MatchNewsTab';
 import MvpTab from '@/components/scorecard/MvpTab';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
@@ -83,10 +85,14 @@ function ScorecardContent() {
             : (scoreData as any)?.data?.commentary;
         return <CommentaryTab commentaryData={resolvedComm} loading={isCommLoading} />;
       }
+      case 'charts':
+        return <ChartsTab matchUrl={matchUrl} scoreData={scoreData} />;
+      case 'news':
+        return <MatchNewsTab scoreData={scoreData} matchUrl={matchUrl} />;
       case 'mvp':
         return <MvpTab scoreData={scoreData} loading={isScoreLoading} />;
       case 'details':
-        return <DetailsTab scoreData={scoreData} loading={isScoreLoading} />;
+        return <DetailsTab scoreData={scoreData} matchUrl={matchUrl} loading={isScoreLoading} />;
       case 'squads': {
         const rawSquads = (scoreData as any)?.data?.squads;
         const squadTeams = rawSquads ? Object.keys(rawSquads) : [];

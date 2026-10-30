@@ -1,24 +1,30 @@
 'use client';
 
 import React from 'react';
-import { Award, FileText, Users, MessageSquare, Trophy } from 'lucide-react';
+import { Award, FileText, Users, MessageSquare, Trophy, BarChart2, Newspaper } from 'lucide-react';
 
 interface TabNavigationProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   hasSquads?: boolean;
   hasCommentary?: boolean;
+  hasCharts?: boolean;
+  hasNews?: boolean;
 }
 
 export const TabNavigation: React.FC<TabNavigationProps> = ({
   activeTab,
   setActiveTab,
   hasSquads = true,
-  hasCommentary = true
+  hasCommentary = true,
+  hasCharts = true,
+  hasNews = true
 }) => {
   const tabs = [
     { id: 'scorecard', label: 'Scorecard', icon: Award, show: true },
     { id: 'commentary', label: 'Commentary', icon: MessageSquare, show: hasCommentary },
+    { id: 'charts', label: 'Overs & Charts', icon: BarChart2, show: hasCharts },
+    { id: 'news', label: 'News & Reports', icon: Newspaper, show: hasNews },
     { id: 'mvp', label: 'MVP & Impact', icon: Trophy, show: true },
     { id: 'squads', label: 'Squads', icon: Users, show: hasSquads },
     { id: 'details', label: 'Match Info', icon: FileText, show: true },

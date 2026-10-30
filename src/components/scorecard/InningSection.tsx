@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import { BattingTable } from './BattingTable';
 import { BowlingTable } from './BowlingTable';
-import { ScorecardTable } from '@/types/match';
-import { ChevronDown } from 'lucide-react';
+import { ScorecardTable, InningsPartnership, FallOfWicketItem, DrsReviewSummary } from '@/types/match';
+import PartnershipsSection from './PartnershipsSection';
+import DrsSection from './DrsSection';
+import ImageWithFallback from '../common/ImageWithFallback';
+import { ChevronDown, ShieldAlert } from 'lucide-react';
 
 interface InningProps {
   inning?: {
@@ -20,6 +23,9 @@ interface InningProps {
   battingTable?: ScorecardTable & { extras?: any; total?: any; didNotBat?: string[]; fallOfWickets?: string[] };
   bowlingTable?: ScorecardTable;
   squads?: Record<string, any[]> | null;
+  partnerships?: InningsPartnership[];
+  richFow?: FallOfWicketItem[];
+  drsReviews?: DrsReviewSummary[];
   defaultOpen?: boolean;
 }
 
@@ -29,6 +35,9 @@ export const InningSection: React.FC<InningProps> = ({
   battingTable, 
   bowlingTable,
   squads,
+  partnerships,
+  richFow,
+  drsReviews,
   defaultOpen = true
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -57,7 +66,7 @@ export const InningSection: React.FC<InningProps> = ({
             {heading}
           </h2>
           {totalScore && (
-            <span className="ml-1 sm:ml-2 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-red-50 text-red-600 border border-red-200/60 flex-shrink-0">
+            <span className="ml-1 sm:ml-2 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-red-50 text-red-600 border border-red-200/60 flex-shrink-0 font-mono">
               {totalScore}
             </span>
           )}
@@ -79,7 +88,7 @@ export const InningSection: React.FC<InningProps> = ({
 
       {/* Accordion Body */}
       {isOpen && (
-        <div className="p-5 sm:p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-6">
           {/* Batting Section */}
           <div className="space-y-2">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -94,16 +103,16 @@ export const InningSection: React.FC<InningProps> = ({
               {extras && (
                 <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-600">Extras</span>
-                  <span className="font-bold text-slate-900">
-                    {extras.total} {extras.details && <span className="font-normal text-slate-500 text-[11px]">({extras.details})</span>}
+                  <span className="font-bold text-slate-900 font-mono">
+                    {extras.total} {extras.details && <span className="font-normal text-slate-500 text-[11px] font-sans">({extras.details})</span>}
                   </span>
                 </div>
               )}
               {total && (
                 <div className="bg-red-50/70 border border-red-200 p-3 rounded-lg flex items-center justify-between text-xs">
                   <span className="font-bold text-red-800">Total</span>
-                  <span className="font-extrabold text-red-700 text-sm">
-                    {total.score || total.runs} {total.details && <span className="font-normal text-red-900 text-xs">({total.details})</span>}
+                  <span className="font-extrabold text-red-700 text-sm font-mono">
+                    {total.score || total.runs} {total.details && <span className="font-normal text-red-900 text-xs font-sans">({total.details})</span>}
                   </span>
                 </div>
               )}
@@ -127,8 +136,66 @@ export const InningSection: React.FC<InningProps> = ({
             </div>
           )}
 
-          {/* Fall of Wickets */}
-          {fallOfWickets.length > 0 && (
+          {/* Fall of Wickets (Rich cards or pill list) */}
+          {richFow && richFow.length > 0 ? (
+            <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-4 rounded-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+                  Fall of Wickets
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  {richFow.length} wickets
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                {richFow.map((f, i) => (
+                  <div
+                    key={i}
+                    className="bg-white border border-slate-200 p-2.5 rounded-lg flex items-center justify-between gap-2 shadow-2xs hover:border-slate-300 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200">
+                        <ImageWithFallback
+                          src={f.batsman?.headshot}
+                          alt={f.batsman?.name || 'Batsman'}
+                          width={28}
+                          height={28}
+                          className="object-cover w-full h-full"
+                          fallbackText={f.batsman?.name || 'W'}
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-slate-900 text-xs truncate">
+                          {f.batsman?.name || `Wicket ${f.wicketNumber}`}
+                        </div>
+                        <div className="text-[11px] text-slate-500 font-mono">
+                          {f.runsScored !== undefined && (
+                            <span>{f.runsScored} ({f.ballsFaced || 0}b)</span>
+                          )}
+                          {f.fowType && (
+                            <span className="text-slate-400 text-[10px] ml-1 truncate block">
+                              {f.fowType}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <div className="font-mono font-extrabold text-red-600 text-xs">
+                        {f.runs}/{f.wicketNumber}
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-mono">
+                        {f.wicketOver} ov
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : fallOfWickets.length > 0 ? (
             <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg space-y-1.5">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
                 Fall of Wickets
@@ -144,6 +211,20 @@ export const InningSection: React.FC<InningProps> = ({
                 ))}
               </div>
             </div>
+          ) : null}
+
+          {/* Innings Partnerships Section */}
+          {partnerships && partnerships.length > 0 && (
+            <PartnershipsSection
+              partnerships={partnerships}
+              teamName={heading}
+              defaultOpen={true}
+            />
+          )}
+
+          {/* Innings DRS Reviews */}
+          {drsReviews && drsReviews.length > 0 && (
+            <DrsSection drsReviews={drsReviews} teamName={heading} />
           )}
 
           {/* Bowling Section */}
