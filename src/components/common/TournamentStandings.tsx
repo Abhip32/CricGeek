@@ -127,12 +127,12 @@ export const TournamentStandings: React.FC<TournamentStandingsProps> = ({
 
       {/* Standings Table Body */}
       {isStandingsLoading ? (
-        <div className="p-6 space-y-3 animate-pulse">
-          <div className="h-10 bg-slate-100 rounded-lg" />
-          <div className="h-12 bg-slate-50 rounded-lg" />
-          <div className="h-12 bg-slate-50 rounded-lg" />
-          <div className="h-12 bg-slate-50 rounded-lg" />
-          <div className="h-12 bg-slate-50 rounded-lg" />
+        <div className="p-6 space-y-3">
+          <div className="h-10 shimmer-block rounded-lg" />
+          <div className="h-12 shimmer-block-subtle rounded-lg" />
+          <div className="h-12 shimmer-block-subtle rounded-lg" />
+          <div className="h-12 shimmer-block-subtle rounded-lg" />
+          <div className="h-12 shimmer-block-subtle rounded-lg" />
         </div>
       ) : standings.length === 0 ? (
         <div className="p-10 text-center space-y-3">

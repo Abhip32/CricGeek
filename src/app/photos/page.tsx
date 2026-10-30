@@ -102,11 +102,11 @@ export default function PhotosPage() {
         {isGalleriesLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs animate-pulse">
-                <div className="h-52 bg-slate-200" />
+              <div key={i} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+                <div className="h-52 shimmer-block" />
                 <div className="p-4 space-y-2">
-                  <div className="h-4 bg-slate-200 rounded w-3/4" />
-                  <div className="h-3 bg-slate-100 rounded w-1/2" />
+                  <div className="h-4 shimmer-block rounded w-3/4" />
+                  <div className="h-3 shimmer-block-subtle rounded w-1/2" />
                 </div>
               </div>
             ))}

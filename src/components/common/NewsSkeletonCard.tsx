@@ -1,17 +1,21 @@
 import React from 'react';
 
-export const NewsSkeletonCard = () => {
+export const NewsSkeletonCard: React.FC = () => {
   return (
-    <div className="rounded-xl bg-white border border-slate-200 overflow-hidden shadow-xs animate-pulse flex flex-col sm:flex-row">
-      <div className="w-full sm:w-48 h-44 sm:h-auto bg-slate-200 flex-shrink-0" />
-      <div className="p-4 flex-1 space-y-3">
-        <div className="h-3 w-20 bg-slate-200 rounded" />
-        <div className="h-5 w-5/6 bg-slate-200 rounded" />
-        <div className="h-4 w-full bg-slate-200 rounded" />
-        <div className="h-4 w-2/3 bg-slate-200 rounded" />
-        <div className="pt-2 flex items-center justify-between">
-          <div className="h-3 w-24 bg-slate-200 rounded" />
-          <div className="h-3 w-16 bg-slate-200 rounded" />
+    <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex gap-3.5 sm:gap-4 shadow-2xs overflow-hidden">
+      {/* Thumbnail shimmer */}
+      <div className="w-28 sm:w-44 h-24 sm:h-30 flex-shrink-0 rounded-lg shimmer-block border border-slate-200/80" />
+
+      {/* Editorial Content shimmer */}
+      <div className="flex flex-col justify-between flex-1 min-w-0 py-0.5 space-y-2">
+        <div className="space-y-2">
+          <div className="h-3.5 w-20 rounded shimmer-block" />
+          <div className="h-4 w-11/12 rounded shimmer-block" />
+          <div className="h-3.5 w-3/4 rounded shimmer-block-subtle hidden sm:block" />
+        </div>
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+          <div className="h-3 w-24 rounded shimmer-block" />
+          <div className="h-3 w-16 rounded shimmer-block" />
         </div>
       </div>
     </div>

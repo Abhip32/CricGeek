@@ -132,3 +132,41 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: #ef4444;
 }
+
+/* ==========================================================================
+   Shimmer Loading Animations (The Alchemists Clean Shimmer Effect)
+   ========================================================================== */
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-block {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 0%,
+    #e2e8f0 20%,
+    #f8fafc 40%,
+    #e2e8f0 60%,
+    #f1f5f9 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.shimmer-block-subtle {
+  background: linear-gradient(
+    90deg,
+    #f8fafc 0%,
+    #f1f5f9 20%,
+    #ffffff 40%,
+    #f1f5f9 60%,
+    #f8fafc 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
