@@ -140,33 +140,35 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
     <div className="space-y-4">
       {/* Commentary Filter Pills */}
       <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-          {[
-            { id: 'all', label: 'All Balls', count: rawList.length },
-            { id: 'wickets', label: 'Wickets', count: rawList.filter(i => i.wicket || /out|wicket|bowled|caught|lbw/i.test(i.shortText || '')).length },
-            { id: 'boundaries', label: 'Boundaries (4s & 6s)', count: rawList.filter(i => i.boundary || i.runs === 4 || i.runs === 6).length },
-          ].map(tab => {
-            const isActive = filter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setFilter(tab.id as any)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-                  isActive
-                    ? 'bg-red-600 text-white shadow-2xs'
-                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                  {tab.count}
-                </span>
-              </button>
-            );
-          })}
+        <div className="min-w-0 flex-1 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch] pb-0.5">
+          <div className="inline-flex items-center gap-1.5 min-w-max py-0.5 px-0.5">
+            {[
+              { id: 'all', label: 'All Balls', count: rawList.length },
+              { id: 'wickets', label: 'Wickets', count: rawList.filter(i => (i as any).wicket || (i as any).isWicket || /out|wicket|bowled|caught|lbw/i.test(i.shortText || '')).length },
+              { id: 'boundaries', label: 'Boundaries (4s & 6s)', count: rawList.filter(i => i.boundary || i.runs === 4 || i.runs === 6).length },
+            ].map(tab => {
+              const isActive = filter === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setFilter(tab.id as any)}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                    isActive
+                      ? 'bg-red-600 text-white shadow-2xs'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 active:bg-slate-200'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${isActive ? 'bg-red-700 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        <span className="text-xs font-semibold text-slate-500 hidden sm:inline">
+        <span className="text-xs font-semibold text-slate-500 hidden sm:inline flex-shrink-0">
           Latest Balls First
         </span>
       </div>

@@ -34,20 +34,22 @@ export const PartnershipsSection: React.FC<PartnershipsSectionProps> = ({
     <div className={`space-y-3 ${hideAccordion ? '' : 'p-3 sm:p-4 border-t border-slate-100'}`}>
       {/* Innings Selector Pills if multiple groups provided */}
       {inningsGroups && inningsGroups.length > 1 && (
-        <div className="flex items-center gap-1.5 pb-1 overflow-x-auto no-scrollbar">
-          {inningsGroups.map((group, idx) => (
-            <button
-              key={idx}
-              onClick={() => setSelectedGroupIdx(idx)}
-              className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition-all whitespace-nowrap ${
-                selectedGroupIdx === idx
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {group.team} ({group.score || `Inn ${group.period}`})
-            </button>
-          ))}
+        <div className="w-full max-w-full overflow-x-auto pb-1.5 pt-0.5 scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+          <div className="inline-flex items-center gap-1.5 min-w-max px-0.5 py-0.5">
+            {inningsGroups.map((group, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSelectedGroupIdx(idx)}
+                className={`flex-shrink-0 px-2.5 py-1 rounded text-[11px] font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                  selectedGroupIdx === idx
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 active:bg-slate-300'
+                }`}
+              >
+                {group.team} ({group.score || `Inn ${group.period}`})
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

@@ -146,23 +146,25 @@ export const ChartsTab: React.FC<ChartsTabProps> = ({ matchUrl, scoreData }) => 
 
             {/* Innings Tabs */}
             {manhattanInnings.length > 1 && (
-              <div className="flex items-center gap-1.5">
-                {manhattanInnings.map((inn, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setSelectedInning(idx);
-                      setHoveredOver(null);
-                    }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
-                      selectedInning === idx
-                        ? 'bg-slate-900 text-white shadow-2xs'
-                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    {inn.team || inn.period || `Inn ${idx + 1}`}
-                  </button>
-                ))}
+              <div className="w-full sm:w-auto max-w-full overflow-x-auto pb-1.5 pt-0.5 scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+                <div className="inline-flex items-center gap-1.5 min-w-max px-0.5 py-0.5">
+                  {manhattanInnings.map((inn, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setSelectedInning(idx);
+                        setHoveredOver(null);
+                      }}
+                      className={`flex-shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                        selectedInning === idx
+                          ? 'bg-slate-900 text-white shadow-2xs'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 active:bg-slate-200'
+                      }`}
+                    >
+                      {inn.team || inn.period || `Inn ${idx + 1}`}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

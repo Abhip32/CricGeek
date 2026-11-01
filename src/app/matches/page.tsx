@@ -119,7 +119,8 @@ function MatchesContent() {
         {/* Navigation Tabs & Refresh */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
           {/* Responsive Segmented Tabs */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 md:pb-0 w-full md:w-auto">
+          <div className="w-full md:w-auto overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch] pb-1 md:pb-0">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 min-w-max px-0.5">
             {[
               { id: 'live', label: 'LIVE MATCHES', count: liveMatches.length, icon: Flame },
               { id: 'recent', label: 'RECENT RESULTS', count: recentMatches.length, icon: Clock },
@@ -152,6 +153,7 @@ function MatchesContent() {
                 </button>
               );
             })}
+            </div>
           </div>
 
           {/* Refresh Button */}

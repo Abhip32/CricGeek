@@ -105,39 +105,41 @@ export const ScorecardTab: React.FC<ScorecardTabProps> = ({ scoreData, loading }
     <div className="space-y-5">
       {/* Innings Switcher Pills */}
       {inningsPairs.length > 1 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          <button
-            onClick={() => setSelectedInningIdx('all')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-              selectedInningIdx === 'all'
-                ? 'bg-red-600 text-white shadow-xs'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
-            }`}
-          >
-            All Innings
-          </button>
+        <div className="w-full max-w-full overflow-x-auto pb-1.5 pt-0.5 scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+          <div className="inline-flex items-center gap-2 min-w-max px-0.5 py-0.5">
+            <button
+              onClick={() => setSelectedInningIdx('all')}
+              className={`flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                selectedInningIdx === 'all'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 active:bg-slate-200'
+              }`}
+            >
+              All Innings
+            </button>
 
-          {inningsPairs.map((pair, idx) => {
-            const cleanTitle = pair.title
-              .replace(/\s+Batting/i, '')
-              .replace(/\s+Innings/i, '')
-              .trim();
-            const isActive = selectedInningIdx === idx;
+            {inningsPairs.map((pair, idx) => {
+              const cleanTitle = pair.title
+                .replace(/\s+Batting/i, '')
+                .replace(/\s+Innings/i, '')
+                .trim();
+              const isActive = selectedInningIdx === idx;
 
-            return (
-              <button
-                key={idx}
-                onClick={() => setSelectedInningIdx(idx)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-                  isActive
-                    ? 'bg-red-600 text-white shadow-xs'
-                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600'
-                }`}
-              >
-                {cleanTitle} Innings
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedInningIdx(idx)}
+                  className={`flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                    isActive
+                      ? 'bg-red-600 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-red-600 active:bg-slate-200'
+                  }`}
+                >
+                  {cleanTitle} Innings
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 

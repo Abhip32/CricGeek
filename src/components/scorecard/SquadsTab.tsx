@@ -245,20 +245,22 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
   return (
     <div className="space-y-4">
       {/* Mobile Team Switcher */}
-      <div className="md:hidden flex items-center gap-2 pb-1 overflow-x-auto no-scrollbar">
-        {teamGroups.map((group, idx) => (
-          <button
-            key={idx}
-            onClick={() => setSelectedTeamIdx(idx)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-              selectedTeamIdx === idx
-                ? 'bg-red-600 text-white shadow-2xs'
-                : 'bg-white border border-slate-200 text-slate-700'
-            }`}
-          >
-            {group.team.name}
-          </button>
-        ))}
+      <div className="md:hidden w-full max-w-full overflow-x-auto pb-1.5 pt-0.5 scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+        <div className="inline-flex items-center gap-2 min-w-max px-0.5 py-0.5">
+          {teamGroups.map((group, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedTeamIdx(idx)}
+              className={`flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer select-none ${
+                selectedTeamIdx === idx
+                  ? 'bg-red-600 text-white shadow-2xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 active:bg-slate-100'
+              }`}
+            >
+              {group.team.name}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Grid: 2 columns on desktop, 1 on mobile */}
