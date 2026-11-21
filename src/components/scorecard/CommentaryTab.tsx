@@ -2,10 +2,11 @@
 
 import React, { useState, useMemo } from 'react';
 import EmptyState from '../common/EmptyState';
-import { MessageSquare, Flame, Zap, ShieldAlert, Award, Play } from 'lucide-react';
+import { MessageSquare, Flame, Zap, ShieldAlert, Award, Play, ChevronRight, Layers } from 'lucide-react';
+import { useOvers } from '@/hooks/useCricketQueries';
 
 interface CommentaryItem {
-  over?: string;
+  over?: string | number;
   ball?: number;
   text?: string;
   shortText?: string;
@@ -25,22 +26,40 @@ interface CommentaryItem {
 interface CommentaryTabProps {
   commentaryData?: CommentaryItem[] | any;
   loading?: boolean;
+  selectedOver?: number | null;
+  onClearOver?: () => void;
 }
 
-export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, loading }) => {
+export const CommentaryTab: React.FC<CommentaryTabProps> = ({
+  commentaryData,
+  loading,
+  selectedOver = null,
+  onClearOver
+}) => {
   const [filter, setFilter] = useState<'all' | 'wickets' | 'boundaries'>('all');
 
   const rawList: CommentaryItem[] = Array.isArray(commentaryData) ? commentaryData : [];
 
   const filteredList = useMemo(() => {
+    let list = rawList;
+
+    if (selectedOver !== null) {
+      list = list.filter((item) => {
+        const itemOverNum = typeof item.over === 'number'
+          ? Math.floor(item.over) + 1
+          : item.over ? Math.floor(parseFloat(String(item.over))) + 1 : null;
+        return itemOverNum === selectedOver;
+      });
+    }
+
     if (filter === 'wickets') {
-      return rawList.filter((item) => item.wicket || /out|wicket|bowled|caught|lbw|run out|stumped/i.test(item.text || item.shortText || ''));
+      return list.filter((item) => item.wicket || /out|wicket|bowled|caught|lbw|run out|stumped/i.test(item.text || item.shortText || ''));
     }
     if (filter === 'boundaries') {
-      return rawList.filter((item) => item.boundary || item.runs === 4 || item.runs === 6 || /four|six/i.test(item.shortText || ''));
+      return list.filter((item) => item.boundary || item.runs === 4 || item.runs === 6 || /four|six/i.test(item.shortText || ''));
     }
-    return rawList;
-  }, [rawList, filter]);
+    return list;
+  }, [rawList, filter, selectedOver]);
 
   if (loading) {
     return (
@@ -138,6 +157,29 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({ commentaryData, lo
 
   return (
     <div className="space-y-4">
+      {/* Over Filter Indicator Banner if filtered from top strip */}
+      {selectedOver !== null && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+            <span className="font-extrabold text-red-700">
+              Filtered to Over {selectedOver}
+            </span>
+            <span className="text-slate-500 text-[11px]">
+              ({filteredList.length} balls)
+            </span>
+          </div>
+          {onClearOver && (
+            <button
+              onClick={onClearOver}
+              className="font-bold text-red-600 hover:text-red-800 text-[11px] underline cursor-pointer"
+            >
+              Show All Overs
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Commentary Filter Pills */}
       <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex items-center justify-between gap-3">
         <div className="min-w-0 flex-1 overflow-x-auto scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch] pb-0.5">

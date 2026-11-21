@@ -4,13 +4,16 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import ImageWithFallback from '../common/ImageWithFallback';
 import { ScorecardSummary } from '@/types/match';
-import { MapPin, Trophy, Star, Award, Zap, ArrowLeft, RefreshCw, ChevronRight } from 'lucide-react';
+import { MapPin, Trophy, Star, Award, Zap, ArrowLeft, RefreshCw, ChevronRight, Share2, Activity, Gauge } from 'lucide-react';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
+import { useSituation } from '@/hooks/useCricketQueries';
 import PlayerProfileModal from './PlayerProfileModal';
+import ShareCardModal from './ShareCardModal';
 
 interface MiniScoreCardProps {
   summary?: ScorecardSummary | null;
   matchProp?: any;
+  matchUrl?: string;
   squads?: Record<string, any[]> | null;
   leaders?: any[] | null;
   tables?: any[] | null;
@@ -22,6 +25,7 @@ interface MiniScoreCardProps {
 export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
   summary,
   matchProp,
+  matchUrl,
   squads,
   leaders,
   tables,
@@ -30,6 +34,7 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
   backHref = '/matches?tab=live'
 }) => {
   const [selectedPlayer, setSelectedPlayer] = useState<{ id?: string | null; name: string } | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const resolvedSummary = summary || {
     matchTitle: matchProp?.title || matchProp?.series || 'Match Scorecard',
@@ -71,6 +76,8 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
     rawStatus.includes('RESULT') ||
     rawStatus.includes('CONCLUDED')
   );
+
+  const { data: situation } = useSituation(matchUrl || matchProp?.link, isLive);
 
   // 1. Resolve Player of the Match
   const potmName =
@@ -178,6 +185,15 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
             </span>
           )}
 
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="p-1.5 sm:p-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-colors shadow-2xs"
+            title="Share Match Card"
+            aria-label="Share Match Card"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+          </button>
+
           {onRefresh && (
             <button
               onClick={onRefresh}
@@ -259,6 +275,68 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
                 ? 'Innings Break'
                 : 'Match in Progress')}
           </p>
+
+          {/* Live Match Situation & Win Predictor Bar */}
+          {situation && (
+            <div className="pt-3 border-t border-slate-100 space-y-2.5">
+              {/* Equation & Rate Chips */}
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                {situation.currentRunRate > 0 && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 font-bold text-[11px]">
+                    <Activity className="w-3 h-3 text-red-600" />
+                    <span>CRR: {situation.currentRunRate}</span>
+                  </span>
+                )}
+
+                {situation.requiredRunRate && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-red-50 text-red-700 font-extrabold text-[11px] border border-red-200">
+                    <Gauge className="w-3 h-3 text-red-600" />
+                    <span>RRR: {situation.requiredRunRate}</span>
+                  </span>
+                )}
+
+                {situation.runsNeeded !== null && situation.ballsRemaining !== null && (
+                  <span className="font-extrabold text-red-600 text-xs">
+                    Need {situation.runsNeeded} off {situation.ballsRemaining} balls
+                  </span>
+                )}
+
+                {situation.last5Overs && (situation.last5Overs.runs > 0 || situation.last5Overs.wickets > 0) && (
+                  <span className="text-[11px] text-slate-500 font-medium">
+                    Last 5 ovs: <strong className="text-slate-800">{situation.last5Overs.runs}/{situation.last5Overs.wickets}</strong>
+                  </span>
+                )}
+              </div>
+
+              {/* Win Probability Dual-Team Bar */}
+              {situation.winProbability && (
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold">
+                    <span className="text-red-600 flex items-center gap-1 truncate max-w-[150px]">
+                      {situation.winProbability.teamA}: {situation.winProbability.teamAPercentage}%
+                    </span>
+                    <span className="text-slate-500 text-[10px] uppercase font-black">WIN PREDICTOR</span>
+                    <span className="text-slate-700 flex items-center gap-1 truncate max-w-[150px] justify-end">
+                      {situation.winProbability.teamB}: {situation.winProbability.teamBPercentage}%
+                    </span>
+                  </div>
+
+                  <div className="w-full h-2 rounded-full overflow-hidden bg-slate-200 flex">
+                    <div
+                      className="bg-red-600 h-full transition-all duration-500"
+                      style={{ width: `${situation.winProbability.teamAPercentage}%` }}
+                      title={`${situation.winProbability.teamA}: ${situation.winProbability.teamAPercentage}%`}
+                    />
+                    <div
+                      className="bg-slate-700 h-full transition-all duration-500"
+                      style={{ width: `${situation.winProbability.teamBPercentage}%` }}
+                      title={`${situation.winProbability.teamB}: ${situation.winProbability.teamBPercentage}%`}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right Side (Col 9-12): Player of the Match & MVP with Player Headshots */}
@@ -355,6 +433,14 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
           playerId={selectedPlayer.id}
           playerName={selectedPlayer.name}
           onClose={() => setSelectedPlayer(null)}
+        />
+      )}
+
+      {/* Shareable Match Graphic Modal */}
+      {showShareModal && (
+        <ShareCardModal
+          summary={resolvedSummary}
+          onClose={() => setShowShareModal(false)}
         />
       )}
     </div>

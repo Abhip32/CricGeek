@@ -10,7 +10,10 @@ import {
   WormTrajectory,
   TournamentStanding,
   TournamentTeamsResponse,
-  CricketerProfile
+  CricketerProfile,
+  TickerMatch,
+  MatchSituation,
+  OversResponse
 } from '@/types/match';
 import { NewsItem } from '@/types/news';
 
@@ -179,13 +182,34 @@ export const cricketApi = {
   },
 
   /**
-   * Fetches latest cricket news (global or league-specific)
+   * Fetches real-time ticker stream across active matches
    */
-  getTopNews: async (limit: number = 8, leagueId?: string): Promise<NewsItem[]> => {
+  getLiveTicker: async (): Promise<TickerMatch[]> => {
     try {
-      const url = leagueId
-        ? `${API_BASE_URL}/getNews?leagueId=${encodeURIComponent(leagueId)}`
-        : `${API_BASE_URL}/getNews`;
+      const response = await fetch(`${API_BASE_URL}/getTicker`, { next: { revalidate: 30 } });
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.warn('getLiveTicker failed:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Fetches latest cricket news (global, country-specific, or league-specific)
+   */
+  getTopNews: async (limit: number = 8, country?: string, leagueId?: string): Promise<NewsItem[]> => {
+    try {
+      const params = new URLSearchParams();
+      if (country && country !== 'all' && country !== 'global') {
+        params.set('country', country);
+      }
+      if (leagueId) {
+        params.set('leagueId', leagueId);
+      }
+      const qs = params.toString();
+      const url = qs ? `${API_BASE_URL}/getNews?${qs}` : `${API_BASE_URL}/getNews`;
       const response = await fetch(url, { next: { revalidate: 300 } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
@@ -378,6 +402,57 @@ export const cricketApi = {
       return await response.json();
     } catch (error) {
       console.warn('getWorm failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches real-time match situation, live CRR/RRR, target calculation, and win predictor
+   */
+  getMatchSituation: async (matchUrl?: string): Promise<MatchSituation | null> => {
+    try {
+      const url = matchUrl
+        ? `${API_BASE_URL}/match/situation?url=${encodeURIComponent(matchUrl)}`
+        : `${API_BASE_URL}/match/situation`;
+      const response = await fetch(url, { next: { revalidate: 20 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getMatchSituation failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches grouped over-by-over ball breakdowns and runs
+   */
+  getOverSummaries: async (matchUrl?: string): Promise<OversResponse | null> => {
+    try {
+      const url = matchUrl
+        ? `${API_BASE_URL}/match/overs?url=${encodeURIComponent(matchUrl)}`
+        : `${API_BASE_URL}/match/overs`;
+      const response = await fetch(url, { next: { revalidate: 30 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getOverSummaries failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches dynamic team flag and logo dictionary
+   */
+  getTeamFlags: async (team?: string) => {
+    try {
+      const url = team
+        ? `${API_BASE_URL}/team-flags?team=${encodeURIComponent(team)}`
+        : `${API_BASE_URL}/team-flags`;
+      const response = await fetch(url, { next: { revalidate: 3600 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getTeamFlags failed:', error);
       return null;
     }
   },

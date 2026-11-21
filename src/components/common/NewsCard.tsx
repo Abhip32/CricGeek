@@ -7,6 +7,43 @@ import { Newspaper, ExternalLink, Clock } from 'lucide-react';
 
 interface NewsCardProps {
   news: NewsItem;
+  countryName?: string;
+  countryFlag?: string;
+}
+
+function resolveCountry(news: NewsItem, propName?: string, propFlag?: string) {
+  if (propName && propFlag && propName.toLowerCase() !== 'global') {
+    return { name: propName, flag: propFlag };
+  }
+  const text = `${news.title || ''} ${news.description || ''}`.toLowerCase();
+  if (/\bindia\b|\bindian\b|\bind\b|\brohit\b|\bkohli\b|\bjaiswal\b|\bpant\b|\bbcci\b|\bgill\b|\bipl\b|\brana\b|\bbumrah\b|\bshami\b|\bsiraj\b/.test(text)) {
+    return { name: 'India', flag: '🇮🇳' };
+  }
+  if (/\baustralia\b|\baussie\b|\baus\b|\bcummins\b|\bsmith\b|\bhead\b|\bstarc\b|\bbbl\b|\bcarey\b|\blabuschagne\b|\bmarsh\b/.test(text)) {
+    return { name: 'Australia', flag: '🇦🇺' };
+  }
+  if (/\bengland\b|\benglish\b|\beng\b|\bstokes\b|\broot\b|\becb\b|\bbazball\b|\batkinson\b|\bduckett\b|\bbrook\b/.test(text)) {
+    return { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' };
+  }
+  if (/\bpakistan\b|\bpak\b|\bbabar\b|\bshaheen\b|\brizwan\b|\bpcb\b|\bpsl\b|\bnaseem\b/.test(text)) {
+    return { name: 'Pakistan', flag: '🇵🇰' };
+  }
+  if (/\bsouth africa\b|\bproteas\b|\brsa\b|\brabada\b|\bde kock\b|\bbavuma\b|\bjansen\b|\bmarkram\b/.test(text)) {
+    return { name: 'South Africa', flag: '🇿🇦' };
+  }
+  if (/\bnew zealand\b|\bblack caps\b|\bnz\b|\bwilliamson\b|\blatham\b|\bsantner\b|\bravindra\b/.test(text)) {
+    return { name: 'New Zealand', flag: '🇳🇿' };
+  }
+  if (/\bwest indies\b|\bwindies\b|\bcaribbean\b|\bcpl\b|\bhope\b|\bholder\b|\brussell\b|\bpooran\b/.test(text)) {
+    return { name: 'West Indies', flag: '🌴' };
+  }
+  if (/\bsri lanka\b|\bsl\b|\bcolombo\b|\bhasaranga\b|\bmendis\b|\basalanka\b/.test(text)) {
+    return { name: 'Sri Lanka', flag: '🇱🇰' };
+  }
+  if (/\bbangladesh\b|\btigers\b|\bshakib\b|\bmushfiqur\b|\bshanto\b|\btasquin\b/.test(text)) {
+    return { name: 'Bangladesh', flag: '🇧🇩' };
+  }
+  return { name: 'Global', flag: '🌍' };
 }
 
 function formatNewsTime(dateStr?: string): string {
@@ -33,8 +70,9 @@ function formatNewsTime(dateStr?: string): string {
   }
 }
 
-export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
+export const NewsCard: React.FC<NewsCardProps> = ({ news, countryName, countryFlag }) => {
   const [imageError, setImageError] = useState(false);
+  const country = resolveCountry(news, countryName, countryFlag);
 
   const hasValidImage =
     Boolean(news.image) &&
@@ -79,8 +117,9 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
       <div className="flex flex-col justify-between flex-1 min-w-0 py-0.5">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-heading font-black uppercase tracking-wider px-2 py-0.5 rounded bg-red-50 text-red-600 border border-red-200">
-              CRICKET NEWS
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-heading font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-red-50 text-red-700 border border-red-200/80 shadow-2xs">
+              <span className="text-xs leading-none">{country.flag}</span>
+              <span>{country.name}</span>
             </span>
           </div>
 

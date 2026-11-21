@@ -2,8 +2,21 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { cricketApi } from '@/services/api';
-import { Match, UpcomingMatch, ScorecardResponse } from '@/types/match';
+import { Match, UpcomingMatch, ScorecardResponse, TickerMatch, MatchSituation, OversResponse } from '@/types/match';
 import { NewsItem } from '@/types/news';
+
+/**
+ * Hook for real-time live ticker bar
+ */
+export function useTicker() {
+  return useQuery<TickerMatch[]>({
+    queryKey: ['matches', 'ticker'],
+    queryFn: () => cricketApi.getLiveTicker(),
+    staleTime: 1000 * 30,
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
+  });
+}
 
 /**
  * Hook for live matches
@@ -62,13 +75,57 @@ export function useSchedule(date?: string, category?: string, format?: string) {
 }
 
 /**
- * Hook for cricket headlines (global or tournament-specific)
+ * Hook for cricket headlines (global, country-specific, or tournament-specific)
  */
-export function useTopNews(limit: number = 8, leagueId?: string) {
+export function useTopNews(limit: number = 8, country?: string, leagueId?: string) {
   return useQuery<NewsItem[]>({
-    queryKey: ['news', limit, leagueId || 'global'],
-    queryFn: () => cricketApi.getTopNews(limit, leagueId),
+    queryKey: ['news', limit, country || 'all', leagueId || 'global'],
+    queryFn: () => cricketApi.getTopNews(limit, country, leagueId),
     staleTime: 1000 * 60 * 15,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+/**
+ * Hook for live match situation, CRR, RRR, and Win Predictor
+ */
+export function useSituation(matchUrl?: string, isLive?: boolean) {
+  return useQuery<MatchSituation | null>({
+    queryKey: ['situation', matchUrl || 'latest'],
+    queryFn: () => (matchUrl ? cricketApi.getMatchSituation(matchUrl) : Promise.resolve(null)),
+    enabled: Boolean(matchUrl),
+    staleTime: isLive ? 1000 * 20 : 1000 * 60 * 5,
+    refetchInterval: isLive ? 20000 : false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+/**
+ * Hook for over-by-over summary chips and ball sequence
+ */
+export function useOvers(matchUrl?: string, isLive?: boolean) {
+  return useQuery<OversResponse | null>({
+    queryKey: ['overs', matchUrl || 'latest'],
+    queryFn: () => (matchUrl ? cricketApi.getOverSummaries(matchUrl) : Promise.resolve(null)),
+    enabled: Boolean(matchUrl),
+    staleTime: isLive ? 1000 * 30 : 1000 * 60 * 5,
+    refetchInterval: isLive ? 30000 : false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+/**
+ * Hook for dynamic team logos & flags
+ */
+export function useTeamFlags(team?: string) {
+  return useQuery<any>({
+    queryKey: ['team_flags', team || 'all'],
+    queryFn: () => cricketApi.getTeamFlags(team),
+    staleTime: 1000 * 60 * 60,
     refetchInterval: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

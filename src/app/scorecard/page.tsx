@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useScorecard, useSquads, useCommentary } from '@/hooks/useCricketQueries';
 import { ScorecardResponse, Match } from '@/types/match';
 import MiniScoreCard from '@/components/scorecard/MiniScoreCard';
+import OverSummariesStrip from '@/components/scorecard/OverSummariesStrip';
 import TabNavigation from '@/components/scorecard/TabNavigation';
 import ScorecardTab from '@/components/scorecard/ScorecardTab';
 import DetailsTab from '@/components/scorecard/DetailsTab';
@@ -24,6 +25,7 @@ function ScorecardContent() {
 
   const [matchProp, setMatchProp] = useState<Match | null>(null);
   const [activeTab, setActiveTab] = useState('scorecard');
+  const [selectedOver, setSelectedOver] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -82,7 +84,14 @@ function ScorecardContent() {
           commentaryData && Array.isArray(commentaryData) && commentaryData.length > 0
             ? commentaryData
             : (scoreData as any)?.data?.commentary;
-        return <CommentaryTab commentaryData={resolvedComm} loading={isCommLoading} />;
+        return (
+          <CommentaryTab
+            commentaryData={resolvedComm}
+            loading={isCommLoading}
+            selectedOver={selectedOver}
+            onClearOver={() => setSelectedOver(null)}
+          />
+        );
       }
       case 'charts':
         return <ChartsTab matchUrl={matchUrl} scoreData={scoreData} />;
@@ -141,11 +150,24 @@ function ScorecardContent() {
             <MiniScoreCard 
               summary={scoreData?.data?.summary} 
               matchProp={matchProp}
+              matchUrl={matchUrl}
               squads={(scoreData as any)?.data?.squads}
               leaders={(scoreData as any)?.data?.leaders}
               tables={(scoreData as any)?.data?.tables}
               onRefresh={handleRefresh}
               isRefreshing={refreshing}
+            />
+
+            {/* Over Summaries Strip - Positioned below MiniScoreCard and above TabNavigation */}
+            <OverSummariesStrip
+              matchUrl={matchUrl}
+              selectedOver={selectedOver}
+              onSelectOver={(overNum) => {
+                setSelectedOver(overNum);
+                if (overNum !== null) {
+                  setActiveTab('commentary');
+                }
+              }}
             />
 
             {/* Tab Navigation */}

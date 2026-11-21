@@ -287,3 +287,86 @@ export interface ScorecardResponse {
     raw?: any;
   };
 }
+
+export interface TickerMatch {
+  id: string;
+  leagueId: string;
+  league: string;
+  name: string;
+  state: string;
+  isLive: boolean;
+  isCompleted: boolean;
+  status: string;
+  statusDetail?: string;
+  link: string;
+  teams: Array<{
+    name: string;
+    shortName: string;
+    score: string;
+    overs?: string;
+    flag: string | null;
+  }>;
+}
+
+export interface MatchSituation {
+  leagueId: string;
+  eventId: string;
+  isLive: boolean;
+  statusText: string;
+  battingTeam: {
+    id?: string;
+    name: string;
+    abbreviation: string;
+    score: string;
+    flag: string | null;
+    overs: number;
+    runs: number;
+    wickets: number;
+    isBatting?: boolean;
+    target?: number;
+  } | null;
+  bowlingTeam: {
+    id?: string;
+    name: string;
+    abbreviation: string;
+    score: string;
+    flag: string | null;
+    overs: number;
+    runs: number;
+    wickets: number;
+  } | null;
+  target: number | null;
+  runsNeeded: number | null;
+  ballsRemaining: number | null;
+  currentRunRate: number;
+  requiredRunRate: number | null;
+  winProbability: {
+    teamA: string;
+    teamAPercentage: number;
+    teamB: string;
+    teamBPercentage: number;
+  };
+  striker: { name: string } | null;
+  currentBowler: { name: string } | null;
+  last5Overs: {
+    runs: number;
+    wickets: number;
+  };
+}
+
+export interface OverSummary {
+  overNumber: number;
+  period: string;
+  bowler: string;
+  runs: number;
+  wickets: number;
+  balls: string[];
+  commentaryItems?: any[];
+}
+
+export interface OversResponse {
+  leagueId: string;
+  eventId: string;
+  oversCount: number;
+  overs: OverSummary[];
+}
