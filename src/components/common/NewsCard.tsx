@@ -3,47 +3,61 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { NewsItem } from '@/types/news';
-import { Newspaper, ExternalLink, Clock } from 'lucide-react';
+import { Newspaper, ExternalLink, Clock, Globe } from 'lucide-react';
 
 interface NewsCardProps {
   news: NewsItem;
   countryName?: string;
+  countryFlagUrl?: string | null;
   countryFlag?: string;
 }
 
-function resolveCountry(news: NewsItem, propName?: string, propFlag?: string) {
-  if (propName && propFlag && propName.toLowerCase() !== 'global') {
-    return { name: propName, flag: propFlag };
+const COUNTRY_FLAGS_MAP: Record<string, { name: string; flagUrl: string | null }> = {
+  india: { name: 'India', flagUrl: 'https://flagcdn.com/w40/in.png' },
+  australia: { name: 'Australia', flagUrl: 'https://flagcdn.com/w40/au.png' },
+  england: { name: 'England', flagUrl: 'https://flagcdn.com/w40/gb-eng.png' },
+  pakistan: { name: 'Pakistan', flagUrl: 'https://flagcdn.com/w40/pk.png' },
+  'south-africa': { name: 'South Africa', flagUrl: 'https://flagcdn.com/w40/za.png' },
+  'new-zealand': { name: 'New Zealand', flagUrl: 'https://flagcdn.com/w40/nz.png' },
+  'west-indies': { name: 'West Indies', flagUrl: 'https://a.espncdn.com/i/teamlogos/cricket/500/4.png' },
+  'sri-lanka': { name: 'Sri Lanka', flagUrl: 'https://flagcdn.com/w40/lk.png' },
+  bangladesh: { name: 'Bangladesh', flagUrl: 'https://flagcdn.com/w40/bd.png' },
+  global: { name: 'Global', flagUrl: null },
+};
+
+function resolveCountry(news: NewsItem, propName?: string, propFlagUrl?: string | null) {
+  if (propName && propName.toLowerCase() !== 'global') {
+    return { name: propName, flagUrl: propFlagUrl || null };
   }
   const text = `${news.title || ''} ${news.description || ''}`.toLowerCase();
   if (/\bindia\b|\bindian\b|\bind\b|\brohit\b|\bkohli\b|\bjaiswal\b|\bpant\b|\bbcci\b|\bgill\b|\bipl\b|\brana\b|\bbumrah\b|\bshami\b|\bsiraj\b/.test(text)) {
-    return { name: 'India', flag: '🇮🇳' };
+    return COUNTRY_FLAGS_MAP.india;
   }
   if (/\baustralia\b|\baussie\b|\baus\b|\bcummins\b|\bsmith\b|\bhead\b|\bstarc\b|\bbbl\b|\bcarey\b|\blabuschagne\b|\bmarsh\b/.test(text)) {
-    return { name: 'Australia', flag: '🇦🇺' };
+    return COUNTRY_FLAGS_MAP.australia;
   }
   if (/\bengland\b|\benglish\b|\beng\b|\bstokes\b|\broot\b|\becb\b|\bbazball\b|\batkinson\b|\bduckett\b|\bbrook\b/.test(text)) {
-    return { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' };
+    return COUNTRY_FLAGS_MAP.england;
   }
   if (/\bpakistan\b|\bpak\b|\bbabar\b|\bshaheen\b|\brizwan\b|\bpcb\b|\bpsl\b|\bnaseem\b/.test(text)) {
-    return { name: 'Pakistan', flag: '🇵🇰' };
+    return COUNTRY_FLAGS_MAP.pakistan;
   }
   if (/\bsouth africa\b|\bproteas\b|\brsa\b|\brabada\b|\bde kock\b|\bbavuma\b|\bjansen\b|\bmarkram\b/.test(text)) {
-    return { name: 'South Africa', flag: '🇿🇦' };
+    return COUNTRY_FLAGS_MAP['south-africa'];
   }
   if (/\bnew zealand\b|\bblack caps\b|\bnz\b|\bwilliamson\b|\blatham\b|\bsantner\b|\bravindra\b/.test(text)) {
-    return { name: 'New Zealand', flag: '🇳🇿' };
+    return COUNTRY_FLAGS_MAP['new-zealand'];
   }
   if (/\bwest indies\b|\bwindies\b|\bcaribbean\b|\bcpl\b|\bhope\b|\bholder\b|\brussell\b|\bpooran\b/.test(text)) {
-    return { name: 'West Indies', flag: '🌴' };
+    return COUNTRY_FLAGS_MAP['west-indies'];
   }
   if (/\bsri lanka\b|\bsl\b|\bcolombo\b|\bhasaranga\b|\bmendis\b|\basalanka\b/.test(text)) {
-    return { name: 'Sri Lanka', flag: '🇱🇰' };
+    return COUNTRY_FLAGS_MAP['sri-lanka'];
   }
   if (/\bbangladesh\b|\btigers\b|\bshakib\b|\bmushfiqur\b|\bshanto\b|\btasquin\b/.test(text)) {
-    return { name: 'Bangladesh', flag: '🇧🇩' };
+    return COUNTRY_FLAGS_MAP.bangladesh;
   }
-  return { name: 'Global', flag: '🌍' };
+  return COUNTRY_FLAGS_MAP.global;
 }
 
 function formatNewsTime(dateStr?: string): string {
@@ -70,9 +84,9 @@ function formatNewsTime(dateStr?: string): string {
   }
 }
 
-export const NewsCard: React.FC<NewsCardProps> = ({ news, countryName, countryFlag }) => {
+export const NewsCard: React.FC<NewsCardProps> = ({ news, countryName, countryFlagUrl, countryFlag }) => {
   const [imageError, setImageError] = useState(false);
-  const country = resolveCountry(news, countryName, countryFlag);
+  const country = resolveCountry(news, countryName, countryFlagUrl || countryFlag);
 
   const hasValidImage =
     Boolean(news.image) &&
@@ -118,7 +132,17 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news, countryName, countryFl
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-[10px] font-heading font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-red-50 text-red-700 border border-red-200/80 shadow-2xs">
-              <span className="text-xs leading-none">{country.flag}</span>
+              {country.flagUrl ? (
+                <img
+                  src={country.flagUrl}
+                  alt={country.name}
+                  width={14}
+                  height={14}
+                  className="w-3.5 h-3.5 rounded-full object-cover flex-shrink-0 border border-black/10"
+                />
+              ) : (
+                <Globe className="w-3 h-3 text-red-600 flex-shrink-0" />
+              )}
               <span>{country.name}</span>
             </span>
           </div>

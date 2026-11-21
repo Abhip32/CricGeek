@@ -122,34 +122,34 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
 
     if (isWicket) {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-100 text-red-700 border border-red-200">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-100 text-red-700 border border-red-200">
           Wicket
         </span>
       );
     }
     if (item.boundary === 'six' || item.runs === 6 || text.includes('six')) {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 border border-purple-200">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 border border-purple-200">
           Six
         </span>
       );
     }
     if (item.boundary === 'four' || item.runs === 4 || text.includes('four')) {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200">
           Four
         </span>
       );
     }
     if (item.runs && item.runs > 0) {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
           {item.runs} {item.runs === 1 ? 'run' : 'runs'}
         </span>
       );
     }
     return (
-      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-200">
+      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-200">
         no run
       </span>
     );
@@ -251,7 +251,7 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
                   {item.over || `${idx + 1}`}
                 </span>
                 <span
-                  className={`w-6.5 h-6.5 rounded-full flex items-center justify-center text-xs font-black ${badge.style}`}
+                  className={`w-7 h-7 min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px] aspect-square rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black leading-none ${badge.style}`}
                 >
                   {badge.label}
                 </span>

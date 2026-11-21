@@ -82,7 +82,7 @@ export const OverSummariesStrip: React.FC<OverSummariesStripProps> = ({
                 {ov.balls.slice(0, 8).map((b, bIdx) => (
                   <span
                     key={bIdx}
-                    className={`w-5 h-5 rounded text-[10px] flex items-center justify-center font-mono font-bold ${
+                    className={`w-5 h-5 min-w-[20px] min-h-[20px] aspect-square rounded-full flex-shrink-0 flex items-center justify-center font-mono font-bold text-[9px] leading-none ${
                       b === 'W'
                         ? isSelected
                           ? 'bg-white text-red-600 shadow-xs'
