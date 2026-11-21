@@ -5,9 +5,11 @@ import { Trophy, Star, Award, Flame, Zap, Shield, TrendingUp } from 'lucide-reac
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
 import EmptyState from '@/components/common/EmptyState';
+import KeyPerformersCard from './KeyPerformersCard';
 
 interface MvpTabProps {
   scoreData: any;
+  matchUrl?: string;
   loading?: boolean;
 }
 
@@ -29,7 +31,7 @@ interface PlayerImpact {
   economy: string;
 }
 
-export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
+export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, matchUrl, loading }) => {
   const squads = scoreData?.data?.squads || scoreData?.squads;
   const rawLeaders = scoreData?.data?.leaders || scoreData?.leaders || [];
   const tables = scoreData?.data?.tables || scoreData?.tables || [];
@@ -215,6 +217,9 @@ export const MvpTab: React.FC<MvpTabProps> = ({ scoreData, loading }) => {
 
   return (
     <div className="space-y-6">
+      {/* Official HD Match Leaders & Key Performers */}
+      <KeyPerformersCard matchUrl={matchUrl} />
+
       {/* Official Match Leaders Strip */}
       {validOfficialLeaders.length > 0 && (
         <div className="space-y-3">

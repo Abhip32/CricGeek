@@ -167,12 +167,13 @@ export const TournamentStandings: React.FC<TournamentStandingsProps> = ({
                 const logo = row.team?.logo || null;
 
                 const stats = row.stats || {};
-                const played = stats.gamesPlayed || stats.played || stats.matches || stats.matchesPlayed || '-';
-                const won = stats.wins || stats.won || stats.w || '-';
-                const lost = stats.losses || stats.lost || stats.l || '-';
-                const noResult = stats.noResult || stats.nr || stats.ties || stats.tied || stats.t || '-';
-                const nrr = stats.netRunRate || stats.nrr || '-';
-                const points = row.points || stats.matchPoints || stats.points || '0';
+                const played = row.played ?? stats.matchesPlayed ?? stats.played ?? stats.gamesPlayed ?? stats.matches ?? '-';
+                const won = row.won ?? stats.matchesWon ?? stats.wins ?? stats.won ?? stats.w ?? '-';
+                const lost = row.lost ?? stats.matchesLost ?? stats.losses ?? stats.lost ?? stats.l ?? '-';
+                const noResult = row.noResult ?? stats.noresult ?? stats.noResult ?? stats.nr ?? stats.matchesTied ?? stats.ties ?? stats.tied ?? '-';
+                const nrr = row.netrr ?? stats.netrr ?? stats.netRunRate ?? stats.nrr ?? '-';
+                const points = row.points ?? stats.matchPoints ?? stats.points ?? '0';
+                const isQualified = Boolean(row.qualified || stats.qualified === 'Y' || stats.qualified === '1' || stats.qualified === true);
 
                 // Playoff qualification indicators (Top 2: Qualifier, Top 4: Eliminator)
                 const isTop2 = rank <= 2;
@@ -222,9 +223,19 @@ export const TournamentStandings: React.FC<TournamentStandingsProps> = ({
                           )}
                         </div>
                         <div className="min-w-0">
-                          <span className="font-extrabold text-slate-900 truncate block text-xs sm:text-sm">
-                            {teamName}
-                          </span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-extrabold text-slate-900 truncate block text-xs sm:text-sm">
+                              {teamName}
+                            </span>
+                            {isQualified && (
+                              <span
+                                className="px-1.5 py-0.2 rounded text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex-shrink-0"
+                                title="Qualified for Playoffs"
+                              >
+                                Q
+                              </span>
+                            )}
+                          </div>
                           {abbr && (
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                               {abbr}
@@ -283,6 +294,12 @@ export const TournamentStandings: React.FC<TournamentStandingsProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-xs bg-blue-500 flex-shrink-0" />
             <span className="font-bold text-slate-700">Top 4: Eliminator Spot</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="px-1.5 py-0.2 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Q
+            </span>
+            <span className="font-bold text-slate-700">Qualified for Playoffs</span>
           </div>
         </div>
 

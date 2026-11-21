@@ -5,6 +5,7 @@ import ImageWithFallback from '../common/ImageWithFallback';
 import EmptyState from '../common/EmptyState';
 import { Users, Shield, Award, Sparkles } from 'lucide-react';
 import PlayerProfileModal from './PlayerProfileModal';
+import { useMatchDebuts } from '@/hooks/useCricketQueries';
 
 interface SquadPlayer {
   id?: string | null;
@@ -37,12 +38,14 @@ interface TeamSquadGroup {
 interface SquadsTabProps {
   squadsData?: any;
   debuts?: Array<{ team: string; players: string[] }>;
+  matchUrl?: string;
   loading?: boolean;
 }
 
-export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], loading }) => {
+export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], matchUrl, loading }) => {
   const [selectedTeamIdx, setSelectedTeamIdx] = useState<number>(0);
   const [selectedPlayer, setSelectedPlayer] = useState<{ id?: string | null; name: string } | null>(null);
+  const { data: debutsData } = useMatchDebuts(matchUrl);
 
   if (loading) {
     return (
@@ -244,6 +247,47 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], l
 
   return (
     <div className="space-y-4">
+      {/* Match & Tournament Debutants */}
+      {debutsData && debutsData.debuts && debutsData.debuts.length > 0 && (
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 shadow-2xs">
+          <div className="flex items-center gap-2 mb-2.5">
+            <Sparkles className="w-4 h-4 text-amber-600" />
+            <h4 className="text-xs font-black uppercase tracking-wider text-amber-900">
+              Match Debutants ({debutsData.debuts.length})
+            </h4>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+            {debutsData.debuts.map((d, dIdx) => (
+              <div
+                key={dIdx}
+                className="bg-white border border-amber-200/80 rounded-lg p-2.5 flex items-center gap-2.5"
+              >
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0">
+                  {d.headshot ? (
+                    <ImageWithFallback
+                      src={d.headshot}
+                      alt={d.name}
+                      width={32}
+                      height={32}
+                      className="object-cover w-full h-full"
+                      fallbackText={d.name.slice(0, 1)}
+                    />
+                  ) : (
+                    <Users className="w-4 h-4 text-slate-400 m-auto mt-2" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-slate-900 truncate">{d.name}</p>
+                  <p className="text-[10px] text-amber-700 font-bold truncate">
+                    {d.debutText || d.team || 'Debutant'}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Mobile Team Switcher */}
       <div className="md:hidden w-full max-w-full overflow-x-auto pb-1.5 pt-0.5 scrollbar-none touch-pan-x overscroll-x-contain [-webkit-overflow-scrolling:touch]">
         <div className="inline-flex items-center gap-2 min-w-max px-0.5 py-0.5">

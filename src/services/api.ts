@@ -13,7 +13,14 @@ import {
   CricketerProfile,
   TickerMatch,
   MatchSituation,
-  OversResponse
+  OversResponse,
+  MatchTimelineResponse,
+  MatchLeadersResponse,
+  MatchVenueResponse,
+  MatchWeatherResponse,
+  MatchDebutsResponse,
+  MatchH2HResponse,
+  SeriesFixturesResponse
 } from '@/types/match';
 import { NewsItem } from '@/types/news';
 
@@ -436,6 +443,136 @@ export const cricketApi = {
       return await response.json();
     } catch (error) {
       console.warn('getOverSummaries failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches chronological match timeline, milestones (50s/100s), partnerships, and session breaks
+   */
+  getTimeline: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchTimelineResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/timeline${qs}`, { next: { revalidate: 30 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getTimeline failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches top batters, top bowlers, and match leaders with HD headshots
+   */
+  getLeaders: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchLeadersResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/leaders${qs}`, { next: { revalidate: 30 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getLeaders failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches stadium profile, high-res photo, capacity, and match officials
+   */
+  getVenue: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchVenueResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/venue${qs}`, { next: { revalidate: 600 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getVenue failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches real-time stadium weather, rain probability %, humidity, and rain alerts
+   */
+  getWeather: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchWeatherResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/weather${qs}`, { next: { revalidate: 300 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getWeather failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches players making match or tournament debuts
+   */
+  getDebuts: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchDebutsResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/debuts${qs}`, { next: { revalidate: 600 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getDebuts failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches head-to-head match rivalry history and recent encounters
+   */
+  getH2H: async (matchUrl?: string, leagueId?: string, eventId?: string): Promise<MatchH2HResponse | null> => {
+    try {
+      const params = new URLSearchParams();
+      if (matchUrl) params.set('url', matchUrl);
+      if (leagueId) params.set('leagueId', leagueId);
+      if (eventId) params.set('eventId', eventId);
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const response = await fetch(`${API_BASE_URL}/match/h2h${qs}`, { next: { revalidate: 1800 } });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getH2H failed:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches multi-match tour fixtures and schedule for a series
+   */
+  getSeriesFixtures: async (leagueId: string): Promise<SeriesFixturesResponse | null> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/series/fixtures?leagueId=${encodeURIComponent(leagueId)}`, {
+        next: { revalidate: 180 }
+      });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      console.warn('getSeriesFixtures failed:', error);
       return null;
     }
   },

@@ -222,6 +222,16 @@ export interface TournamentStanding {
   };
   rank: number | null;
   points: string | number;
+  played?: string | number;
+  won?: string | number;
+  lost?: string | number;
+  tied?: string | number;
+  noResult?: string | number;
+  netrr?: string | number;
+  qualified?: boolean;
+  runsFor?: string;
+  runsAgainst?: string;
+  group?: string | null;
   stats: Record<string, any>;
 }
 
@@ -372,3 +382,153 @@ export interface OversResponse {
   oversCount: number;
   overs: OverSummary[];
 }
+
+export interface MatchTimelineEvent {
+  type: 'milestone' | 'partnership' | 'session' | 'drs' | 'tactical' | 'other';
+  typeDisplay: string;
+  text: string;
+  period?: number;
+  over?: number;
+  ball?: number;
+  runs?: number;
+  score?: string;
+}
+
+export interface MatchTimelineResponse {
+  leagueId: string;
+  eventId: string;
+  totalNotes: number;
+  milestones: MatchTimelineEvent[];
+  partnerships: MatchTimelineEvent[];
+  sessions: MatchTimelineEvent[];
+  drsReviews: MatchTimelineEvent[];
+  events: MatchTimelineEvent[];
+}
+
+export interface MatchLeaderPerformer {
+  playerId: string;
+  name: string;
+  fullName?: string;
+  headshot?: string;
+  value?: string;
+  position?: string;
+  order?: string;
+  team?: string;
+  teamLogo?: string;
+}
+
+export interface MatchLeadersResponse {
+  leagueId: string;
+  eventId: string;
+  topBatter?: MatchLeaderPerformer | null;
+  topBowler?: MatchLeaderPerformer | null;
+  groups?: Array<{
+    name: string;
+    leaders: MatchLeaderPerformer[];
+  }>;
+}
+
+export interface MatchOfficial {
+  name: string;
+  role: string;
+  order?: number;
+  country?: string;
+  countryFlag?: string | null;
+}
+
+export interface MatchVenueResponse {
+  id?: string;
+  name: string;
+  city?: string;
+  country?: string;
+  capacity?: number;
+  grass?: boolean;
+  photoUrl?: string | null;
+  officials: MatchOfficial[];
+}
+
+export interface MatchWeatherResponse {
+  city: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  temperatureC: number;
+  temperatureF: number;
+  rainProbability: number;
+  precipitationMm: number;
+  humidityPct: number;
+  windSpeedKmh: number;
+  condition: string;
+  rainInterruptionAlert: boolean;
+}
+
+export interface MatchDebutPlayer {
+  id: string;
+  name: string;
+  fullName?: string;
+  headshot?: string;
+  position?: string;
+  team?: string;
+  teamLogo?: string | null;
+  debutText?: string;
+}
+
+export interface MatchDebutsResponse {
+  leagueId: string;
+  eventId: string;
+  debutsCount: number;
+  debuts: MatchDebutPlayer[];
+}
+
+export interface MatchH2HResponse {
+  team1: { id?: string; name: string; logo?: string | null };
+  team2: { id?: string; name: string; logo?: string | null };
+  overall: {
+    matchesPlayed: number;
+    team1Wins: number;
+    team2Wins: number;
+    draws: number;
+    ties: number;
+    noResults: number;
+  };
+  recentEncounters?: Array<{
+    date?: string;
+    winner?: string;
+    margin?: string;
+    scores?: string;
+  }>;
+}
+
+export interface SeriesFixtureItem {
+  id: string;
+  eventId: string;
+  matchNumber: number;
+  name: string;
+  shortName: string;
+  description: string;
+  date: string;
+  venue: string;
+  state: 'pre' | 'in' | 'post';
+  statusText: string;
+  isLive: boolean;
+  isCompleted: boolean;
+  teams: Array<{
+    id?: string;
+    name: string;
+    abbreviation?: string;
+    score?: string;
+    overs?: string;
+    winner?: boolean;
+    logo?: string | null;
+  }>;
+}
+
+export interface SeriesFixturesResponse {
+  leagueId: string;
+  seriesName: string;
+  season?: number | null;
+  totalMatches: number;
+  fixtures: SeriesFixtureItem[];
+}
+

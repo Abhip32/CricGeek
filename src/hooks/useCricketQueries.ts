@@ -2,7 +2,21 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { cricketApi } from '@/services/api';
-import { Match, UpcomingMatch, ScorecardResponse, TickerMatch, MatchSituation, OversResponse } from '@/types/match';
+import {
+  Match,
+  UpcomingMatch,
+  ScorecardResponse,
+  TickerMatch,
+  MatchSituation,
+  OversResponse,
+  MatchTimelineResponse,
+  MatchLeadersResponse,
+  MatchVenueResponse,
+  MatchWeatherResponse,
+  MatchDebutsResponse,
+  MatchH2HResponse,
+  SeriesFixturesResponse
+} from '@/types/match';
 import { NewsItem } from '@/types/news';
 
 /**
@@ -424,5 +438,103 @@ export function usePhotos(galleryId?: string) {
     refetchInterval: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  });
+}
+
+/**
+ * Hook for match timeline & notes (milestones, partnerships, session breaks, DRS)
+ */
+export function useMatchTimeline(matchUrl?: string, leagueId?: string, eventId?: string, isLive?: boolean) {
+  return useQuery<MatchTimelineResponse | null>({
+    queryKey: ['match_timeline', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getTimeline(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: isLive ? 1000 * 30 : 1000 * 60 * 10,
+    refetchInterval: isLive ? 30000 : false,
+    refetchOnWindowFocus: isLive ? true : false,
+  });
+}
+
+/**
+ * Hook for top batters, top bowlers, and match leaders
+ */
+export function useMatchLeaders(matchUrl?: string, leagueId?: string, eventId?: string, isLive?: boolean) {
+  return useQuery<MatchLeadersResponse | null>({
+    queryKey: ['match_leaders', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getLeaders(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: isLive ? 1000 * 30 : 1000 * 60 * 10,
+    refetchInterval: isLive ? 30000 : false,
+    refetchOnWindowFocus: isLive ? true : false,
+  });
+}
+
+/**
+ * Hook for stadium profile, high-res photo, capacity, and match officials
+ */
+export function useMatchVenue(matchUrl?: string, leagueId?: string, eventId?: string) {
+  return useQuery<MatchVenueResponse | null>({
+    queryKey: ['match_venue', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getVenue(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: 1000 * 60 * 15,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Hook for real-time venue weather and rain probability radar
+ */
+export function useMatchWeather(matchUrl?: string, leagueId?: string, eventId?: string, isLive?: boolean) {
+  return useQuery<MatchWeatherResponse | null>({
+    queryKey: ['match_weather', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getWeather(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: isLive ? 1000 * 60 * 5 : 1000 * 60 * 15,
+    refetchInterval: isLive ? 1000 * 60 * 5 : false,
+    refetchOnWindowFocus: isLive ? true : false,
+  });
+}
+
+/**
+ * Hook for players making their match or tournament debut
+ */
+export function useMatchDebuts(matchUrl?: string, leagueId?: string, eventId?: string) {
+  return useQuery<MatchDebutsResponse | null>({
+    queryKey: ['match_debuts', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getDebuts(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: 1000 * 60 * 15,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Hook for head-to-head match rivalry history
+ */
+export function useMatchH2H(matchUrl?: string, leagueId?: string, eventId?: string) {
+  return useQuery<MatchH2HResponse | null>({
+    queryKey: ['match_h2h', matchUrl || '', leagueId || '', eventId || ''],
+    queryFn: () => cricketApi.getH2H(matchUrl, leagueId, eventId),
+    enabled: Boolean(matchUrl || (leagueId && eventId)),
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Hook for multi-match tour fixtures and schedule
+ */
+export function useSeriesFixtures(leagueId?: string) {
+  return useQuery<SeriesFixturesResponse | null>({
+    queryKey: ['series_fixtures', leagueId || ''],
+    queryFn: () => (leagueId ? cricketApi.getSeriesFixtures(leagueId) : Promise.resolve(null)),
+    enabled: Boolean(leagueId),
+    staleTime: 1000 * 60 * 5,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
   });
 }

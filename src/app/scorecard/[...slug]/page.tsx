@@ -13,6 +13,8 @@ import SquadsTab from '@/components/scorecard/SquadsTab';
 import CommentaryTab from '@/components/scorecard/CommentaryTab';
 import ChartsTab from '@/components/scorecard/ChartsTab';
 import MvpTab from '@/components/scorecard/MvpTab';
+import TimelineTab from '@/components/scorecard/TimelineTab';
+import SeriesTourStrip from '@/components/scorecard/SeriesTourStrip';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import ScorecardSkeleton from '@/components/scorecard/ScorecardSkeleton';
 import EmptyState from '@/components/common/EmptyState';
@@ -105,10 +107,12 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
           />
         );
       }
+      case 'timeline':
+        return <TimelineTab matchUrl={matchUrl} isLive={isLive} />;
       case 'charts':
         return <ChartsTab matchUrl={matchUrl} scoreData={scoreData} />;
       case 'mvp':
-        return <MvpTab scoreData={scoreData} loading={isScoreLoading} />;
+        return <MvpTab scoreData={scoreData} matchUrl={matchUrl} loading={isScoreLoading} />;
       case 'details':
         return <DetailsTab scoreData={scoreData} matchUrl={matchUrl} loading={isScoreLoading} />;
       case 'squads': {
@@ -120,7 +124,7 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
               team2: { name: squadTeams[1], players: rawSquads[squadTeams[1]] }
             }
           : squadsData;
-        return <SquadsTab squadsData={resolvedSquads} loading={isScoreLoading} />;
+        return <SquadsTab squadsData={resolvedSquads} matchUrl={matchUrl} loading={isScoreLoading} />;
       }
       default:
         return <ScorecardTab scoreData={scoreData} loading={isScoreLoading} />;
@@ -142,6 +146,26 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
     ? `${matchProp.teamA} vs ${matchProp.teamB}`
     : 'Match';
 
+  const resolvedLeagueId = useMemo(() => {
+    return (
+      (scoreData as any)?.leagueId ||
+      (scoreData as any)?.data?.leagueId ||
+      (scoreData as any)?.data?.gameInfo?.league?.id ||
+      searchParams.get('leagueId') ||
+      undefined
+    );
+  }, [scoreData, searchParams]);
+
+  const resolvedEventId = useMemo(() => {
+    return (
+      (scoreData as any)?.eventId ||
+      (scoreData as any)?.data?.eventId ||
+      (scoreData as any)?.data?.gameInfo?.id ||
+      searchParams.get('eventId') ||
+      undefined
+    );
+  }, [scoreData, searchParams]);
+
   return (
     <div className="min-h-screen bg-slate-50 py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -158,6 +182,14 @@ export default function ScorecardCatchAllPage({ params }: { params: Promise<{ sl
           />
         ) : (
           <div className="space-y-6">
+            {/* Series Multi-Match Tour Tracker */}
+            {resolvedLeagueId && (
+              <SeriesTourStrip
+                leagueId={resolvedLeagueId}
+                currentEventId={resolvedEventId}
+              />
+            )}
+
             {/* Header Hero Scorecard Banner */}
             <MiniScoreCard 
               summary={scoreData?.data?.summary} 

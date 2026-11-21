@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { Award, FileText, Users, MessageSquare, Trophy, BarChart2 } from 'lucide-react';
+import { Award, FileText, Users, MessageSquare, Trophy, BarChart2, Clock } from 'lucide-react';
 
 interface TabNavigationProps {
   activeTab: string;
@@ -22,6 +22,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
   const tabs = [
     { id: 'scorecard', label: 'Scorecard', icon: Award, show: true },
     { id: 'commentary', label: 'Commentary', icon: MessageSquare, show: hasCommentary },
+    { id: 'timeline', label: 'Timeline', icon: Clock, show: true },
     { id: 'charts', label: 'Overs & Charts', icon: BarChart2, show: hasCharts },
     { id: 'details', label: 'Match Info', icon: FileText, show: true },
     { id: 'squads', label: 'Squads', icon: Users, show: hasSquads },

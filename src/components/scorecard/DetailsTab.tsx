@@ -4,6 +4,8 @@ import React, { useMemo } from 'react';
 import { ScorecardSummary } from '@/types/match';
 import { useMatchPreview } from '@/hooks/useCricketQueries';
 import ImageWithFallback from '../common/ImageWithFallback';
+import VenueWeatherWidget from './VenueWeatherWidget';
+import HeadToHeadCard from './HeadToHeadCard';
 import {
   Info,
   MapPin,
@@ -154,6 +156,12 @@ export const DetailsTab: React.FC<DetailsTabProps> = ({ scoreData, matchUrl, loa
           </div>
         </div>
       )}
+
+      {/* Stadium Profile & Live Ground Weather Radar */}
+      <VenueWeatherWidget matchUrl={matchUrl} />
+
+      {/* Head-to-Head Historical Rivalry */}
+      <HeadToHeadCard matchUrl={matchUrl} />
 
       {/* Pitch & Weather Insights Card (When Pitch Report or Weather is present) */}
       {(pitchReport || weather || captainQuotes) && (
