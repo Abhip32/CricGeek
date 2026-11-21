@@ -345,6 +345,8 @@ export interface MatchSituation {
     teamAPercentage: number;
     teamB: string;
     teamBPercentage: number;
+    teamAAbbreviation?: string;
+    teamBAbbreviation?: string;
   };
   striker: { name: string } | null;
   currentBowler: { name: string } | null;

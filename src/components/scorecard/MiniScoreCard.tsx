@@ -310,18 +310,48 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
 
               {/* Win Probability Dual-Team Bar */}
               {situation.winProbability && (
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-[11px] font-bold">
-                    <span className="text-red-600 flex items-center gap-1 truncate max-w-[150px]">
-                      {situation.winProbability.teamA}: {situation.winProbability.teamAPercentage}%
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between gap-2 sm:gap-3 text-xs font-bold">
+                    {/* Team A (Left / Red) */}
+                    <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
+                      <span
+                        className="text-red-600 font-extrabold truncate text-[11px] sm:text-xs tracking-tight"
+                        title={situation.winProbability.teamA}
+                      >
+                        <span className="hidden sm:inline">{situation.winProbability.teamA}</span>
+                        <span className="sm:hidden">
+                          {situation.winProbability.teamAAbbreviation || situation.winProbability.teamA}
+                        </span>
+                      </span>
+                      <span className="text-red-600 font-black flex-shrink-0 tabular-nums text-[11px] sm:text-xs">
+                        {situation.winProbability.teamAPercentage}%
+                      </span>
+                    </div>
+
+                    {/* Win Predictor Center Badge */}
+                    <span className="text-slate-400 text-[9px] sm:text-[10px] uppercase font-black px-1.5 py-0.5 rounded bg-slate-100 flex-shrink-0 tracking-wider">
+                      WIN PREDICTOR
                     </span>
-                    <span className="text-slate-500 text-[10px] uppercase font-black">WIN PREDICTOR</span>
-                    <span className="text-slate-700 flex items-center gap-1 truncate max-w-[150px] justify-end">
-                      {situation.winProbability.teamB}: {situation.winProbability.teamBPercentage}%
-                    </span>
+
+                    {/* Team B (Right / Slate) */}
+                    <div className="flex items-center justify-end gap-1 sm:gap-1.5 min-w-0 flex-1">
+                      <span
+                        className="text-slate-700 font-extrabold truncate text-right text-[11px] sm:text-xs tracking-tight"
+                        title={situation.winProbability.teamB}
+                      >
+                        <span className="hidden sm:inline">{situation.winProbability.teamB}</span>
+                        <span className="sm:hidden">
+                          {situation.winProbability.teamBAbbreviation || situation.winProbability.teamB}
+                        </span>
+                      </span>
+                      <span className="text-slate-700 font-black flex-shrink-0 tabular-nums text-[11px] sm:text-xs">
+                        {situation.winProbability.teamBPercentage}%
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="w-full h-2 rounded-full overflow-hidden bg-slate-200 flex">
+                  {/* Dual Bar */}
+                  <div className="w-full h-2 rounded-full overflow-hidden bg-slate-200 flex shadow-inner">
                     <div
                       className="bg-red-600 h-full transition-all duration-500"
                       style={{ width: `${situation.winProbability.teamAPercentage}%` }}
