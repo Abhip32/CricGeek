@@ -161,13 +161,14 @@ export const PlayerProfileModal: React.FC<PlayerProfileModalProps> = ({
           {teamName && (
             <div className="flex items-center gap-2 pb-2 bg-slate-50 border border-slate-200/80 px-3 py-1.5 rounded-xl shadow-2xs">
               {teamFlag ? (
-                <div className="w-6 h-4 overflow-hidden rounded shadow-2xs border border-slate-200 flex-shrink-0">
+                <div className="w-6 h-6 rounded-full overflow-hidden shadow-2xs border border-slate-200 flex-shrink-0 bg-white flex items-center justify-center p-0.5">
                   <ImageWithFallback
                     src={teamFlag}
                     alt={teamName}
-                    width={24}
-                    height={16}
-                    className="object-cover w-full h-full"
+                    width={22}
+                    height={22}
+                    className="object-contain w-full h-full rounded-full"
+                    fallbackText={teamAbbr || teamName}
                   />
                 </div>
               ) : (
@@ -267,9 +268,23 @@ export const PlayerProfileModal: React.FC<PlayerProfileModalProps> = ({
                     Representation
                   </span>
                 </div>
-                <strong className="text-sm font-bold text-slate-900 block truncate">
-                  {teamName || 'International / First-Class'}
-                </strong>
+                <div className="flex items-center gap-2 min-w-0">
+                  {teamFlag && (
+                    <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 flex-shrink-0 flex items-center justify-center p-0.5 shadow-2xs">
+                      <ImageWithFallback
+                        src={teamFlag}
+                        alt={teamName}
+                        width={18}
+                        height={18}
+                        className="object-contain w-full h-full rounded-full"
+                        fallbackText={teamAbbr || teamName}
+                      />
+                    </div>
+                  )}
+                  <strong className="text-sm font-bold text-slate-900 block truncate">
+                    {teamName || 'International / First-Class'}
+                  </strong>
+                </div>
               </div>
             </div>
           )}

@@ -12,7 +12,7 @@ export interface MatchedPlayer {
 
 export function findPlayerInSquads(
   playerName: string,
-  squads?: Record<string, any[]> | null
+  squads?: Record<string, any> | null
 ): MatchedPlayer | null {
   if (!squads || !playerName) return null;
 
@@ -27,9 +27,27 @@ export function findPlayerInSquads(
   const cleanLower = raw.toLowerCase();
 
   const allPlayers: MatchedPlayer[] = [];
-  Object.values(squads).forEach((list) => {
+
+  const addCandidate = (item: any) => {
+    if (!item || !item.name) return;
+    allPlayers.push({
+      name: item.name,
+      id: item.id ? String(item.id) : null,
+      image: item.image || item.headshot || null,
+      role: item.role || item.position || '',
+      captain: item.captain || false,
+      wicketkeeper: item.wicketkeeper || item.keeper || false,
+    });
+  };
+
+  Object.values(squads).forEach((list: any) => {
     if (Array.isArray(list)) {
-      allPlayers.push(...list);
+      list.forEach(addCandidate);
+    } else if (list && typeof list === 'object') {
+      if (Array.isArray(list.playingXI)) list.playingXI.forEach(addCandidate);
+      if (Array.isArray(list.bench)) list.bench.forEach(addCandidate);
+      if (Array.isArray(list.players)) list.players.forEach(addCandidate);
+      if (Array.isArray(list.starters)) list.starters.forEach(addCandidate);
     }
   });
 
@@ -55,10 +73,9 @@ export function findPlayerInSquads(
     if (found) return found;
   }
 
-  // 3. Match on first word if unique (e.g. "Rohit", "Kohli", "Bumrah")
-  const firstName = parts[0];
-  if (firstName && firstName.length >= 4) {
-    found = allPlayers.find((p) => (p.name || '').toLowerCase().includes(firstName));
+  // 3. Fallback: startsWith on last name
+  if (lastName && lastName.length >= 3) {
+    found = allPlayers.find((p) => (p.name || '').toLowerCase().startsWith(cleanLower.split(/\s+/)[0]));
     if (found) return found;
   }
 

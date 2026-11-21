@@ -22,30 +22,55 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 }) => {
   const [error, setError] = useState(false);
 
-  // Derive clean 2-3 letter monogram initials from team name
+  // Derive clean, strictly 2-letter monogram initials (e.g. Devon Conway -> DC, India -> IN)
   const initials = React.useMemo(() => {
-    if (fallbackText) return fallbackText.slice(0, 3).toUpperCase();
-    if (!alt) return 'TM';
-    const words = alt.trim().split(/\s+/);
-    if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
-    return words.slice(0, 3).map(w => w[0]).join('').toUpperCase();
+    const raw = (fallbackText || alt || '').trim();
+    if (!raw) return 'CR';
+
+    // Remove qualifiers like (c), (wk), dagger, arrows
+    const clean = raw
+      .replace(/\s*\(.*?\)/g, '')
+      .replace(/\s*†/g, '')
+      .replace(/►/g, '')
+      .trim();
+
+    const words = clean.split(/\s+/).filter(Boolean);
+    if (words.length === 0) return 'CR';
+
+    if (words.length === 1) {
+      // Single word: max 2 characters
+      return words[0].slice(0, 2).toUpperCase();
+    }
+
+    // Multiple words: take first letter of first word and first letter of last word
+    const firstChar = words[0][0] || '';
+    const lastChar = words[words.length - 1][0] || '';
+    return (firstChar + lastChar).toUpperCase();
   }, [alt, fallbackText]);
 
-  // Check if image is missing, is a lazy loader SVG placeholder, or failed
+  // Check if image is missing, failed, or is a generic placeholder
   const isInvalid = !src || 
                     error || 
                     src.includes('lazyimage') || 
                     src.endsWith('.svg') || 
-                    src.startsWith('data:image');
+                    src.startsWith('data:image') ||
+                    src.includes('default-player-logo');
 
   if (isInvalid) {
+    // Keep font size well within bounds so initials never clip or overflow the container
+    const dimension = Math.min(width, height);
+    const fontSize = Math.min(32, Math.max(9, Math.floor(dimension * 0.32)));
+
     return (
       <span
-        style={{ width, height }}
-        className={`inline-flex flex-shrink-0 items-center justify-center font-bold text-slate-600 rounded bg-slate-100 ${className}`}
+        style={{ width, height, maxWidth: '100%', maxHeight: '100%' }}
+        className={`inline-flex flex-shrink-0 items-center justify-center font-heading font-black tracking-wider text-slate-700 rounded-xl bg-gradient-to-br from-slate-100 via-slate-100 to-slate-200 select-none overflow-hidden p-1 shadow-inner ${className}`}
         title={alt}
       >
-        <span style={{ fontSize: Math.max(9, Math.floor(Math.min(width, height) * 0.45)) }}>
+        <span
+          style={{ fontSize, lineHeight: 1 }}
+          className="truncate"
+        >
           {initials}
         </span>
       </span>
