@@ -6,6 +6,8 @@ import { BowlingTable } from './BowlingTable';
 import { ScorecardTable, InningsPartnership, FallOfWicketItem, DrsReviewSummary } from '@/types/match';
 import PartnershipsSection from './PartnershipsSection';
 import DrsSection from './DrsSection';
+import PlayerProfileModal from './PlayerProfileModal';
+import { findPlayerInSquads } from '@/lib/playerMatcher';
 import { ChevronDown, Users, Activity, FileSpreadsheet } from 'lucide-react';
 
 interface InningProps {
@@ -41,13 +43,33 @@ export const InningSection: React.FC<InningProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [activeView, setActiveView] = useState<'scorecard' | 'partnerships' | 'fow'>('scorecard');
+  const [activePlayer, setActivePlayer] = useState<{ id?: string | null; name: string } | null>(null);
 
   const heading = title || inning?.header || battingTable?.title || 'Innings Scorecard';
 
   const extras = battingTable?.extras || inning?.extras;
   const total = battingTable?.total || inning?.total;
-  const didNotBat = battingTable?.didNotBat || inning?.didNotBat || [];
   const fallOfWickets = battingTable?.fallOfWickets || inning?.fallOfWickets || [];
+
+  // Robustly extract Did Not Bat / Yet to Bat list
+  const didNotBatList: string[] = React.useMemo(() => {
+    let raw: string[] = [];
+    if (Array.isArray(battingTable?.didNotBat) && battingTable.didNotBat.length > 0) {
+      raw = battingTable.didNotBat;
+    } else if (Array.isArray(inning?.didNotBat) && inning.didNotBat.length > 0) {
+      raw = inning.didNotBat;
+    } else if (battingTable && Array.isArray(battingTable.rows)) {
+      const dnbRow = battingTable.rows.find((r) => {
+        const cell = String(r['BATTING'] || r['Batting'] || r['Batter'] || Object.values(r)[0] || '').trim();
+        return /^(yet to bat|did not bat)/i.test(cell);
+      });
+      if (dnbRow) {
+        const cell = String(dnbRow['BATTING'] || dnbRow['Batting'] || dnbRow['Batter'] || Object.values(dnbRow)[0] || '').trim();
+        raw = cell.replace(/^(yet to bat|did not bat):?/i, '').split(',').map((n) => n.trim()).filter(Boolean);
+      }
+    }
+    return raw.map(name => name.replace(/^(yet to bat|did not bat):?/i, '').trim()).filter(Boolean);
+  }, [battingTable, inning]);
 
   const totalScore = total?.score || total?.runs;
   const hasPartnerships = Boolean(partnerships && partnerships.length > 0);
@@ -204,20 +226,40 @@ export const InningSection: React.FC<InningProps> = ({
                 </div>
               )}
 
-              {/* Did Not Bat */}
-              {didNotBat.length > 0 && (
-                <div className="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="font-heading font-black text-slate-500 uppercase tracking-wider text-[11px] mr-1">
-                    Did Not Bat:
-                  </span>
-                  {didNotBat.map((name, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-medium text-xs border border-slate-200"
-                    >
-                      {name}
+              {/* Yet to Bat / Did Not Bat */}
+              {didNotBatList.length > 0 && (
+                <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-3 sm:p-3.5 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-3.5 bg-red-600 rounded-full flex-shrink-0" />
+                    <span className="font-heading font-black text-slate-800 uppercase tracking-wider text-[11px]">
+                      Yet to Bat ({didNotBatList.length})
                     </span>
-                  ))}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {didNotBatList.map((playerName, i) => {
+                      const matched = findPlayerInSquads(playerName, squads);
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setActivePlayer({ id: matched?.id || null, name: playerName })}
+                          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white text-slate-800 font-bold text-xs border border-slate-200 shadow-2xs hover:border-red-300 hover:text-red-600 transition-all cursor-pointer group"
+                          title={`View ${playerName}'s profile`}
+                        >
+                          <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0 flex items-center justify-center">
+                            {matched?.image ? (
+                              <img src={matched.image} alt={playerName} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-[9px] font-black text-slate-500">
+                                {playerName.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <span>{playerName}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -378,6 +420,14 @@ export const InningSection: React.FC<InningProps> = ({
           )}
         </div>
       )}
+
+      {/* Player Profile Modal */}
+      <PlayerProfileModal
+        isOpen={Boolean(activePlayer)}
+        playerId={activePlayer?.id}
+        playerName={activePlayer?.name}
+        onClose={() => setActivePlayer(null)}
+      />
     </div>
   );
 };

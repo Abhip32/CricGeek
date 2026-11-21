@@ -27,19 +27,38 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData, 
 
   const rows = React.useMemo(() => {
     if (battingData && Array.isArray(battingData)) {
-      return battingData.map((r) => ({
-        name: r.name || '',
-        dismissal: r.dismissal || '',
-        runs: r.runs ?? '-',
-        balls: r.balls ?? '-',
-        fours: r.fours ?? '-',
-        sixes: r.sixes ?? '-',
-        sr: r.strikeRate ?? '-'
-      }));
+      return battingData
+        .filter((r) => {
+          const lower = String(r.name || '').trim().toLowerCase();
+          return !lower.startsWith('yet to bat') &&
+                 !lower.startsWith('did not bat') &&
+                 !lower.startsWith('extras') &&
+                 !lower.startsWith('total') &&
+                 !lower.startsWith('fall of wickets');
+        })
+        .map((r) => ({
+          name: r.name || '',
+          dismissal: r.dismissal || '',
+          runs: r.runs ?? '-',
+          balls: r.balls ?? '-',
+          fours: r.fours ?? '-',
+          sixes: r.sixes ?? '-',
+          sr: r.strikeRate ?? '-'
+        }));
     }
 
     if (table && Array.isArray(table.rows)) {
-      return table.rows.map((row) => {
+      return table.rows
+        .filter((row) => {
+          const battingCell = String(row['BATTING'] || row['Batting'] || row['Batter'] || Object.values(row)[0] || '').trim();
+          const lower = battingCell.toLowerCase();
+          return !lower.startsWith('yet to bat') &&
+                 !lower.startsWith('did not bat') &&
+                 !lower.startsWith('extras') &&
+                 !lower.startsWith('total') &&
+                 !lower.startsWith('fall of wickets');
+        })
+        .map((row) => {
         let name = '';
         let dismissal = '';
 
