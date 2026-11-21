@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import EmptyState from '../common/EmptyState';
-import { MessageSquare, Flame, Zap, ShieldAlert, Award, Play, ChevronRight, Layers } from 'lucide-react';
+import { MessageSquare, Flame, Zap, ShieldAlert, Award, Play, ChevronRight, Layers, ArrowUpDown } from 'lucide-react';
 import { useOvers } from '@/hooks/useCricketQueries';
 
 interface CommentaryItem {
@@ -37,11 +37,25 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
   onClearOver
 }) => {
   const [filter, setFilter] = useState<'all' | 'wickets' | 'boundaries'>('all');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
   const rawList: CommentaryItem[] = Array.isArray(commentaryData) ? commentaryData : [];
 
   const filteredList = useMemo(() => {
-    let list = rawList;
+    let list = [...rawList];
+
+    // Ensure list matches requested sortOrder
+    if (list.length > 1) {
+      const firstOver = Number(list[0].over) || 0;
+      const lastOver = Number(list[list.length - 1].over) || 0;
+      const isCurrentlyAsc = firstOver < lastOver;
+
+      if (sortOrder === 'desc' && isCurrentlyAsc) {
+        list.reverse();
+      } else if (sortOrder === 'asc' && !isCurrentlyAsc) {
+        list.reverse();
+      }
+    }
 
     if (selectedOver !== null) {
       list = list.filter((item) => {
@@ -59,7 +73,7 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
       return list.filter((item) => item.boundary || item.runs === 4 || item.runs === 6 || /four|six/i.test(item.shortText || ''));
     }
     return list;
-  }, [rawList, filter, selectedOver]);
+  }, [rawList, filter, selectedOver, sortOrder]);
 
   if (loading) {
     return (
@@ -210,9 +224,15 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
           </div>
         </div>
 
-        <span className="text-xs font-semibold text-slate-500 hidden sm:inline flex-shrink-0">
-          Latest Balls First
-        </span>
+        <button
+          type="button"
+          onClick={() => setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'))}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-slate-100 transition-colors border border-slate-200 cursor-pointer shadow-2xs select-none flex-shrink-0"
+          title="Click to toggle ball ordering"
+        >
+          <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+          <span>{sortOrder === 'desc' ? 'Latest Balls First' : 'Oldest Balls First'}</span>
+        </button>
       </div>
 
       {/* Ball by Ball Timeline Stream */}
@@ -232,11 +252,12 @@ export const CommentaryTab: React.FC<CommentaryTabProps> = ({
             if (toMatch) matchUp = toMatch[1].trim();
           }
 
-          // Strip duplicate matchup prefix from description body if present
+          // Strip duplicate matchup prefix from description body and remove raw HTML tags
           let narrative = rawText;
           if (matchUp && narrative.toLowerCase().startsWith(matchUp.toLowerCase())) {
             narrative = narrative.slice(matchUp.length).replace(/^,\s*/, '').trim();
           }
+          narrative = narrative.replace(/<[^>]*>/g, '').trim();
 
           return (
             <div
