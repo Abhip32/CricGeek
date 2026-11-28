@@ -98,10 +98,22 @@ export const MiniScoreCard: React.FC<MiniScoreCardProps> = ({
     (tables || []).forEach((t: any) => {
       if (t.type === 'Batting') {
         (t.rows || []).forEach((r: any) => {
+          const rawName = (r['BATTING'] || r['Batting'] || Object.values(r)[0] || '').split('\n')[0].replace(/►/g, '').trim();
+          const lower = rawName.toLowerCase();
+          if (
+            !rawName ||
+            lower.startsWith('extras') ||
+            lower.startsWith('total') ||
+            lower.startsWith('did not bat') ||
+            lower.startsWith('yet to bat') ||
+            lower.startsWith('fall of wickets')
+          ) {
+            return;
+          }
           const runs = parseInt(r['R'] || r['Runs'] || '0', 10);
           if (!isNaN(runs) && runs > maxRuns) {
             maxRuns = runs;
-            topName = (r['BATTING'] || r['Batting'] || Object.values(r)[0] || '').split('\n')[0].replace(/►/g, '').trim();
+            topName = rawName;
             ballsFaced = r['B'] || r['Balls'] || '';
           }
         });

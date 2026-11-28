@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface ImageWithFallbackProps {
@@ -21,6 +21,10 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   fallbackText
 }) => {
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setError(false);
+  }, [src]);
 
   // Derive clean, strictly 2-letter monogram initials (e.g. Devon Conway -> DC, India -> IN)
   const initials = React.useMemo(() => {

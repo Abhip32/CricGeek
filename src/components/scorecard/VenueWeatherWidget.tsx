@@ -187,11 +187,14 @@ export const VenueWeatherWidget: React.FC<VenueWeatherWidgetProps> = ({
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{official.role}</p>
                 </div>
                 {official.countryFlag && (
-                  <div className="w-5 h-4 rounded-xs overflow-hidden flex-shrink-0 border border-slate-200 shadow-2xs">
-                    <img
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 border border-slate-200 bg-white flex items-center justify-center p-0.5 shadow-2xs">
+                    <ImageWithFallback
                       src={official.countryFlag}
-                      alt={official.country || ''}
-                      className="w-full h-full object-cover"
+                      alt={official.country || official.name}
+                      width={20}
+                      height={20}
+                      className="w-full h-full object-contain rounded-full"
+                      fallbackText={official.country || official.name}
                     />
                   </div>
                 )}

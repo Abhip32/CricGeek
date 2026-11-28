@@ -207,7 +207,7 @@ export const SquadsTab: React.FC<SquadsTabProps> = ({ squadsData, debuts = [], m
                   alt={group.team.name}
                   width={24}
                   height={24}
-                  className="object-cover"
+                  className="object-contain w-full h-full rounded-full"
                 />
               ) : (
                 <Shield className="w-3.5 h-3.5 text-red-600" />

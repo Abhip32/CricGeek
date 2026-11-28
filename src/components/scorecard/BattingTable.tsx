@@ -152,7 +152,7 @@ export const BattingTable: React.FC<BattingTableProps> = ({ table, battingData, 
                           alt={batter.name}
                           width={28}
                           height={28}
-                          fallbackText={batter.name.slice(0, 1)}
+                          fallbackText={batter.name}
                         />
                       ) : (
                         <span className="text-[10px] font-black text-slate-600">

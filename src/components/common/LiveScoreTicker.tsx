@@ -53,7 +53,7 @@ export default function LiveScoreTicker() {
                         alt={team1.shortName || team1.name || ''}
                         width={16}
                         height={16}
-                        className="object-cover"
+                        className="object-contain w-full h-full rounded-full"
                       />
                     </div>
                   )}
@@ -78,7 +78,7 @@ export default function LiveScoreTicker() {
                         alt={team2.shortName || team2.name || ''}
                         width={16}
                         height={16}
-                        className="object-cover"
+                        className="object-contain w-full h-full rounded-full"
                       />
                     </div>
                   )}

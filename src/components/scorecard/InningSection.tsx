@@ -7,6 +7,7 @@ import { ScorecardTable, InningsPartnership, FallOfWicketItem, DrsReviewSummary 
 import PartnershipsSection from './PartnershipsSection';
 import DrsSection from './DrsSection';
 import PlayerProfileModal from './PlayerProfileModal';
+import ImageWithFallback from '../common/ImageWithFallback';
 import { findPlayerInSquads } from '@/lib/playerMatcher';
 import { ChevronDown, Users, Activity, FileSpreadsheet } from 'lucide-react';
 
@@ -247,13 +248,14 @@ export const InningSection: React.FC<InningProps> = ({
                           title={`View ${playerName}'s profile`}
                         >
                           <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0 flex items-center justify-center">
-                            {matched?.image ? (
-                              <img src={matched.image} alt={playerName} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-[9px] font-black text-slate-500">
-                                {playerName.charAt(0).toUpperCase()}
-                              </span>
-                            )}
+                            <ImageWithFallback
+                              src={matched?.image}
+                              alt={playerName}
+                              width={20}
+                              height={20}
+                              className="w-full h-full object-cover rounded-full"
+                              fallbackText={playerName}
+                            />
                           </div>
                           <span>{playerName}</span>
                         </button>
